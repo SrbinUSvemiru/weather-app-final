@@ -1,13 +1,131 @@
+*,
+*::backdrop,
+*::after {
+  box-sizing: border-box;
+}
+
+p,
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans", sans-serif;
+  line-height: 1;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.SearchBar {
+  color: white;
+  display: flex;
+  max-width: 400px;
+  position: fixed;
+  left: 2rem;
+  top: 1rem;
+}
+
+#search-bar {
+  width: 250px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  border-radius: 10px;
+}
+
+::placeholder {
+  color: #ffffff;
+  opacity: 0.7;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+  background-color: transparent;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  max-height: 50vh;
+  overflow: scroll;
+  max-height: 200px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 1.8rem;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  padding-left: 1rem;
+  padding-top: 0.5rem;
+  background: rgb(97, 94, 144);
+  background: linear-gradient(
+    180deg,
+    rgba(97, 94, 144, 0.9139005944174545) 0%,
+    rgba(108, 108, 163, 0.527345972568715) 47%,
+    rgba(163, 215, 226, 0.014740930551908282) 100%
+  );
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+#list-btn {
+  width: 300px;
+  all: unset;
+  margin-top: 5px;
+  opacity: 0.8;
+}
+
+#list-btn:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.clock {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.clock p {
+  margin: 0;
+}
+
+.icon img {
+  width: 90px;
+}
+
+#container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  align-items: center;
+}
+
+#container h3 {
+  margin-left: 0.7rem;
+}
+
+#container p {
+  margin-right: 0.7rem;
 }
