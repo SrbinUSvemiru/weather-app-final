@@ -55,18 +55,14 @@ export const Uvi = styled.div`
 `;
 
 export const Wrapper = styled(animated.div)`
-  background: rgb(144, 71, 175);
   position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
+  bottom: 0;
   left: 0;
+  right: 0;
   margin: 0 auto;
-  background: linear-gradient(
-    138deg,
-    rgba(144, 71, 175, 1) 0%,
-    rgba(233, 92, 235, 0.4433123591233369) 31%,
-    rgba(0, 0, 0, 0.2024160005799195) 100%
-  );
+  background-image: linear-gradient(to top, #5f72bd 0%, #9b23ea 100%);
   border-radius: 10px;
 `;

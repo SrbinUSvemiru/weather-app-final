@@ -7,18 +7,36 @@ function CurrentInfoWindow(props) {
   const data = useGetFetchedQuery(props.currentCity);
 
   const activeWrapperPop = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: props.activeWrapper === "pop" ? 1 : 0 },
+    config: { mass: 2, tension: 3000, friction: 150 },
+    from: { opacity: 0, scale: "0%" },
+    to: {
+      opacity: props.activeWrapper === "pop" ? 0.7 : 0,
+      scale: props.activeWrapper === "pop" ? "100%" : "0%",
+      backgroundImage:
+        "linear-gradient(to top, #1e3c72 0%, #1e3c72 1%, #2a5298 100%)",
+    },
   });
 
   const activeWrapperWind = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: props.activeWrapper === "wind" ? 1 : 0 },
+    config: { mass: 2, tension: 3000, friction: 150 },
+    from: { opacity: 0, scale: "0%" },
+    to: {
+      opacity: props.activeWrapper === "wind" ? 0.5 : 0,
+      scale: props.activeWrapper === "wind" ? "100%" : "0%",
+      backgroundImage:
+        "linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%)",
+    },
   });
 
   const activeWrapperVisibility = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: props.activeWrapper === "visibility" ? 1 : 0 },
+    config: { mass: 2, tension: 3000, friction: 150 },
+    from: { opacity: 0, scale: "0%" },
+    to: {
+      opacity: props.activeWrapper === "visibility" ? 0.8 : 0,
+      scale: props.activeWrapper === "visibility" ? "100%" : "0%",
+      backgroundImage:
+        "linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);",
+    },
   });
 
   return (

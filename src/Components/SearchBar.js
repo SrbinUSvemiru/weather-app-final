@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useTransition, animated, easings } from "react-spring";
-import Data from "../Utils/citiesList.json";
-import "../index.css";
-
+import { animated } from "react-spring";
+import { API } from "../Utils/utils";
+import citiesList from "cities.json";
 function SearchBar({ setCities, cities }) {
   const [cityName, setCityName] = useState("");
-  const [searchCities, setSearchCities] = useState();
+  const [searchCities, setSearchCities] = useState(undefined);
 
   useEffect(() => {
-    const list = Data.filter((post) => {
+    const list = citiesList.filter((post) => {
       if (cityName === "") {
         return "";
       } else if (post.name.toLowerCase().includes(cityName.toLowerCase())) {
@@ -36,19 +35,12 @@ function SearchBar({ setCities, cities }) {
     setSearchCities(sliced);
   }, [cityName]);
 
-  const handleClick = (e) => {
-    setCities([...cities, e.target.value]);
+  const handleClick = (obj) => {
+    setCities([...cities, obj]);
     setSearchCities(undefined);
     const inputField = document.getElementById("search-bar");
     inputField.value = "";
   };
-
-  const transition = useTransition(searchCities, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-    config: { easing: easings.easeInOutQuad, duration: 200 },
-  });
 
   return (
     <div className="SearchBar">
@@ -58,19 +50,18 @@ function SearchBar({ setCities, cities }) {
         id="search-bar"
       />
       <div className="list">
-        {searchCities !== undefined
-          ? transition((style, item) => (
+        {searchCities === undefined
+          ? ""
+          : searchCities.map((citie, index) => (
               <animated.button
-                key={item.name + item.country}
-                value={item.name}
+                key={citie.name + index}
+                value={citie}
                 id="list-btn"
-                onClick={handleClick}
-                style={style}
+                onClick={() => handleClick(citie)}
               >
-                {item.name} / {item.country}
+                {`${citie.name} / ${citie.country}`}
               </animated.button>
-            ))
-          : ""}
+            ))}
       </div>
     </div>
   );

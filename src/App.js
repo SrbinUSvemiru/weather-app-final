@@ -22,20 +22,21 @@ function App() {
   const [position, setPosition] = useState(0);
 
   const [cities, setCities] = useState([
-    "London",
-    "Tokyo",
-    "New York County",
-    "Cairo",
-    "New Delhi",
-    "Buenos Aires",
-    "Oslo",
-    "Kuwait City",
-    "Yakutsk",
+    {
+      country: "RS",
+      lat: 44.8178131,
+      lng: 20.4568974,
+      name: "Belgrade",
+    },
   ]);
+
+  useEffect(() => {
+    console.log(cities);
+  });
 
   const { x, ...style } = useSpring({
     config: { mass: 7, tension: 5000, friction: 200 },
-    delay: !open ? 200 : 0,
+    delay: !open ? 300 : 0,
     from: { opacity: 0, x: 0 },
     to: {
       opacity: !open ? 1 : 0,
@@ -84,7 +85,7 @@ function App() {
       <div className="con">
         {trail.map(({ x, ...style }, index) => (
           <Item
-            key={cities[index]}
+            key={cities[index].name}
             style={{ ...style, transform: x.to((x) => `scale(${x})`) }}
             onClick={() => setOpen(!open)}
           >

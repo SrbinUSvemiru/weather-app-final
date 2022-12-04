@@ -48,12 +48,10 @@ function City(props) {
   return (
     <>
       <Tile
-        onClick={() => props.setCurrentCity(data.cityName)}
-        temp={data.current.temp}
+        onClick={() => props.setCurrentCity(`${data.cityName}/${data.country}`)}
       >
         <div id="container">
-          <h3>{props.city}</h3>
-
+          <h3>{data.cityName}</h3>
           <p>{Math.round(data.current.temp * 2) / 2} &#176;C</p>
         </div>
         <div className="icon">

@@ -10,6 +10,7 @@ import { NaturalCurve } from "react-svg-curve";
 import { nextFourtyEightHours, returnDays } from "../../Utils/utils";
 import { useGetFetchedQuery } from "../../Queries/useCitiesQuery";
 import TemperatureSvg from "../TemperatureSvg/TemperatureSvg";
+import WindSvg from "../WindSvg/WindSvg";
 
 function GraphWindow(props) {
   const [clicked, setClicked] = useState();
@@ -30,28 +31,6 @@ function GraphWindow(props) {
     });
   }, [data]);
 
-  // const sumOfTemp = useMemo(() => {
-  //   if (clicked) {
-  //     let sum = clicked.values.reduce(
-  //       (previousValue, currentValue) => previousValue + currentValue,
-  //       0
-  //     );
-  //     return sum;
-  //   }
-  // }, [clicked]);
-
-  // const everyThirdHour = useMemo(() => {
-  //   if (clicked) {
-  //     if (clicked.values.length > 15) {
-  //       return clicked.values.filter((element, index) => {
-  //         return index % 3 === 0;
-  //       });
-  //     } else {
-  //       return clicked.values;
-  //     }
-  //   }
-  // }, [clicked]);
-
   return (
     <Window
       style={{
@@ -65,14 +44,20 @@ function GraphWindow(props) {
           <Button onClick={() => setClicked("daily")}>week</Button>
         </div>
         <SvgContainer>
-          <div id="svg-container">
-            <TemperatureSvg
-              currentCity={props.currentCity}
-              clicked={clicked}
-              hoursList={hoursList}
-              daysList={daysList}
-            />
-          </div>
+          <TemperatureSvg
+            currentCity={props.currentCity}
+            clicked={clicked}
+            hoursList={hoursList}
+            daysList={daysList}
+            activeWrapper={props.activeWrapper}
+          />
+          <WindSvg
+            currentCity={props.currentCity}
+            clicked={clicked}
+            hoursList={hoursList}
+            daysList={daysList}
+            activeWrapper={props.activeWrapper}
+          />
         </SvgContainer>
         <TimeList>
           {clicked === "hourly"

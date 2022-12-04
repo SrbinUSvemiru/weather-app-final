@@ -124,6 +124,7 @@ function Expanded(props) {
           <GraphWindow
             currentCity={props.currentCity}
             animation={props.animation}
+            activeWrapper={activeWrapper}
           />
         </div>
       </Container>

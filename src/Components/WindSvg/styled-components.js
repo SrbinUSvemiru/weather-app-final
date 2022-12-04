@@ -25,6 +25,19 @@ export const ValueContainer = styled.div`
   transform: translateX(-50%);
   margin: auto;
   top: ${(props) => props.sumOfTemp - 30}px;
+  & #wind-arrow {
+    position: absolute;
+    left: 0;
+    margin: auto;
+    top: ${(props) => props.sumOfTemp - 15}px;
+    transform: rotate(${(props) => props.degrees - 90}deg);
+    dipslay: flex;
+    justify-content: center;
+    & > img {
+      width: 15px;
+      filter: brightness(0) invert(1);
+    }
+  }
 `;
 
 export const TemperatureTile = styled.div`
@@ -38,20 +51,4 @@ export const TemperatureTile = styled.div`
     opacity: 0.8;
     font-size: 0.8rem;
   }
-
-  // &::after {
-  //   content: "${(props) => props.temp}";
-  //   height: 120px;
-  //   min-width: ${(props) => props.length}px;
-  //   position: absolute;
-  //   top: ${(props) => -props.temp * 2 + 60 + props.sumOfTemp - 150}px;
-  //   background: red;
-  //   left: 0;
-  //   right: 0;
-  //   margin: auto;
-  //   font-size: 0.7rem;
-  //   opacity: 0.5;
-  //   display: flex;
-  //   justify-content: center;
-  // }
 `;

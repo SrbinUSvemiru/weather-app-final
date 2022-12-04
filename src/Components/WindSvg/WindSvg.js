@@ -9,37 +9,48 @@ import {
 } from "./styled-components";
 import { useSpring } from "react-spring";
 
-function TemperatureSvg(props) {
-  const [temperature, setTemperature] = useState();
+function WindSvg(props) {
+  const [wind, setWind] = useState();
 
   const data = useGetFetchedQuery(props.currentCity);
 
   useEffect(() => {
     switch (props.clicked) {
       case "hourly":
-        setTemperature(() => {
-          let values = data.hourly.map((element, index) => element.temp);
+        setWind(() => {
+          let values = data.hourly.map((element, index) => element.wind_speed);
           let array = values.filter((element, index) => {
             return index % 3 === 0;
           });
-          return { temperatureDay: values, list: array };
+          let deg = data.hourly
+            .map((element, index) => element.wind_deg)
+            .filter((element, index) => {
+              return index % 3 === 0;
+            });
+          return { wind: values, degrees: deg, list: array };
         });
 
         break;
       case "daily":
-        setTemperature(() => {
-          let values = data.daily.map((element, index) => element.temp.day);
-          let array = data.daily.map((element, index) => element.temp.day);
-          return { temperatureDay: values, list: array };
+        setWind(() => {
+          let values = data.daily.map((element, index) => element.wind_speed);
+          let deg = data.daily.map((element) => element.wind_deg);
+
+          return { wind: values, degrees: deg, list: values };
         });
         break;
       default:
-        setTemperature(() => {
-          let values = data.hourly.map((element, index) => element.temp);
+        setWind(() => {
+          let values = data.hourly.map((element, index) => element.wind_speed);
           let array = values.filter((element, index) => {
             return index % 3 === 0;
           });
-          return { temperatureDay: values, list: array };
+          let deg = data.hourly
+            .map((element, index) => element.wind_deg)
+            .filter((element, index) => {
+              return index % 3 === 0;
+            });
+          return { wind: values, degrees: deg, list: array };
         });
     }
   }, [data, props.clicked]);
@@ -47,51 +58,55 @@ function TemperatureSvg(props) {
   const animation = useSpring({
     from: { opacity: 0 },
     to: {
-      opacity: props.activeWrapper === "temperature" ? 1 : 0,
+      opacity: props.activeWrapper === "wind" ? 1 : 0,
     },
   });
 
-  if (temperature)
+  if (wind)
     return (
       <Container style={animation}>
         <svg width="700" height="120" xmlns="http://www.w3.org/2000/svg">
           <NaturalCurve
-            data={temperature.temperatureDay.map((temp, index) => [
-              index * (700 / (temperature.temperatureDay.length - 1)),
-              -temp * 2 +
+            data={wind.wind.map((value, index) => [
+              index * (700 / (wind.wind.length - 1)),
+              -value * 2 +
                 60 +
-                (temperature.temperatureDay.reduce(
+                (wind.wind.reduce(
                   (previousValue, currentValue) => previousValue + currentValue,
                   0
                 ) /
-                  (temperature.temperatureDay.length - 1)) *
+                  (wind.wind.length - 1)) *
                   2 +
                 3,
             ])}
             strokeOpacity={0.5}
             showPoints={false}
             strokeWidth={3}
-            stroke="#f9d423"
+            stroke="#ffffff"
           />
         </svg>
         <div className="container-for">
-          {temperature.list.map((element, index) => (
+          {wind.list.map((element, index) => (
             <NumbersContainer>
               <ValueContainer
                 sumOfTemp={
                   -element * 2 +
                   60 +
-                  (temperature.temperatureDay.reduce(
+                  (wind.wind.reduce(
                     (previousValue, currentValue) =>
                       previousValue + currentValue,
                     0
                   ) /
-                    (temperature.temperatureDay.length - 1)) *
+                    (wind.wind.length - 1)) *
                     2 +
                   3
                 }
+                degrees={wind.degrees[index]}
               >
-                {Math.round(element * 10) / 10}
+                <p>{Math.round(element * 3.6 * 10) / 10}</p>
+                <div id="wind-arrow">
+                  <img src="../wind-arrow.png" />
+                </div>
               </ValueContainer>
             </NumbersContainer>
           ))}
@@ -100,4 +115,4 @@ function TemperatureSvg(props) {
     );
 }
 
-export default TemperatureSvg;
+export default WindSvg;

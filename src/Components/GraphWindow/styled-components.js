@@ -2,9 +2,9 @@ import styled from "styled-components";
 import { animated } from "react-spring";
 
 export const SvgContainer = styled.div`
-  width: 100%;
+  width: 700px;
   position: relative;
-  height: 100%;
+  height: 120px;
   & .container-for {
     position: absolute;
     width: 100%;
@@ -14,12 +14,6 @@ export const SvgContainer = styled.div`
     right: 0;
     margin: auto;
     display: flex;
-  }
-
-  & #svg-container {
-    width: 100%;
-    height: 100%;
-    font-size: 0.6rem;
   }
 `;
 
@@ -54,6 +48,7 @@ export const Button = styled.div`
   cursor: pointer;
   border: 1px solid rgba(0, 0, 0, 0.3);
   margin-bottom: 0.5rem;
+  z-index: 2;
 `;
 
 export const TemperatureTile = styled.div`
@@ -67,22 +62,6 @@ export const TemperatureTile = styled.div`
     opacity: 0.8;
     font-size: 0.8rem;
   }
-
-  // &::after {
-  //   content: "${(props) => props.temp}";
-  //   height: 120px;
-  //   min-width: ${(props) => props.length}px;
-  //   position: absolute;
-  //   top: ${(props) => -props.temp * 2 + 60 + props.sumOfTemp - 150}px;
-  //   background: red;
-  //   left: 0;
-  //   right: 0;
-  //   margin: auto;
-  //   font-size: 0.7rem;
-  //   opacity: 0.5;
-  //   display: flex;
-  //   justify-content: center;
-  // }
 `;
 
 export const TimeList = styled.div`

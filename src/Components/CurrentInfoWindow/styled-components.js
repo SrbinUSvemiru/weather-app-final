@@ -29,6 +29,7 @@ export const Window = styled(animated.div)`
 
     & > img {
       width: 20px;
+      z-index: 1;
     }
     & #speed {
       color: white;
