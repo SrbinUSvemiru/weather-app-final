@@ -1,22 +1,15 @@
 import React, { useState } from "react";
-import { useSpring } from "react-spring";
+
 import {
   LeftSideContainer,
   RightSideContainer,
   Container,
   Window,
-  Wrapper,
-  DayWindow,
   TopContainer,
 } from "./styled-components";
-import {
-  capitalizeFirstLetter,
-  offsetDate,
-  returnDate,
-  uvIndex,
-} from "../../Utils/utils";
+
 import GraphWindow from "../GraphWindow/GraphWindow";
-import SunriseSunset from "../SunriseSunset/SunriseSunset";
+
 import { useGetFetchedQuery } from "../../Queries/useCitiesQuery";
 import DaysList from "../DaysList/DaysList";
 import DisplayActiveDay from "../DisplayActiveDay/DisplayActiveDay";
@@ -24,7 +17,6 @@ import TemperatureWindow from "../TemperatureWindow/TemperatureWindow";
 import UVWindow from "../UVWindow/UVWindow";
 import CurrentInfoWindow from "../CurrentInfoWindow/CurrentInfoWindow";
 import DateAndLocationWindow from "../DateAndLocationWindow/DateAndLocationWindow";
-import { useEffect } from "react";
 
 function Expanded(props) {
   const [activeDay, setActiveDay] = useState(0);
@@ -88,17 +80,11 @@ function Expanded(props) {
               />
             </div>
             <div className="row">
-              <Window
-                style={{
-                  ...props.animation,
-                  transform: props.animation.x.to((x) => `scale(${x})`),
-                }}
-              >
-                <DisplayActiveDay
-                  activeDay={activeDay}
-                  currentCity={props.currentCity}
-                ></DisplayActiveDay>
-              </Window>
+              <DisplayActiveDay
+                activeDay={activeDay}
+                currentCity={props.currentCity}
+                animation={props.animation}
+              />
             </div>
             <div className="row">
               <div id="days-list">

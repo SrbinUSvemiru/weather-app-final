@@ -6,10 +6,32 @@ export const Detailed = styled(animated.div)`
   height: 90vh;
   position: absolute;
   padding: 1rem;
-  top: 2rem;
+  top: 3rem;
   color: white;
-  right: 2rem;
+  right: 0rem;
   border-radius: 10px;
+`;
+
+export const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  empty-cells: show;
+  border-collapse: collapse;
+  column-gap: 2rem;
+  row-gap: 2rem;
+  width: 50vw;
+  height: 80vh;
+  margin: 0 auto;
+`;
+
+export const EmptyCell = styled(animated.div)`
+  width: 100%;
+  height: 100%;
+  background-color: rgba(9, 18, 35, 0.3);
+  color: rgba(9, 18, 35, 0.3);
+  border-radius: 10px;
+  border: 3px dashed rgba(0, 0, 0, 0.3);
 `;
 
 export const Item = styled(animated.div)`

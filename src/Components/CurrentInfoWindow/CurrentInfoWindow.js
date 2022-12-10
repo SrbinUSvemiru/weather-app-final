@@ -1,6 +1,6 @@
 import React from "react";
 import { useGetFetchedQuery } from "../../Queries/useCitiesQuery";
-import { Window, Wrapper } from "./styled-components";
+import { Window, Wrapper, Row } from "./styled-components";
 import { useSpring } from "react-spring";
 
 function CurrentInfoWindow(props) {
@@ -10,10 +10,9 @@ function CurrentInfoWindow(props) {
     config: { mass: 2, tension: 3000, friction: 150 },
     from: { opacity: 0, scale: "0%" },
     to: {
-      opacity: props.activeWrapper === "pop" ? 0.7 : 0,
-      scale: props.activeWrapper === "pop" ? "100%" : "0%",
-      backgroundImage:
-        "linear-gradient(to top, #1e3c72 0%, #1e3c72 1%, #2a5298 100%)",
+      opacity: props.activeWrapper === "precipitation" ? 0.7 : 0,
+      scale: props.activeWrapper === "precipitation" ? "100%" : "0%",
+      background: "linear-gradient(to right, #0cebeb, #20e3b2, #29ffc6)",
     },
   });
 
@@ -21,10 +20,9 @@ function CurrentInfoWindow(props) {
     config: { mass: 2, tension: 3000, friction: 150 },
     from: { opacity: 0, scale: "0%" },
     to: {
-      opacity: props.activeWrapper === "wind" ? 0.5 : 0,
+      opacity: props.activeWrapper === "wind" ? 0.8 : 0,
       scale: props.activeWrapper === "wind" ? "100%" : "0%",
-      backgroundImage:
-        "linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%)",
+      background: "linear-gradient(to right, #ee9ca7, #ffdde1)",
     },
   });
 
@@ -34,13 +32,12 @@ function CurrentInfoWindow(props) {
     to: {
       opacity: props.activeWrapper === "visibility" ? 0.8 : 0,
       scale: props.activeWrapper === "visibility" ? "100%" : "0%",
-      backgroundImage:
-        "linear-gradient(to top, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);",
+      background: "linear-gradient(to right, #2193b0, #6dd5ed)",
     },
   });
 
   return (
-    <>
+    <Row>
       <Window
         style={{
           ...props.animation,
@@ -49,8 +46,8 @@ function CurrentInfoWindow(props) {
         onClick={() => props.setActiveWrapper("wind")}
       >
         <Wrapper style={activeWrapperWind} />
-        <div className="card">
-          <img src="../wind.png" />
+        <div className="card" title="Wind">
+          <img src="../wind.svg" />
           <p id="speed">
             {Math.round(data.current.wind_speed * 3.5)}
             km/h
@@ -63,12 +60,12 @@ function CurrentInfoWindow(props) {
           ...props.animation,
           transform: props.animation.x.to((x) => `scale(${x})`),
         }}
-        onClick={() => props.setActiveWrapper("pop")}
+        onClick={() => props.setActiveWrapper("precipitation")}
       >
         <Wrapper style={activeWrapperPop} />
-        <div className="card">
-          <img src="../wet.png" />
-          <p id="speed">{data.daily[0].pop * 100}%</p>
+        <div className="card" title="Precipitation">
+          <img src="../umbrella.svg" />
+          <p id="speed">{data.hourly[0].pop * 100}%</p>
         </div>
       </Window>
 
@@ -81,15 +78,12 @@ function CurrentInfoWindow(props) {
         value="visibility"
       >
         <Wrapper style={activeWrapperVisibility} />
-        <div className="card">
-          <img src="../visibility.png" />
-          <p id="speed">
-            {Math.round((data.current.visibility / 1000) * 10) / 10}
-            km
-          </p>
+        <div className="card" title="Humidity">
+          <img src="../humidity.svg" />
+          <p id="speed">{data.current.humidity}%</p>
         </div>
       </Window>
-    </>
+    </Row>
   );
 }
 

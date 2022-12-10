@@ -9,48 +9,37 @@ import {
 } from "./styled-components";
 import { useSpring } from "react-spring";
 
-function WindSvg(props) {
-  const [wind, setWind] = useState();
+function UVSvg(props) {
+  const [uv, setUV] = useState();
 
   const data = useGetFetchedQuery(props.currentCity);
 
   useEffect(() => {
     switch (props.clicked) {
       case "hourly":
-        setWind(() => {
-          let values = data.hourly.map((element, index) => element.wind_speed);
+        setUV(() => {
+          let values = data.hourly.map((element, index) => element.uvi);
           let array = values.filter((element, index) => {
             return index % 3 === 0;
           });
-          let deg = data.hourly
-            .map((element, index) => element.wind_deg)
-            .filter((element, index) => {
-              return index % 3 === 0;
-            });
-          return { wind: values, degrees: deg, list: array };
+          return { uvi: values, list: array };
         });
 
         break;
       case "daily":
-        setWind(() => {
-          let values = data.daily.map((element, index) => element.wind_speed);
-          let deg = data.daily.map((element) => element.wind_deg);
-
-          return { wind: values, degrees: deg, list: values };
+        setUV(() => {
+          let values = data.daily.map((element, index) => element.uvi);
+          let array = data.daily.map((element, index) => element.uvi);
+          return { uvi: values, list: array };
         });
         break;
       default:
-        setWind(() => {
-          let values = data.hourly.map((element, index) => element.wind_speed);
+        setUV(() => {
+          let values = data.hourly.map((element, index) => element.uvi);
           let array = values.filter((element, index) => {
             return index % 3 === 0;
           });
-          let deg = data.hourly
-            .map((element, index) => element.wind_deg)
-            .filter((element, index) => {
-              return index % 3 === 0;
-            });
-          return { wind: values, degrees: deg, list: array };
+          return { uvi: values, list: array };
         });
     }
   }, [data, props.clicked]);
@@ -58,55 +47,51 @@ function WindSvg(props) {
   const animation = useSpring({
     from: { opacity: 0 },
     to: {
-      opacity: props.activeWrapper === "wind" ? 1 : 0,
+      opacity: props.activeWrapper === "UV" ? 1 : 0,
     },
   });
 
-  if (wind)
+  if (uv)
     return (
       <Container style={animation}>
         <svg width="700" height="120" xmlns="http://www.w3.org/2000/svg">
           <NaturalCurve
-            data={wind.wind.map((value, index) => [
-              index * (700 / (wind.wind.length - 1)),
-              -value * 2 +
+            data={uv.uvi.map((temp, index) => [
+              index * (700 / (uv.uvi.length - 1)),
+              -temp * 2 +
                 60 +
-                (wind.wind.reduce(
+                (uv.uvi.reduce(
                   (previousValue, currentValue) => previousValue + currentValue,
                   0
                 ) /
-                  (wind.wind.length - 1)) *
+                  (uv.uvi.length - 1)) *
                   2 +
                 3,
             ])}
-            strokeOpacity={0.9}
+            strokeOpacity={0.8}
             showPoints={false}
             strokeWidth={3}
-            stroke="#ffdde1"
+            stroke="#9b23ea"
           />
         </svg>
         <div className="container-for">
-          {wind.list.map((element, index) => (
+          {uv.list.map((element, index) => (
             <NumbersContainer>
               <ValueContainer
                 sumOfTemp={
                   -element * 2 +
                   60 +
-                  (wind.wind.reduce(
+                  (uv.uvi.reduce(
                     (previousValue, currentValue) =>
                       previousValue + currentValue,
                     0
                   ) /
-                    (wind.wind.length - 1)) *
+                    (uv.uvi.length - 1)) *
                     2 +
                   3
                 }
-                degrees={wind.degrees[index]}
               >
-                <p>{Math.round(element * 3.6 * 10) / 10}</p>
-                <div id="wind-arrow">
-                  <img src="../wind-arrow.png" />
-                </div>
+                {element}
               </ValueContainer>
             </NumbersContainer>
           ))}
@@ -115,4 +100,4 @@ function WindSvg(props) {
     );
 }
 
-export default WindSvg;
+export default UVSvg;

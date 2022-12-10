@@ -163,3 +163,20 @@ export const Images = [
   "ten",
   "eleven",
 ];
+
+export function getCurrentLocation(list) {
+  const geolocationAPI = navigator.geolocation;
+  geolocationAPI.getCurrentPosition((position) => {
+    let lat = position.coords.latitude.toString().slice(0, 4);
+    let lng = position.coords.longitude.toString().slice(0, 4);
+
+    let firstFilter = list.filter((city) => {
+      return city.lat.toString().slice(0, 4) === lat;
+    });
+    let secondFilter = firstFilter.filter((city) => {
+      return city.lng.toString().slice(0, 4) === lng;
+    });
+
+    return secondFilter;
+  });
+}

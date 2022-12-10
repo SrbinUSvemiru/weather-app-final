@@ -6,21 +6,22 @@ import {
   Button,
   Window,
 } from "./styled-components";
-import { NaturalCurve } from "react-svg-curve";
 import { nextFourtyEightHours, returnDays } from "../../Utils/utils";
 import { useGetFetchedQuery } from "../../Queries/useCitiesQuery";
 import TemperatureSvg from "../TemperatureSvg/TemperatureSvg";
 import WindSvg from "../WindSvg/WindSvg";
+import UVSvg from "../UVSvg/UVSvg";
+import PrecipitationSvg from "../PrecipitationSvg/PrecipitationSvg";
+import VisibilitySvg from "../VisibilitySvg/VisibilitySvg";
 
 function GraphWindow(props) {
-  const [clicked, setClicked] = useState();
+  const [clicked, setClicked] = useState("hourly");
   const [hoursList, setHoursList] = useState();
   const [daysList, setDaysList] = useState();
 
   const data = useGetFetchedQuery(props.currentCity);
 
   useEffect(() => {
-    setClicked("hourly");
     setHoursList(() => {
       return nextFourtyEightHours(data.timezone_offset).map((hour) => {
         return hour < 10 ? `0${hour}:00` : `${hour}:00`;
@@ -52,6 +53,27 @@ function GraphWindow(props) {
             activeWrapper={props.activeWrapper}
           />
           <WindSvg
+            currentCity={props.currentCity}
+            clicked={clicked}
+            hoursList={hoursList}
+            daysList={daysList}
+            activeWrapper={props.activeWrapper}
+          />
+          <UVSvg
+            currentCity={props.currentCity}
+            clicked={clicked}
+            hoursList={hoursList}
+            daysList={daysList}
+            activeWrapper={props.activeWrapper}
+          />
+          <PrecipitationSvg
+            currentCity={props.currentCity}
+            clicked={clicked}
+            hoursList={hoursList}
+            daysList={daysList}
+            activeWrapper={props.activeWrapper}
+          />
+          <VisibilitySvg
             currentCity={props.currentCity}
             clicked={clicked}
             hoursList={hoursList}

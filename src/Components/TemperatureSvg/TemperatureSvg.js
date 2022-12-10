@@ -68,7 +68,7 @@ function TemperatureSvg(props) {
                   2 +
                 3,
             ])}
-            strokeOpacity={0.5}
+            strokeOpacity={0.9}
             showPoints={false}
             strokeWidth={3}
             stroke="#f9d423"
@@ -91,7 +91,7 @@ function TemperatureSvg(props) {
                   3
                 }
               >
-                {Math.round(element * 10) / 10}
+                {Math.round(element * 10) / 10}&#176;
               </ValueContainer>
             </NumbersContainer>
           ))}

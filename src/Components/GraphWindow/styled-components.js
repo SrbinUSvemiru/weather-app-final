@@ -66,9 +66,12 @@ export const TemperatureTile = styled.div`
 
 export const TimeList = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 100%;
-  padding-top: 0.5rem;
+  padding-top: 1rem;
+  padding-bottom: 0.2rem;
+  font-size: 0.8rem;
+  opacity: 0.8;
 `;
 
 export const DegreesContainer = styled.div`
