@@ -11,25 +11,30 @@ export const Window = styled(animated.div)`
   position: relative;
   height: 100%;
   user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   & .row {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
   }
   & .row-clock {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
   }
   & #expanded-clock {
     display: flex;
+    justify-content: center;
     margin-top: 0.3rem;
     color: black;
     font-weight: 500;
     opacity: 0.5;
     background: linear-gradient(to right, #ffeeee, #ddefbb);
     border-radius: 5px;
-    padding: 0.2rem;
+    padding: 0.1rem;
+    width: 70px;
   }
   & #city-name {
     font-size: 1.5rem;

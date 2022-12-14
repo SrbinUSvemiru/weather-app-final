@@ -50,15 +50,14 @@ function DisplayActiveDay(props) {
             <div className="image-container">
               <img src={`../icons/${dayData.weather[0].icon}.svg`} />
             </div>
-            <div id="container">
-              <div>
-                <p>
-                  {Math.round(dayData.temp.max * 10) / 10}&#176; /{" "}
-                  {Math.round(dayData.temp.min * 10) / 10}
-                  &#176;
-                </p>
-              </div>
+            <div>
+              <p>
+                {Math.round(dayData.temp.max * 10) / 10}&#176;C /{" "}
+                {Math.round(dayData.temp.min * 10) / 10}
+                &#176;C
+              </p>
             </div>
+
             <div className="sun">
               <img src="./sunrise.png" />
               <p id="time">
