@@ -50,7 +50,7 @@ function DateAndLocationWindow(props) {
           <span>{data.country}</span>
         </p>
       </div>
-      <div className="row">
+      <div className="row-clock">
         <div id="expanded-clock">
           <p>{hours <= 9 ? "0" + hours : hours}:</p>
           <p>{minutes <= 9 ? "0" + minutes : minutes}:</p>

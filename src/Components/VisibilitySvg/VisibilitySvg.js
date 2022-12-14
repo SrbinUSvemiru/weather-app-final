@@ -60,10 +60,10 @@ function VisibilitySvg(props) {
   if (visibility)
     return (
       <Container style={animation}>
-        <svg width="700" height="120" xmlns="http://www.w3.org/2000/svg">
+        <svg width="800" height="120" xmlns="http://www.w3.org/2000/svg">
           <NaturalCurve
             data={visibility.vis.map((value, index) => [
-              index * (700 / (visibility.vis.length - 1)),
+              index * (800 / (visibility.vis.length - 1)),
               -value * 2 +
                 60 +
                 (visibility.vis.reduce(
@@ -97,7 +97,7 @@ function VisibilitySvg(props) {
                   3
                 }
               >
-                <p>{element * 2}</p>
+                <p>{element * 2}%</p>
               </ValueContainer>
             </NumbersContainer>
           ))}

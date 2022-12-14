@@ -12,27 +12,27 @@ export const MainWeather = styled.div`
   & .row-first {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     position: relative;
+    padding-bottom: 1rem;
+    & .image-container {
+      width: 40px;
+      & img {
+        width: 100%;
+      }
+    }
   }
 
   & .row + .row {
     border-top: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  & .image-container {
-    width: 80px;
-    & img {
-      width: 100%;
-    }
-  }
-
   & #container {
     font-size: 0.9rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     min-width: 200px;
+
     & > h4 {
       margin: 0;
       font-weight: 500;
@@ -43,12 +43,26 @@ export const MainWeather = styled.div`
       font-weight: 400;
       opacity: 1;
     }
+    & img {
+      width: 20px;
+    }
   }
   & #whole {
     display: flex;
   }
   & #side + #side {
     margin-left: 2rem;
+  }
+  & .sun {
+    display: flex;
+    align-items: center;
+    margin-right: 2rem;
+    & img {
+      width: 20px;
+      margin-right: 0.3rem;
+      filter: invert(100%) sepia(28%) saturate(2%) hue-rotate(174deg)
+        brightness(107%) contrast(101%);
+    }
   }
 `;
 
@@ -58,7 +72,7 @@ export const Window = styled(animated.div)`
   box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   overflow: hidden;
-  padding: 0 0.5rem 0.5rem;
-  margin: 0;
+  padding: 0.5rem 1rem 0.5rem 1rem;
   position: relative;
+  user-select: none;
 `;

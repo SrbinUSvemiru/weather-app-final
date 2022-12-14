@@ -8,17 +8,33 @@ export const Window = styled(animated.div)`
   border-radius: 10px;
   overflow: hidden;
   padding: 0.8rem;
-  margin: 0.5rem;
   position: relative;
+  height: 100%;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   & .row {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
+  }
+  & .row-clock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   & #expanded-clock {
     display: flex;
+    justify-content: center;
     margin-top: 0.3rem;
-    opacity: 0.7;
+    color: black;
+    font-weight: 500;
+    opacity: 0.5;
+    background: linear-gradient(to right, #ffeeee, #ddefbb);
+    border-radius: 5px;
+    padding: 0.1rem;
+    width: 70px;
   }
   & #city-name {
     font-size: 1.5rem;

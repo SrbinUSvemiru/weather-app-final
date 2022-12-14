@@ -2,14 +2,12 @@ import styled from "styled-components";
 import { animated } from "react-spring";
 
 export const Detailed = styled(animated.div)`
-  width: 80vw;
-  height: 90vh;
   position: absolute;
-  padding: 1rem;
-  top: 3rem;
+  top: 4.5rem;
   color: white;
-  right: 0rem;
   border-radius: 10px;
+  margin: 0 auto;
+  height: 80vh;
 `;
 
 export const Grid = styled.div`

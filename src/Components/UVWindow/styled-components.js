@@ -8,7 +8,7 @@ export const Window = styled(animated.div)`
   border-radius: 10px;
   overflow: hidden;
   padding: 1rem;
-  margin: 0.5rem;
+  user-select: none;
   position: relative;
   cursor: pointer;
   & .row {
@@ -44,7 +44,7 @@ export const Uvi = styled.div`
   width: 230px;
   border-radius: 5px;
   background: rgb(0, 0, 0, 0.2);
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   & #background {
     width: ${(props) => props.uvi * 16.36 + 50}px;
     background: ${(props) => props.color.background};

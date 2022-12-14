@@ -8,16 +8,17 @@ export const Window = styled(animated.div)`
   border-radius: 10px;
   overflow: hidden;
   padding: 0.5rem;
-  margin: 0.5rem;
+  width: 100%;
   position: relative;
   cursor: pointer;
+  user-select: none;
   & #main-svg{
     width: 100px;
   }
   & .row {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     position: relative;
     & .temp-con {
       margin-left: 1rem;
@@ -42,8 +43,17 @@ export const Window = styled(animated.div)`
   & #description{
     opacity: 0.5;
     font-size: 1rem;
-    text-align: center;
-  
+  }
+  & .description-row{
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-around;
+    & span{
+      opacity: 0.6;
+    }
+  }
+  & #unit{
+    font-size: 2.5rem;
   }
 `;
 
@@ -54,6 +64,8 @@ export const Wrapper = styled(animated.div)`
   height: 100%;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   margin: 0 auto;
   background-image: linear-gradient(to right, #f83600 0%, #f9d423 100%);
   border-radius: 10px;

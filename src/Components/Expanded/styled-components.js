@@ -2,6 +2,11 @@ import styled from "styled-components";
 import { animated } from "react-spring";
 
 export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
   & ::-webkit-scrollbar {
     display: none;
   }
@@ -28,6 +33,7 @@ export const Container = styled.div`
     align-items: center;
     justify-content: flex-start;
     position: relative;
+    width: 100%;
   }
   & .container {
     display: flex;
@@ -49,19 +55,34 @@ export const Container = styled.div`
 
 export const TopContainer = styled.div`
   display: flex;
+
+  justify-content: space-between;
+  flex: 1;
+  padding-bottom: 1rem;
 `;
 
 export const LeftSideContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  & .row {
+    display: flex;
+    align-items: flex-start;
+  }
 `;
 
 export const RightSideContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   justify-content: space-between;
+  & .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+  }
 `;
 
 export const Window = styled(animated.div)`
@@ -75,6 +96,17 @@ export const Window = styled(animated.div)`
   position: relative;
 `;
 
+export const MoonWindow = styled(animated.div)`
+  backdrop-filter: saturate(50%) blur(10px);
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  overflow: hidden;
+  padding: 0.5rem;
+  position: relative;
+  user-select: none;
+`;
+
 export const Wrapper = styled(animated.div)`
   background: rgb(144, 71, 175);
   margin: 0.5rem;
@@ -85,4 +117,13 @@ export const Wrapper = styled(animated.div)`
     rgba(0, 0, 0, 0.2024160005799195) 100%
   );
   border-radius: 10px;
+`;
+
+export const Visibility = styled.div``;
+
+export const Moon = styled.div``;
+
+export const DaysRow = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;

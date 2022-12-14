@@ -65,10 +65,10 @@ function WindSvg(props) {
   if (wind)
     return (
       <Container style={animation}>
-        <svg width="700" height="120" xmlns="http://www.w3.org/2000/svg">
+        <svg width="800" height="120" xmlns="http://www.w3.org/2000/svg">
           <NaturalCurve
             data={wind.wind.map((value, index) => [
-              index * (700 / (wind.wind.length - 1)),
+              index * (800 / (wind.wind.length - 1)),
               -value * 2 +
                 60 +
                 (wind.wind.reduce(

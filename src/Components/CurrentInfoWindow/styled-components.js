@@ -14,6 +14,7 @@ export const Window = styled(animated.div)`
   min-width: 60px;
   min-height: 60px;
   cursor: pointer;
+  user-select: none;
 
   & .card {
     display: flex;
@@ -66,7 +67,5 @@ export const Wrapper = styled(animated.div)`
 export const Row = styled.div`
   display: flex;
   width: 100%;
-  & ${Window} + ${Window} {
-    margin-left: 1rem;
-  }
+  justify-content: space-between;
 `;
