@@ -79,7 +79,7 @@ function App() {
         />
       ))}
 
-      <SearchBar setCities={setCities} cities={cities} />
+      <SearchBar setCities={setCities} cities={cities} setOpen={setOpen} />
 
       <Detailed>
         <Expanded
