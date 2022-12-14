@@ -8,13 +8,13 @@ export const Day = styled(animated.div)`
   align-items: center;
   cursor: pointer;
   border-radius: 5px;
+  max-width: 36px;
   & > img {
-    min-width: 50px;
+    width: 100%;
   }
 `;
 
 export const Wrapper = styled(animated.div)`
-  background: rgb(144, 71, 175);
   position: absolute;
   width: 100%;
   height: 100%;
@@ -22,13 +22,7 @@ export const Wrapper = styled(animated.div)`
   left: 0;
   right: 0;
   margin: 0 auto;
-  background: rgb(144, 71, 175);
-  background: linear-gradient(
-    163deg,
-    rgba(144, 71, 175, 0.38448882971157217) 0%,
-    rgba(233, 92, 235, 0.15479695296087181) 49%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background: linear-gradient(180deg, #feac5e, #c779d0, #4bc0c8);
   border-radius: 10px;
   z-index: -1;
 `;

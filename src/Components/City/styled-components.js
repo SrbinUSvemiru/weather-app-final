@@ -30,12 +30,15 @@ export const Spinner = styled.div`
 `;
 
 export const RemoveButton = styled.div`
-  width: 10px;
-  height: 10px;
-
+  width: 20px;
+  height: 20px;
   position: absolute;
-  right: 0.5rem;
-  top: 0.5rem;
+  right: 0.2rem;
+  top: 0.2rem;
+  opacity: 0.2;
+  &:hover {
+    opacity: 1;
+  }
   & img {
     width: 100%;
   }

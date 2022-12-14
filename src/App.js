@@ -1,45 +1,48 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  useTransition,
-  animated,
-  config,
-  useSpring,
-  useChain,
-  useSpringRef,
-  useTrail,
-} from "react-spring";
-import { Carousel, Detailed, Item } from "./styled-components";
+import { useTransition, useSpring, useTrail } from "react-spring";
+import { Carousel, Detailed, Item, Grid, EmptyCell } from "./styled-components";
 import "./App.css";
-import City from "./Components/City";
-import SearchBar from "./Components/SearchBar";
+import City from "./Components/City/City";
+import SearchBar from "./Components/SearchBar/SearchBar";
 import Expanded from "./Components/Expanded/Expanded";
-import { Images, API } from "./Utils/utils";
-import DetailedSvg from "./Components/GraphWindow/GraphWindow";
+import { Images } from "./Utils/utils";
 
 function App() {
   const [open, setOpen] = useState(true);
   const [currentCity, setCurrentCity] = useState();
   const [position, setPosition] = useState(0);
-
   const [cities, setCities] = useState([
-    "London",
-    "Tokyo",
-    "New York County",
-    "Cairo",
-    "New Delhi",
-    "Buenos Aires",
-    "Oslo",
-    "Kuwait City",
-    "Yakutsk",
+    { country: "EG", name: "New Cairo", lat: "30.03", lng: "31.47" },
+    { country: "AR", name: "Los Menucos", lat: "-40.84402", lng: "-68.08718" },
+    { country: "RS", name: "Novi Sad", lat: "45.25167", lng: "19.83694" },
+    { country: "RS", name: "Zemun", lat: "44.8458", lng: "20.40116" },
+    { country: "RS", name: "Novi Beograd", lat: "44.80556", lng: "20.42417" },
   ]);
+
+  useEffect(() => {
+    let retrieveStorage = localStorage.getItem("cities");
+    if (retrieveStorage) {
+      setCities(JSON.parse(retrieveStorage));
+    }
+  }, []);
 
   const { x, ...style } = useSpring({
     config: { mass: 7, tension: 5000, friction: 200 },
-    delay: !open ? 200 : 0,
+    delay: !open ? 300 : 0,
     from: { opacity: 0, x: 0 },
     to: {
       opacity: !open ? 1 : 0,
       x: !open ? 1 : 0,
+    },
+  });
+
+  const emptyCell = useSpring({
+    config: { mass: 7, tension: 2000, friction: 200 },
+    delay: 100,
+    from: { opacity: 0, scale: "0%" },
+    to: {
+      opacity: open ? 1 : 0,
+      scale: open ? "100%" : "0%",
     },
   });
 
@@ -60,6 +63,11 @@ function App() {
     config: { duration: 2000 },
   });
 
+  const handleItemClick = (e) => {
+    e.stopPropagation();
+    setOpen(!open);
+  };
+
   return (
     <div className="App">
       {backgroundTransition((style, index) => (
@@ -71,7 +79,7 @@ function App() {
         />
       ))}
 
-      <SearchBar setCities={setCities} cities={cities} />
+      <SearchBar setCities={setCities} cities={cities} setOpen={setOpen} />
 
       <Detailed>
         <Expanded
@@ -81,17 +89,29 @@ function App() {
           currentCity={currentCity}
         />
       </Detailed>
-      <div className="con">
+      <Grid>
         {trail.map(({ x, ...style }, index) => (
+          // CityContainer
           <Item
-            key={cities[index]}
+            key={cities[index].name}
             style={{ ...style, transform: x.to((x) => `scale(${x})`) }}
-            onClick={() => setOpen(!open)}
+            onClick={(e) => handleItemClick(e)}
           >
-            <City city={cities[index]} setCurrentCity={setCurrentCity} />
+            <City
+              city={cities[index]}
+              index={index}
+              setCurrentCity={setCurrentCity}
+              cities={cities}
+              setCities={setCities}
+            />
           </Item>
         ))}
-      </div>
+        {cities.length < 9
+          ? Array.from(Array(9 - cities.length)).map((element, index) => (
+              <EmptyCell key={index} style={emptyCell} />
+            ))
+          : ""}
+      </Grid>
     </div>
   );
 }

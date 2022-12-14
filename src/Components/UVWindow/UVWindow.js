@@ -7,8 +7,12 @@ function UVWindow(props) {
   const data = useGetFetchedQuery(props.currentCity);
 
   const activeWrapper = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: props.activeWrapper === "UV" ? 1 : 0 },
+    config: { mass: 2, tension: 3000, friction: 150 },
+    from: { opacity: 0, scale: "0%" },
+    to: {
+      opacity: props.activeWrapper === "UV" ? 0.5 : 0,
+      scale: props.activeWrapper === "UV" ? "100%" : "0%",
+    },
   });
 
   const uvIndexCalc = useMemo(() => {

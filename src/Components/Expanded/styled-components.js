@@ -54,15 +54,14 @@ export const TopContainer = styled.div`
 export const LeftSideContainer = styled.div`
   display: flex;
   flex-direction: column;
-
-  width: 100%;
+  justify-content: space-between;
 `;
 
 export const RightSideContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  width: 100%;
+  justify-content: space-between;
 `;
 
 export const Window = styled(animated.div)`

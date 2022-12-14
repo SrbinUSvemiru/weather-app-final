@@ -9,6 +9,7 @@ export const NumbersContainer = styled.div`
   opacity: 1;
   display: flex;
   justify-content: center;
+  z-index: -1;
 `;
 
 export const Container = styled(animated.div)`
@@ -25,6 +26,10 @@ export const ValueContainer = styled.div`
   transform: translateX(-50%);
   margin: auto;
   top: ${(props) => props.sumOfTemp - 30}px;
+  & span {
+    font-size: 0.6rem;
+    opacity: 0.7;
+  }
 `;
 
 export const TemperatureTile = styled.div`

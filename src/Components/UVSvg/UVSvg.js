@@ -9,37 +9,37 @@ import {
 } from "./styled-components";
 import { useSpring } from "react-spring";
 
-function TemperatureSvg(props) {
-  const [temperature, setTemperature] = useState();
+function UVSvg(props) {
+  const [uv, setUV] = useState();
 
   const data = useGetFetchedQuery(props.currentCity);
 
   useEffect(() => {
     switch (props.clicked) {
       case "hourly":
-        setTemperature(() => {
-          let values = data.hourly.map((element, index) => element.temp);
+        setUV(() => {
+          let values = data.hourly.map((element, index) => element.uvi);
           let array = values.filter((element, index) => {
             return index % 3 === 0;
           });
-          return { temperatureDay: values, list: array };
+          return { uvi: values, list: array };
         });
 
         break;
       case "daily":
-        setTemperature(() => {
-          let values = data.daily.map((element, index) => element.temp.day);
-          let array = data.daily.map((element, index) => element.temp.day);
-          return { temperatureDay: values, list: array };
+        setUV(() => {
+          let values = data.daily.map((element, index) => element.uvi);
+          let array = data.daily.map((element, index) => element.uvi);
+          return { uvi: values, list: array };
         });
         break;
       default:
-        setTemperature(() => {
-          let values = data.hourly.map((element, index) => element.temp);
+        setUV(() => {
+          let values = data.hourly.map((element, index) => element.uvi);
           let array = values.filter((element, index) => {
             return index % 3 === 0;
           });
-          return { temperatureDay: values, list: array };
+          return { uvi: values, list: array };
         });
     }
   }, [data, props.clicked]);
@@ -47,51 +47,51 @@ function TemperatureSvg(props) {
   const animation = useSpring({
     from: { opacity: 0 },
     to: {
-      opacity: props.activeWrapper === "temperature" ? 1 : 0,
+      opacity: props.activeWrapper === "UV" ? 1 : 0,
     },
   });
 
-  if (temperature)
+  if (uv)
     return (
       <Container style={animation}>
         <svg width="700" height="120" xmlns="http://www.w3.org/2000/svg">
           <NaturalCurve
-            data={temperature.temperatureDay.map((temp, index) => [
-              index * (700 / (temperature.temperatureDay.length - 1)),
+            data={uv.uvi.map((temp, index) => [
+              index * (700 / (uv.uvi.length - 1)),
               -temp * 2 +
                 60 +
-                (temperature.temperatureDay.reduce(
+                (uv.uvi.reduce(
                   (previousValue, currentValue) => previousValue + currentValue,
                   0
                 ) /
-                  (temperature.temperatureDay.length - 1)) *
+                  (uv.uvi.length - 1)) *
                   2 +
                 3,
             ])}
-            strokeOpacity={0.9}
+            strokeOpacity={0.8}
             showPoints={false}
             strokeWidth={3}
-            stroke="#f9d423"
+            stroke="#9b23ea"
           />
         </svg>
         <div className="container-for">
-          {temperature.list.map((element, index) => (
+          {uv.list.map((element, index) => (
             <NumbersContainer>
               <ValueContainer
                 sumOfTemp={
                   -element * 2 +
                   60 +
-                  (temperature.temperatureDay.reduce(
+                  (uv.uvi.reduce(
                     (previousValue, currentValue) =>
                       previousValue + currentValue,
                     0
                   ) /
-                    (temperature.temperatureDay.length - 1)) *
+                    (uv.uvi.length - 1)) *
                     2 +
                   3
                 }
               >
-                {Math.round(element * 10) / 10}&#176;
+                {element}
               </ValueContainer>
             </NumbersContainer>
           ))}
@@ -100,4 +100,4 @@ function TemperatureSvg(props) {
     );
 }
 
-export default TemperatureSvg;
+export default UVSvg;

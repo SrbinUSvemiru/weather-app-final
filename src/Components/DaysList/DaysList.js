@@ -7,10 +7,10 @@ import { useEffect } from "react";
 
 function DaysList(props) {
   const activeWrapper = useSpring({
-    config: { mass: 2, tension: 2000, friction: 150 },
+    config: { mass: 2, tension: 3000, friction: 150 },
     from: { opacity: 0, scale: "0%" },
     to: {
-      opacity: props.activeDay === props.index ? 1 : 0,
+      opacity: props.activeDay === props.index ? 0.5 : 0,
       scale: props.activeDay === props.index ? "100%" : "0%",
     },
   });

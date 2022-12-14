@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useGetFetchedQuery } from "../../Queries/useCitiesQuery";
-import { MainWeather } from "./styled-components";
+import { MainWeather, Window } from "./styled-components";
 
 function DisplayActiveDay(props) {
   const [dayData, setDayData] = useState();
@@ -14,9 +14,14 @@ function DisplayActiveDay(props) {
 
   if (dayData)
     return (
-      <>
+      <Window
+        style={{
+          ...props.animation,
+          transform: props.animation.x.to((x) => `scale(${x})`),
+        }}
+      >
         <MainWeather>
-          <div className="row">
+          <div className="row-first">
             <div className="image-container">
               <img src={`../icons/${dayData.weather[0].icon}.svg`} />
             </div>
@@ -47,8 +52,8 @@ function DisplayActiveDay(props) {
               </div>
               <div className="row">
                 <div id="container">
-                  <h4>Humidity</h4>
-                  <p>{dayData.humidity}%</p>
+                  <h4>Visibility</h4>
+                  <p>{dayData.visibility}%</p>
                 </div>
               </div>
             </div>
@@ -77,7 +82,7 @@ function DisplayActiveDay(props) {
             </div>
           </div>
         </MainWeather>
-      </>
+      </Window>
     );
 }
 
