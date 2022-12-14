@@ -14,6 +14,7 @@ export const MainWeather = styled.div`
     align-items: center;
     justify-content: flex-start;
     position: relative;
+    padding-bottom: 1rem;
   }
 
   & .row + .row {
@@ -43,12 +44,26 @@ export const MainWeather = styled.div`
       font-weight: 400;
       opacity: 1;
     }
+    & img {
+      width: 20px;
+    }
   }
   & #whole {
     display: flex;
   }
   & #side + #side {
     margin-left: 2rem;
+  }
+  & .sun {
+    display: flex;
+    align-items: center;
+    margin-right: 2rem;
+    & img {
+      width: 20px;
+      margin-right: 0.3rem;
+      filter: invert(100%) sepia(28%) saturate(2%) hue-rotate(174deg)
+        brightness(107%) contrast(101%);
+    }
   }
 `;
 
@@ -60,4 +75,5 @@ export const Window = styled(animated.div)`
   overflow: hidden;
   padding: 0 1rem 0.5rem 1rem;
   position: relative;
+  user-select: none;
 `;

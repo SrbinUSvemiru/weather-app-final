@@ -8,8 +8,10 @@ export const Window = styled(animated.div)`
   border-radius: 10px;
   overflow: hidden;
   padding: 1rem;
-  max-width: 180px;
+  max-width: 200px;
+  min-width: 200px;
   position: relative;
+  user-select: none;
 `;
 
 export const MessageContainer = styled(animated.div)`

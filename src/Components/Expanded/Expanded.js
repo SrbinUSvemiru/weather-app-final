@@ -86,14 +86,13 @@ function Expanded(props) {
           <RightSideContainer>
             <div className="row">
               <MoonWindow
-                onClick={() => handleBackClick()}
                 style={{
                   ...props.animation,
                   transform: props.animation.x.to((x) => `scale(${x})`),
                 }}
               >
                 <Moon>
-                  <div id="moon-img">
+                  <div id="moon-img" title={moon?.name}>
                     <img src={`./moon-icons/${moon?.src}`} />
                   </div>
                 </Moon>

@@ -11,13 +11,14 @@ export const Window = styled(animated.div)`
   width: 100%;
   position: relative;
   cursor: pointer;
+  user-select: none;
   & #main-svg{
     width: 100px;
   }
   & .row {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     position: relative;
     & .temp-con {
       margin-left: 1rem;
@@ -47,7 +48,12 @@ export const Window = styled(animated.div)`
     padding: 0.5rem;
     display: flex;
     justify-content: space-around;
-    
+    & span{
+      opacity: 0.6;
+    }
+  }
+  & #unit{
+    font-size: 2.5rem;
   }
 `;
 

@@ -31,13 +31,13 @@ function TemperatureWindow(props) {
             id="main-svg"
           />
         </div>
+
         <div className="temp-con">
           <div className="container">
-            <h1>{Math.round((data.current.temp * 2) / 2)}</h1>
-            <div>
-              <p id="degrees">&#176;</p>
-              <p id="degrees">c</p>
-            </div>
+            <h1>
+              {Math.round((data.current.temp * 2) / 2)}&#176;
+              <span id="unit">C</span>
+            </h1>
           </div>
           <p id="feels-like">
             Feels like: {Math.round(data.current.feels_like * 10) / 10}
@@ -50,7 +50,8 @@ function TemperatureWindow(props) {
           <p>{data.current.weather[0].description}</p>
         </div>
         <p>
-          Visibility: {Math.round((data.current.visibility / 1000) * 10) / 10}
+          <span> Visibility:</span>{" "}
+          {Math.round((data.current.visibility / 1000) * 10) / 10}
           km
         </p>
       </div>

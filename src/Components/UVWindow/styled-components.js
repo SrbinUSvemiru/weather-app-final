@@ -8,7 +8,7 @@ export const Window = styled(animated.div)`
   border-radius: 10px;
   overflow: hidden;
   padding: 1rem;
-  
+  user-select: none;
   position: relative;
   cursor: pointer;
   & .row {

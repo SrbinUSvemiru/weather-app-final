@@ -104,6 +104,7 @@ export const MoonWindow = styled(animated.div)`
   overflow: hidden;
   padding: 0.5rem;
   position: relative;
+  user-select: none;
 `;
 
 export const Wrapper = styled(animated.div)`

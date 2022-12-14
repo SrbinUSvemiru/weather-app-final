@@ -10,6 +10,7 @@ export const Window = styled(animated.div)`
   padding: 0.8rem;
   position: relative;
   height: 100%;
+  user-select: none;
   & .row {
     display: flex;
     align-items: center;

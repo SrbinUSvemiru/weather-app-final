@@ -97,7 +97,7 @@ function VisibilitySvg(props) {
                   3
                 }
               >
-                <p>{element * 2}</p>
+                <p>{element * 2}%</p>
               </ValueContainer>
             </NumbersContainer>
           ))}

@@ -14,6 +14,7 @@ export const Window = styled(animated.div)`
   min-width: 60px;
   min-height: 60px;
   cursor: pointer;
+  user-select: none;
 
   & .card {
     display: flex;

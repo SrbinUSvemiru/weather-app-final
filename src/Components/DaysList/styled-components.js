@@ -35,7 +35,7 @@ export const Window = styled(animated.div)`
   overflow: hidden;
   padding: 0.3rem;
   position: relative;
-
+  user-select: none;
   cursor: pointer;
 `;
 

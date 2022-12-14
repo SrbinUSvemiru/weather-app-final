@@ -91,4 +91,5 @@ export const Window = styled(animated.div)`
   padding: 0.5rem;
   margin: 0;
   position: relative;
+  user-select: none;
 `;

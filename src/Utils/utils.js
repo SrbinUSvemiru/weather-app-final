@@ -230,21 +230,23 @@ export function getCurrentLocation(list) {
 }
 
 export function moonPhase(phase) {
-  if (phase === 0 || phase === 1) {
+  if (phase === 0) {
     return { src: "new-moon.png", name: "New Moon" };
   } else if (0 < phase < 0.25) {
     return { src: "waxing-crescent-moon.png", name: "Waxing Crescent Moon" };
   } else if (phase === 0.25) {
     return { src: "last-quarter-moon.png", name: "First Quarter Moon" };
-  } else if (0.25 < phase < 0.5) {
+  } else if (phase > 0.25 && phase < 0.5) {
     return { src: "waxing-gibbous-moon.png", name: "Waxing Gibbous Moon" };
   } else if (phase === 0.5) {
     return { src: "full-moon.png", name: "Full Moon" };
-  } else if (0.5 < phase < 0.75) {
+  } else if (phase > 0.5 && phase < 0.75) {
     return { src: "waning-gibbous-moon.png", name: "Waning Gibbous Moon" };
   } else if (phase === 0.75) {
     return { src: "last-quarter-moon.png", name: "Last Quarter Moon" };
   } else if (0.75 < phase < 1) {
     return { src: "waning-crescent-moon.png", name: "Waning Crescent Moon" };
+  } else {
+    return { src: "new-moon.png", name: "New Moon" };
   }
 }
