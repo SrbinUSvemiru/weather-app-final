@@ -30,9 +30,6 @@ function TemperatureWindow(props) {
             src={`../icons/${data.current.weather[0].icon}.svg`}
             id="main-svg"
           />
-          <div id="description">
-            <p>{data.current.weather[0].description}</p>
-          </div>
         </div>
         <div className="temp-con">
           <div className="container">
@@ -47,6 +44,15 @@ function TemperatureWindow(props) {
             &#176;
           </p>
         </div>
+      </div>
+      <div className="description-row">
+        <div id="description">
+          <p>{data.current.weather[0].description}</p>
+        </div>
+        <p>
+          Visibility: {Math.round((data.current.visibility / 1000) * 10) / 10}
+          km
+        </p>
       </div>
     </Window>
   );

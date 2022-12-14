@@ -4,7 +4,7 @@ import citiesList from "cities.json";
 import { SearchBarContainer } from "./styled-components";
 import _ from "lodash";
 
-function SearchBar({ setCities, cities }) {
+function SearchBar({ setCities, cities, setOpen }) {
   const [cityName, setCityName] = useState("");
   const [searchCities, setSearchCities] = useState([]);
 
@@ -33,6 +33,7 @@ function SearchBar({ setCities, cities }) {
 
     setSearchCities([]);
     setCityName("");
+    setOpen(true);
   };
 
   const handleLocationClick = () => {

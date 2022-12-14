@@ -9,6 +9,54 @@ export function offsetDate(offset) {
   return [hrs, mins, secs];
 }
 
+export function returnAlertTime(dt, offset) {
+  var d = new Date(dt * 1000 + offset * 1000);
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  var day = d.getUTCDay();
+  var num = day % days.length;
+
+  var dayOfMonth = d.getUTCDate();
+
+  var hrs = d.getUTCHours() <= 9 ? `0${d.getUTCHours()}` : d.getUTCHours();
+  var mins =
+    d.getUTCMinutes() <= 9 ? `0${d.getUTCMinutes()}` : d.getUTCMinutes();
+
+  let suffix = dayOfMonth;
+
+  switch (suffix) {
+    case 1:
+      suffix = "1st";
+      break;
+    case 2:
+      suffix = "2nd";
+      break;
+    case 3:
+      suffix = "3rd";
+      break;
+
+    case 21:
+      suffix = `21st`;
+      break;
+    case 22:
+      suffix = "22nd";
+      break;
+    case 23:
+      suffix = "23rd";
+      break;
+    case 31:
+      suffix = `${suffix}st`;
+      break;
+    default:
+      suffix = `${suffix}th`;
+  }
+
+  let date = `${days[num]} ${suffix}`;
+  let time = `${hrs}:${mins}`;
+
+  return { date: date, time: time };
+}
+
 export function returnDate(offset) {
   var d = new Date(new Date().getTime() + offset * 1000);
   const days = [
@@ -179,4 +227,24 @@ export function getCurrentLocation(list) {
 
     return secondFilter;
   });
+}
+
+export function moonPhase(phase) {
+  if (phase === 0 || phase === 1) {
+    return { src: "new-moon.png", name: "New Moon" };
+  } else if (0 < phase < 0.25) {
+    return { src: "waxing-crescent-moon.png", name: "Waxing Crescent Moon" };
+  } else if (phase === 0.25) {
+    return { src: "last-quarter-moon.png", name: "First Quarter Moon" };
+  } else if (0.25 < phase < 0.5) {
+    return { src: "waxing-gibbous-moon.png", name: "Waxing Gibbous Moon" };
+  } else if (phase === 0.5) {
+    return { src: "full-moon.png", name: "Full Moon" };
+  } else if (0.5 < phase < 0.75) {
+    return { src: "waning-gibbous-moon.png", name: "Waning Gibbous Moon" };
+  } else if (phase === 0.75) {
+    return { src: "last-quarter-moon.png", name: "Last Quarter Moon" };
+  } else if (0.75 < phase < 1) {
+    return { src: "waning-crescent-moon.png", name: "Waning Crescent Moon" };
+  }
 }

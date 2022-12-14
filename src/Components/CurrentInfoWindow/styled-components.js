@@ -66,7 +66,5 @@ export const Wrapper = styled(animated.div)`
 export const Row = styled.div`
   display: flex;
   width: 100%;
-  & ${Window} + ${Window} {
-    margin-left: 1rem;
-  }
+  justify-content: space-between;
 `;

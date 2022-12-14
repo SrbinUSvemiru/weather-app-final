@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { animated } from "react-spring";
 
 export const SvgContainer = styled.div`
-  width: 700px;
+  width: 800px;
   position: relative;
   height: 120px;
   & .container-for {
@@ -33,7 +33,7 @@ export const Container = styled.div`
     heigth: 100%;
     display: flex;
     justify-content: space-around;
-    margin-right: 1rem;
+    padding-bottom: 0.5rem;
   }
   & ${NumbersContainer} + ${NumbersContainer} {
     border-left: 2px dashed rgba(255, 255, 255, 0.1);

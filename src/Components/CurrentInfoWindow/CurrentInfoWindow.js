@@ -65,7 +65,7 @@ function CurrentInfoWindow(props) {
         <Wrapper style={activeWrapperPop} />
         <div className="card" title="Precipitation">
           <img src="../umbrella.svg" />
-          <p id="speed">{data.hourly[0].pop * 100}%</p>
+          <p id="speed">{Math.round(data.hourly[0].pop) * 100}%</p>
         </div>
       </Window>
 

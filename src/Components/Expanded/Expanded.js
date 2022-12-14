@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   LeftSideContainer,
@@ -6,6 +6,10 @@ import {
   Container,
   Window,
   TopContainer,
+  Visibility,
+  Moon,
+  DaysRow,
+  MoonWindow,
 } from "./styled-components";
 
 import GraphWindow from "../GraphWindow/GraphWindow";
@@ -17,12 +21,19 @@ import TemperatureWindow from "../TemperatureWindow/TemperatureWindow";
 import UVWindow from "../UVWindow/UVWindow";
 import CurrentInfoWindow from "../CurrentInfoWindow/CurrentInfoWindow";
 import DateAndLocationWindow from "../DateAndLocationWindow/DateAndLocationWindow";
+import AlertMessageWindow from "../AlertMessageWindow/AlertMessageWindow";
+import { moonPhase } from "../../Utils/utils";
 
 function Expanded(props) {
   const [activeDay, setActiveDay] = useState(0);
   const [activeWrapper, setActiveWrapper] = useState("temperature");
+  const [moon, setMoon] = useState();
 
   const data = useGetFetchedQuery(props.currentCity);
+
+  useEffect(() => {
+    if (data) setMoon(moonPhase(data.daily[0].moon_phase));
+  }, [data]);
 
   const handleBackClick = () => {
     setActiveDay(0);
@@ -74,6 +85,24 @@ function Expanded(props) {
           </LeftSideContainer>
           <RightSideContainer>
             <div className="row">
+              <MoonWindow
+                onClick={() => handleBackClick()}
+                style={{
+                  ...props.animation,
+                  transform: props.animation.x.to((x) => `scale(${x})`),
+                }}
+              >
+                <Moon>
+                  <div id="moon-img">
+                    <img src={`./moon-icons/${moon?.src}`} />
+                  </div>
+                </Moon>
+              </MoonWindow>
+              <AlertMessageWindow
+                currentCity={props.currentCity}
+                animation={props.animation}
+              />
+
               <DateAndLocationWindow
                 currentCity={props.currentCity}
                 animation={props.animation}
@@ -86,24 +115,22 @@ function Expanded(props) {
                 animation={props.animation}
               />
             </div>
-            <div className="row">
-              <div id="days-list">
-                {data.daily.map((day, index) => (
-                  <>
-                    <DaysList
-                      data={day}
-                      index={index}
-                      offset={data.timezone_offset}
-                      activeDay={activeDay}
-                      currentCity={props.currentCity}
-                      activeWrapper={activeWrapper}
-                      animation={props.animation}
-                      setActiveDay={setActiveDay}
-                    />
-                  </>
-                ))}
-              </div>
-            </div>
+            <DaysRow>
+              {data.daily.map((day, index) => (
+                <>
+                  <DaysList
+                    data={day}
+                    index={index}
+                    offset={data.timezone_offset}
+                    activeDay={activeDay}
+                    currentCity={props.currentCity}
+                    activeWrapper={activeWrapper}
+                    animation={props.animation}
+                    setActiveDay={setActiveDay}
+                  />
+                </>
+              ))}
+            </DaysRow>
           </RightSideContainer>
         </TopContainer>
         <div className="row detailed">

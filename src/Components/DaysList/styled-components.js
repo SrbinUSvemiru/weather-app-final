@@ -35,6 +35,10 @@ export const Window = styled(animated.div)`
   overflow: hidden;
   padding: 0.3rem;
   position: relative;
-  margin: 0.5rem;
+
   cursor: pointer;
+`;
+
+export const Row = styled.div`
+  display: flex;
 `;

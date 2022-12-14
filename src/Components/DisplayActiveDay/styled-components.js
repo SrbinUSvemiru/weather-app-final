@@ -58,7 +58,6 @@ export const Window = styled(animated.div)`
   box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   overflow: hidden;
-  padding: 0 0.5rem 0.5rem;
-  margin: 0;
+  padding: 0 1rem 0.5rem 1rem;
   position: relative;
 `;

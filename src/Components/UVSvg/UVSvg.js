@@ -54,10 +54,10 @@ function UVSvg(props) {
   if (uv)
     return (
       <Container style={animation}>
-        <svg width="700" height="120" xmlns="http://www.w3.org/2000/svg">
+        <svg width="800" height="120" xmlns="http://www.w3.org/2000/svg">
           <NaturalCurve
             data={uv.uvi.map((temp, index) => [
-              index * (700 / (uv.uvi.length - 1)),
+              index * (800 / (uv.uvi.length - 1)),
               -temp * 2 +
                 60 +
                 (uv.uvi.reduce(
