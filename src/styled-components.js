@@ -3,11 +3,12 @@ import { animated } from "react-spring";
 
 export const Detailed = styled(animated.div)`
   position: absolute;
-  top: 4.5rem;
+  top: 50%;
+  transform: translateY(-50%);
   color: white;
   border-radius: 10px;
   margin: 0 auto;
-  height: 80vh;
+  height: 580px;
 `;
 
 export const Grid = styled.div`

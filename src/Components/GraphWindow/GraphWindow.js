@@ -3,7 +3,8 @@ import {
   SvgContainer,
   TimeList,
   Container,
-  Button,
+  ButtonHourly,
+  ButtonDaily,
   Window,
 } from "./styled-components";
 import { nextFourtyEightHours, returnDays } from "../../Utils/utils";
@@ -42,8 +43,12 @@ function GraphWindow(props) {
     >
       <Container>
         <div id="buttons-container">
-          <Button onClick={() => setClicked("hourly")}>48 hours</Button>
-          <Button onClick={() => setClicked("daily")}>week</Button>
+          <ButtonHourly onClick={() => setClicked("hourly")} value={clicked}>
+            48 hours
+          </ButtonHourly>
+          <ButtonDaily onClick={() => setClicked("daily")} value={clicked}>
+            7 days
+          </ButtonDaily>
         </div>
         <SvgContainer>
           <TemperatureSvg

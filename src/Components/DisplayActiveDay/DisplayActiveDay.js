@@ -46,38 +46,18 @@ function DisplayActiveDay(props) {
         }}
       >
         <MainWeather>
-          <div className="row-first">
-            <div className="image-container">
-              <img src={`../icons/${dayData.weather[0].icon}.svg`} />
-            </div>
-            <div>
-              <p>
-                {Math.round(dayData.temp.max * 10) / 10}&#176;C /{" "}
-                {Math.round(dayData.temp.min * 10) / 10}
-                &#176;C
-              </p>
-            </div>
-
-            <div className="sun">
-              <img src="./sunrise.png" />
-              <p id="time">
-                {`${sunrise[0] <= 9 ? "0" + sunrise[0] : sunrise[0]}:${
-                  sunrise[1] <= 9 ? "0" + sunrise[1] : sunrise[1]
-                } `}
-              </p>
-            </div>
-            <div className="sun">
-              <img src="./sunset.png" />
-              <p id="time">
-                {`${sunset[0] <= 9 ? "0" + sunset[0] : sunset[0]}:${
-                  sunset[1] <= 9 ? "0" + sunset[1] : sunset[1]
-                }`}
-              </p>
-            </div>
-          </div>
-
           <div id="whole">
             <div id="side">
+              <div className="row">
+                <div id="container">
+                  <h4>Temperature</h4>
+                  <p>
+                    {Math.round(dayData.temp.max * 10) / 10}&#176;C /{" "}
+                    {Math.round(dayData.temp.min * 10) / 10}
+                    &#176;C
+                  </p>
+                </div>
+              </div>
               <div className="row">
                 <div id="container">
                   <h4>Wind</h4>
@@ -98,6 +78,26 @@ function DisplayActiveDay(props) {
               </div>
             </div>
             <div id="side">
+              <div className="row">
+                <div id="container">
+                  <div id="sun">
+                    <img src="./sunrise.png" />
+                    <p id="time">
+                      {`${sunrise[0] <= 9 ? "0" + sunrise[0] : sunrise[0]}:${
+                        sunrise[1] <= 9 ? "0" + sunrise[1] : sunrise[1]
+                      }h`}
+                    </p>
+                  </div>
+                  <div id="sun">
+                    <img src="./sunset.png" />
+                    <p id="time">
+                      {`${sunset[0] <= 9 ? "0" + sunset[0] : sunset[0]}:${
+                        sunset[1] <= 9 ? "0" + sunset[1] : sunset[1]
+                      }h`}
+                    </p>
+                  </div>
+                </div>
+              </div>
               <div className="row">
                 <div id="container">
                   <h4>Cloud cover</h4>
