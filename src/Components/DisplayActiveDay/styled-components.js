@@ -8,13 +8,6 @@ export const MainWeather = styled.div`
     justify-content: flex-start;
     position: relative;
     padding: 0.5rem;
-  }
-  & .row-first {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    padding-bottom: 1rem;
     & .image-container {
       width: 40px;
       & img {
@@ -53,12 +46,12 @@ export const MainWeather = styled.div`
   & #side + #side {
     margin-left: 2rem;
   }
-  & .sun {
+  & #sun {
     display: flex;
     align-items: center;
-    margin-right: 2rem;
-    & img {
-      width: 20px;
+
+    & > img {
+      width: 15px;
       margin-right: 0.3rem;
       filter: invert(100%) sepia(28%) saturate(2%) hue-rotate(174deg)
         brightness(107%) contrast(101%);

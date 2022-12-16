@@ -13,7 +13,9 @@ export const Container = styled.div`
 
   & #back-arrow-container {
     position: absolute;
-    left: -2.5rem;
+    left: -3rem;
+    top: 50%;
+    transform: translateY(-50%);
     > div {
       padding: 0.2rem;
       border-radius: 50%;

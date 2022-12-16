@@ -29,7 +29,7 @@ export const NumbersContainer = styled.div`
 
 export const Container = styled.div`
   & #buttons-container {
-    width: 30%;
+    width: 20%;
     heigth: 100%;
     display: flex;
     justify-content: space-around;
@@ -40,13 +40,30 @@ export const Container = styled.div`
   }
 `;
 
-export const Button = styled.div`
+export const ButtonHourly = styled.div`
   font-size: 0.9rem;
   opacity: 0.8;
   padding: 0.3rem;
   border-radius: 5px;
   cursor: pointer;
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  border: ${(props) =>
+    props.value === "hourly"
+      ? "2px solid rgba(299, 299, 299, 0.5)"
+      : "2px solid rgba(0, 0, 0, 0.3)"};
+  margin-bottom: 0.5rem;
+  z-index: 2;
+`;
+
+export const ButtonDaily = styled.div`
+  font-size: 0.9rem;
+  opacity: 0.8;
+  padding: 0.3rem;
+  border-radius: 5px;
+  cursor: pointer;
+  border: ${(props) =>
+    props.value === "daily"
+      ? "2px solid rgba(299, 299, 299, 0.5)"
+      : "2px solid rgba(0, 0, 0, 0.3)"};
   margin-bottom: 0.5rem;
   z-index: 2;
 `;
