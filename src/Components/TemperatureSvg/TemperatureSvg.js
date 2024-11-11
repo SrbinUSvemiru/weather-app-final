@@ -18,8 +18,8 @@ function TemperatureSvg(props) {
     switch (props.clicked) {
       case "hourly":
         setTemperature(() => {
-          let values = data.hourly.map((element, index) => element.temp);
-          let array = values.filter((element, index) => {
+          let values = data?.hourly?.map((element, index) => element.temp);
+          let array = values?.filter((element, index) => {
             return index % 3 === 0;
           });
           return { temperatureDay: values, list: array };
@@ -56,15 +56,15 @@ function TemperatureSvg(props) {
       <Container style={animation}>
         <svg width="800" height="120" xmlns="http://www.w3.org/2000/svg">
           <NaturalCurve
-            data={temperature.temperatureDay.map((temp, index) => [
-              index * (800 / (temperature.temperatureDay.length - 1)),
+            data={temperature?.temperatureDay?.map((temp, index) => [
+              index * (800 / (temperature?.temperatureDay?.length - 1)),
               -temp * 2 +
                 60 +
-                (temperature.temperatureDay.reduce(
+                (temperature?.temperatureDay?.reduce(
                   (previousValue, currentValue) => previousValue + currentValue,
                   0
                 ) /
-                  (temperature.temperatureDay.length - 1)) *
+                  (temperature?.temperatureDay?.length - 1)) *
                   2 +
                 3,
             ])}
@@ -75,18 +75,18 @@ function TemperatureSvg(props) {
           />
         </svg>
         <div className="container-for">
-          {temperature.list.map((element, index) => (
+          {temperature?.list?.map((element, index) => (
             <NumbersContainer>
               <ValueContainer
                 sumOfTemp={
                   -element * 2 +
                   60 +
-                  (temperature.temperatureDay.reduce(
+                  (temperature?.temperatureDay?.reduce(
                     (previousValue, currentValue) =>
                       previousValue + currentValue,
                     0
                   ) /
-                    (temperature.temperatureDay.length - 1)) *
+                    (temperature?.temperatureDay?.length - 1)) *
                     2 +
                   3
                 }

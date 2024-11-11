@@ -12,13 +12,13 @@ import { useSpring } from "react-spring";
 function WindSvg(props) {
   const [wind, setWind] = useState();
 
-  const data = useGetFetchedQuery(props.currentCity);
+  const data = useGetFetchedQuery(props?.currentCity);
 
   useEffect(() => {
     switch (props.clicked) {
       case "hourly":
         setWind(() => {
-          let values = data.hourly.map((element, index) => element.wind_speed);
+          let values = data?.hourly?.map((element, index) => element.wind_speed);
           let array = values.filter((element, index) => {
             return index % 3 === 0;
           });
