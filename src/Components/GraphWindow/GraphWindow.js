@@ -29,7 +29,7 @@ function GraphWindow(props) {
       });
     });
     setDaysList(() => {
-      return returnDays(data.current.dt, data.timezone_offset);
+      return returnDays(data?.current?.dt, data?.timezone_offset);
     });
     setClicked("hourly");
   }, [data]);
