@@ -50,7 +50,7 @@ function City({ city, setCurrentCity, setCities, cities }) {
 		<>
 			<Tile onClick={() => setCurrentCity({ ...city, current: data })}>
 				<div id="container">
-					<h3>{data?.name}</h3>
+					<h3>{city?.name}</h3>
 					<p>{Math.round(data?.main?.temp * 2) / 2} &#176;C</p>
 					<RemoveButton onClick={(e) => removeCity(e)}>
 						<img src="./close-icon.png" />

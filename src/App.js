@@ -6,7 +6,6 @@ import City from './Components/City/City';
 import SearchBar from './Components/SearchBar/SearchBar';
 import Expanded from './Components/Expanded/Expanded';
 import { Images } from './Utils/utils';
-import { defaultCities } from './constants/defaultCities';
 import { v4 as uuid } from 'uuid';
 
 function App() {
@@ -22,9 +21,9 @@ function App() {
 	]);
 
 	useEffect(() => {
-		let retrieveStorage = localStorage.getItem('cities');
-		if (retrieveStorage) {
-			setCities(JSON.parse(retrieveStorage));
+		let retrieveStorage = JSON.parse(localStorage.getItem('cities'));
+		if (retrieveStorage?.length) {
+			setCities(retrieveStorage);
 		}
 	}, []);
 

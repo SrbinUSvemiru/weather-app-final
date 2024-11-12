@@ -14,8 +14,6 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 		},
 	});
 
-	console.log(currentCity);
-
 	const activeWrapperWind = useSpring({
 		config: { mass: 2, tension: 3000, friction: 150 },
 		from: { opacity: 0, scale: '0%' },
@@ -30,8 +28,8 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 		config: { mass: 2, tension: 3000, friction: 150 },
 		from: { opacity: 0, scale: '0%' },
 		to: {
-			opacity: activeWrapper === 'visibility' ? 0.8 : 0,
-			scale: activeWrapper === 'visibility' ? '100%' : '0%',
+			opacity: activeWrapper === 'humidity' ? 0.8 : 0,
+			scale: activeWrapper === 'humidity' ? '100%' : '0%',
 			background: 'linear-gradient(to right, #2193b0, #6dd5ed)',
 		},
 	});
@@ -61,6 +59,7 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 					transform: animation.x.to((x) => `scale(${x})`),
 				}}
 				onClick={() => setActiveWrapper('precipitation')}
+				value="precipitation"
 			>
 				<Wrapper style={activeWrapperPop} />
 				<div className="card" title="Precipitation">
@@ -74,8 +73,8 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 					...animation,
 					transform: animation.x.to((x) => `scale(${x})`),
 				}}
-				onClick={() => setActiveWrapper('visibility')}
-				value="visibility"
+				onClick={() => setActiveWrapper('humidity')}
+				value="humidity"
 			>
 				<Wrapper style={activeWrapperVisibility} />
 				<div className="card" title="Humidity">
