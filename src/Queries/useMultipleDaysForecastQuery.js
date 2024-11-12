@@ -22,12 +22,11 @@ export const useMultipleDaysForecastQuery = ({ city, options }) => {
 					if (!acc[key]) {
 						acc[key] = [];
 					}
-
 					acc[key].push(item);
 
 					return acc;
 				}, {});
-				console.log(groupedData);
+
 				const result = Object.keys(groupedData).map((day) => {
 					const dayData = groupedData[day];
 
@@ -37,15 +36,16 @@ export const useMultipleDaysForecastQuery = ({ city, options }) => {
 						min_temp: getMinMax(dayData, 'main.temp_min', 'min'),
 						max_temp: getMinMax(dayData, 'main.temp_max', 'max'),
 						wind_speed: getMinMax(dayData, 'wind.speed', 'max'),
+						wind_deg: dayData[0].wind.deg,
+						pop: getMinMax(dayData, 'pop', 'max'),
 						temp: getMinMax(dayData, 'main.temp', 'max'),
 						humidity: getMinMax(dayData, 'main.humidity', 'max'),
 						pressure: getMinMax(dayData, 'main.pressure', 'max'),
 						weather: dayData[0]?.weather?.[0],
 					};
 				});
-				console.log(groupedData);
 
-				return result || null;
+				return { days: result, hours: res } || null;
 			} catch (e) {
 				console.error(e);
 				return null;

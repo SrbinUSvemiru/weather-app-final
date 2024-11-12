@@ -1,35 +1,22 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
 import { MainWeather, Window } from './styled-components';
 import { moonPhase } from '../../Utils/utils';
 
 function DisplayActiveDay({ currentCity, activeDay, animation }) {
-	const [moon, setMoon] = useState();
-	const [sunrise, setSunrise] = useState();
-	const [sunset, setSunset] = useState();
-	console.log(activeDay);
-	useEffect(() => {
-		if (currentCity) {
-			setMoon(moonPhase(currentCity?.daily?.[activeDay]?.moon_phase));
-			setSunrise(() => {
-				const d = new Date(
-					currentCity?.daily?.[activeDay]?.sunrise * 1000 + currentCity?.timezone_offset * 1000,
-				);
-				let hrs = d.getUTCHours();
-				let mins = d.getUTCMinutes();
-				return [hrs, mins];
-			});
-			setSunset(() => {
-				const d = new Date(
-					currentCity?.daily?.[activeDay]?.sunset * 1000 + currentCity?.timezone_offset * 1000,
-				);
-				let hrs = d.getUTCHours();
-				let mins = d.getUTCMinutes();
-				return [hrs, mins];
-			});
-		}
-	}, [activeDay, currentCity]);
+	const sunrise = useMemo(() => {
+		const d = new Date(currentCity?.current?.sys?.sunrise * 1000 + currentCity?.current?.timezone * 1000);
+		let hrs = d.getUTCHours();
+		let mins = d.getUTCMinutes();
+		return [hrs, mins];
+	}, [currentCity]);
+	const sunset = useMemo(() => {
+		const d = new Date(currentCity?.current?.sys?.sunset * 1000 + currentCity?.current?.timezone * 1000);
+		let hrs = d.getUTCHours();
+		let mins = d.getUTCMinutes();
+		return [hrs, mins];
+	}, [currentCity]);
 
 	return (
 		<Window
@@ -61,12 +48,6 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 							<div id="container">
 								<h4>Pressure</h4>
 								<p>{activeDay?.pressure}mb</p>
-							</div>
-						</div>
-						<div className="row">
-							<div id="container">
-								<img src={`./moon-icons/${moon?.src}`} />
-								<p>{moon?.name}</p>
 							</div>
 						</div>
 					</div>
@@ -104,12 +85,6 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 									{activeDay?.uvi}
 									uv
 								</p>
-							</div>
-						</div>
-						<div className="row">
-							<div id="container">
-								<h4>Dew point</h4>
-								<p>{Math.round(activeDay?.dew_point * 10) / 10}%</p>
 							</div>
 						</div>
 					</div>
