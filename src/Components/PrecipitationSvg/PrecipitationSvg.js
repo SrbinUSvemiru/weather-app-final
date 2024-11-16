@@ -4,7 +4,7 @@ import { NaturalCurve } from 'react-svg-curve';
 import { NumbersContainer, Container, ValueContainer, TemperatureTile } from './styled-components';
 import { useSpring } from 'react-spring';
 
-function PrecipitationSvg({ graphData, activeWrapper, clicked }) {
+function PrecipitationSvg({ graphData, activeWrapper, clicked, width }) {
 	const precipitation = useMemo(() => graphData?.[activeWrapper]?.[clicked], [graphData, clicked, activeWrapper]);
 
 	const animation = useSpring({
@@ -14,16 +14,14 @@ function PrecipitationSvg({ graphData, activeWrapper, clicked }) {
 		},
 	});
 
-	console.log(precipitation);
-
 	return (
 		<Container style={animation}>
-			<svg width="800" height="120" xmlns="http://www.w3.org/2000/svg">
+			<svg width={width} height="160" xmlns="http://www.w3.org/2000/svg">
 				<NaturalCurve
 					data={precipitation?.map((temp, index) => [
-						index * (800 / (precipitation?.length - 1)),
+						index * (width / (precipitation?.length - 1)),
 						-temp * 2 +
-							60 +
+							80 +
 							(precipitation?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
 								(precipitation?.length - 1)) *
 								2 +
@@ -41,7 +39,7 @@ function PrecipitationSvg({ graphData, activeWrapper, clicked }) {
 						<ValueContainer
 							sumOfTemp={
 								-element * 2 +
-								60 +
+								80 +
 								(precipitation?.reduce(
 									(previousValue, currentValue) => previousValue + currentValue,
 									0,

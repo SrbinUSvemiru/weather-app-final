@@ -9,6 +9,7 @@ export const Window = styled(animated.div)`
 	overflow: hidden;
 	padding: 1rem;
 	width: 100%;
+	height: 100%;
 	min-width: 200px;
 	position: relative;
 	user-select: none;

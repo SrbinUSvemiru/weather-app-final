@@ -1,3 +1,5 @@
+import { join, concat } from 'lodash';
+
 export function offsetDate(offset) {
 	var d = new Date(new Date().getTime() + offset * 1000);
 	var hrs = d.getUTCHours();
@@ -160,29 +162,16 @@ export function uvIndex(index) {
 		},
 	];
 
-	const description = ['low', 'moderate', 'high', 'very high', 'extreme'];
+	const description = ['good', 'fair', 'moderate', 'poor', 'very poor'];
 	const message = [
-		'You can safely enjoy being outside!',
-		'Seek shade during midday hours. ',
-		'Avoid being outside during midday! ',
+		'Air quality is satisfactory, and air pollution poses little or no risk.',
+		'Air quality is acceptable. However, there may be a risk for some people.',
+		'Members of sensitive groups may experience health effects.',
+		'Members of sensitive groups may experience more serious health effects.',
+		'Health alert: The risk of health effects is increased for everyone.',
 	];
 
-	if (index < 3) {
-		let array = [colors[0], description[0], message[0]];
-		return array;
-	} else if (index < 6) {
-		let array = [colors[1], description[1], message[1]];
-		return array;
-	} else if (index < 8) {
-		let array = [colors[2], description[2], message[1]];
-		return array;
-	} else if (index < 10) {
-		let array = [colors[3], description[3], message[2]];
-		return array;
-	} else {
-		let array = [colors[4], description[4], message[2]];
-		return array;
-	}
+	return { color: colors[index - 1], description: description[index - 1], message: message[index - 1] };
 }
 
 export const Images = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven'];
@@ -225,3 +214,5 @@ export function moonPhase(phase) {
 		return { src: 'new-moon.png', name: 'New Moon' };
 	}
 }
+
+export const multipleClassNames = (classNames) => join(concat(classNames), ' ');

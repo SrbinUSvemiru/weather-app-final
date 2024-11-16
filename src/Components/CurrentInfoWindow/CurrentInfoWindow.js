@@ -2,8 +2,15 @@ import React from 'react';
 import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
 import { Window, Wrapper, Row } from './styled-components';
 import { useSpring } from 'react-spring';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import OpacityIcon from '@mui/icons-material/Opacity';
+import BeachAccessIcon from '@mui/icons-material/BeachAccess';
+import AirIcon from '@mui/icons-material/Air';
+import { Icon, Typography, Grid2 as Grid } from '@mui/material';
 
 function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, animation }) {
+	const { isXs, isSm } = useBreakpoint();
+
 	const activeWrapperPop = useSpring({
 		config: { mass: 2, tension: 3000, friction: 150 },
 		from: { opacity: 0, scale: '0%' },
@@ -33,56 +40,67 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 			background: 'linear-gradient(to right, #2193b0, #6dd5ed)',
 		},
 	});
-
+	console.log(isXs);
 	return (
-		<Row>
-			<Window
-				style={{
-					...animation,
-					transform: animation.x.to((x) => `scale(${x})`),
-				}}
-				onClick={() => setActiveWrapper('wind')}
-			>
-				<Wrapper style={activeWrapperWind} />
-				<div className="card" title="Wind">
-					<img src="../wind.svg" />
-					<p id="speed">
+		<Grid container spacing={2} sx={{ height: '100%' }}>
+			<Grid size={12}>
+				<Window
+					style={{
+						...animation,
+						transform: animation.x.to((x) => `scale(${x})`),
+					}}
+					onClick={() => setActiveWrapper('wind')}
+				>
+					<Wrapper style={activeWrapperWind} />
+
+					<Icon sx={{ zIndex: 2, mb: '0.2rem', width: '30px', color: 'text.secondary' }}>
+						<AirIcon />
+					</Icon>
+					<Typography variant="subtitle1" zIndex={2} fontWeight={600}>
 						{Math.round(currentCity?.current?.wind?.speed * 3.5)}
 						km/h
-					</p>
-				</div>
-			</Window>
+					</Typography>
+				</Window>
+			</Grid>
+			<Grid size={12}>
+				<Window
+					style={{
+						...animation,
+						transform: animation.x.to((x) => `scale(${x})`),
+					}}
+					onClick={() => setActiveWrapper('precipitation')}
+					value="precipitation"
+				>
+					<Wrapper style={activeWrapperPop} />
 
-			<Window
-				style={{
-					...animation,
-					transform: animation.x.to((x) => `scale(${x})`),
-				}}
-				onClick={() => setActiveWrapper('precipitation')}
-				value="precipitation"
-			>
-				<Wrapper style={activeWrapperPop} />
-				<div className="card" title="Precipitation">
-					<img src="../umbrella.svg" />
-					<p id="speed">{Math.round(pop) * 100}%</p>
-				</div>
-			</Window>
-
-			<Window
-				style={{
-					...animation,
-					transform: animation.x.to((x) => `scale(${x})`),
-				}}
-				onClick={() => setActiveWrapper('humidity')}
-				value="humidity"
-			>
-				<Wrapper style={activeWrapperVisibility} />
-				<div className="card" title="Humidity">
-					<img src="../humidity.svg" />
-					<p id="speed">{currentCity?.current?.main?.humidity}%</p>
-				</div>
-			</Window>
-		</Row>
+					<Icon sx={{ zIndex: 2, mb: '0.2rem', width: '30px', color: 'text.secondary' }}>
+						<BeachAccessIcon />
+					</Icon>
+					<Typography variant="subtitle1" zIndex={2} fontWeight={600}>
+						{Math.round(pop) * 100}%
+					</Typography>
+				</Window>
+			</Grid>
+			<Grid size={12}>
+				<Window
+					style={{
+						...animation,
+						transform: animation.x.to((x) => `scale(${x})`),
+					}}
+					onClick={() => setActiveWrapper('humidity')}
+					value="humidity"
+				>
+					<Wrapper style={activeWrapperVisibility} />
+					<Icon sx={{ zIndex: 2, mb: '0.2rem', width: '30px', color: 'text.secondary' }}>
+						<OpacityIcon />
+					</Icon>
+					<Typography variant="subtitle1" zIndex={2} fontWeight={600}>
+						{' '}
+						{currentCity?.current?.main?.humidity}%
+					</Typography>
+				</Window>
+			</Grid>
+		</Grid>
 	);
 }
 

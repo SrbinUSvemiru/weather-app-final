@@ -4,6 +4,7 @@ import { Wrapper, Window, Day } from './styled-components';
 import { animated, useSpring } from 'react-spring';
 import { returnDay } from '../../Utils/utils';
 import { useEffect } from 'react';
+import { Typography } from '@mui/material';
 
 function DaysList({ data, activeDay, index, offset, animation, setActiveDay }) {
 	const activeWrapper = useSpring({
@@ -25,8 +26,10 @@ function DaysList({ data, activeDay, index, offset, animation, setActiveDay }) {
 		>
 			<Wrapper style={activeWrapper} />
 			<Day>
-				<p>{data?.day?.slice(0, 3)}</p>
 				<img src={`../icons/${data?.weather?.icon}.svg`} />
+				<Typography variant="subtitle1" fontWeight={600} sx={{ color: 'text.secondary' }}>
+					{data?.day?.slice(0, 3)}
+				</Typography>
 			</Day>
 		</Window>
 	);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { animated } from 'react-spring';
 import citiesList from 'cities.json';
 import { SearchBarContainer } from './styled-components';
-import { isEqual } from 'lodash';
+import { isEqual, slice, filter } from 'lodash';
 import { v4 as uuid } from 'uuid';
 
 function SearchBar({ setCities, cities, setOpen }) {
@@ -26,12 +26,12 @@ function SearchBar({ setCities, cities, setOpen }) {
 		setSearchCities(sliced);
 	}, [cityName, cities]);
 
-	const handleClick = (obj) => {
-		if (!cities.find((city) => isEqual(obj, city)) && cities.length < 9) {
-			console.log(obj);
-			setCities([...cities, { ...obj, lon: obj?.lng, id: uuid() }]);
-			localStorage.setItem('cities', JSON.stringify([...cities, obj]));
-		}
+	const handleAddCity = (obj) => {
+		const array = cities?.length ? cities : [];
+		const sliced = [{ ...obj, lon: obj?.lng, id: uuid() }, ...slice(array, 0, array?.length - 1)];
+
+		localStorage.setItem('cities', JSON.stringify(sliced));
+		setCities(sliced);
 
 		setSearchCities([]);
 		setCityName('');
@@ -45,14 +45,12 @@ function SearchBar({ setCities, cities, setOpen }) {
 				let lat = position.coords.latitude.toString().slice(0, 4);
 				let lng = position.coords.longitude.toString().slice(0, 4);
 
-				let firstFilter = citiesList.filter((city) => {
-					return city.lat.toString().slice(0, 4) === lat;
-				});
-				let secondFilter = firstFilter.filter((city) => {
-					return city.lng.toString().slice(0, 4) === lng;
-				});
+				const array = filter(
+					citiesList,
+					(city) => city.lat.toString().slice(0, 4) === lat && city.lng.toString().slice(0, 4) === lng,
+				);
 
-				setSearchCities(secondFilter);
+				setSearchCities(array);
 			});
 		}
 	};
@@ -70,12 +68,12 @@ function SearchBar({ setCities, cities, setOpen }) {
 			</button>
 
 			<div className="list">
-				{searchCities.map((citie, index) => (
+				{searchCities?.map((citie, index) => (
 					<animated.button
 						key={citie.name + index}
 						value={citie}
 						id="list-btn"
-						onClick={() => handleClick(citie)}
+						onClick={() => handleAddCity(citie)}
 					>
 						{citie.name} <span id="span">{citie.country}</span>
 					</animated.button>

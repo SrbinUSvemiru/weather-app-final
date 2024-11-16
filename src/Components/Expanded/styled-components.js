@@ -11,25 +11,6 @@ export const Container = styled.div`
 		display: none;
 	}
 
-	& #back-arrow-container {
-		position: absolute;
-		left: -3rem;
-		top: 50%;
-		transform: translateY(-50%);
-		> div {
-			padding: 0.2rem;
-			border-radius: 50%;
-			cursor: pointer;
-		}
-		& img {
-			width: 30px;
-			opacity: 0.5;
-			transition: width 500 ease;
-			&:hover {
-				opacity: 1;
-			}
-		}
-	}
 	& .row {
 		display: flex;
 		align-items: center;
@@ -57,7 +38,6 @@ export const Container = styled.div`
 
 export const TopContainer = styled.div`
 	display: flex;
-
 	justify-content: space-between;
 	flex: 1;
 	padding-bottom: 1rem;
@@ -95,6 +75,10 @@ export const Window = styled(animated.div)`
 	border-radius: 10px;
 	overflow: hidden;
 	padding: 1rem;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	margin: 0;
 	position: relative;
 `;
@@ -129,4 +113,23 @@ export const Moon = styled.div``;
 export const DaysRow = styled.div`
 	display: flex;
 	justify-content: space-between;
+	margin-top: 1rem;
+`;
+
+export const ArrowBack = styled.div`
+	display: flex;
+	width: 100%;
+	> div {
+		padding: 0.2rem;
+		border-radius: 50%;
+		cursor: pointer;
+	}
+	& img {
+		width: 30px;
+		opacity: 0.5;
+		transition: width 500 ease;
+		&:hover {
+			opacity: 1;
+		}
+	}
 `;

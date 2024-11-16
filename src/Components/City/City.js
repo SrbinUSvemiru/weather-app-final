@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSpring, config, animated } from 'react-spring';
-import { RemoveButton, Tile, Spinner } from './styled-components';
+import { RemoveButton, Tile, Spinner, EmptyCell } from './styled-components';
 import { offsetDate } from '../../Utils/utils';
 import { useCurrentWeatherQuery } from '../../Queries/useCurrentWeatherQuery';
 import { useQueryClient } from 'react-query';
@@ -10,7 +10,7 @@ function City({ city, setCurrentCity, setCities, cities }) {
 	const [minutes, setMinutes] = useState('');
 	const [seconds, setSeconds] = useState('');
 
-	const { isLoading, data, isError, error } = useCurrentWeatherQuery({ city });
+	const { isLoading, data, isError, error } = useCurrentWeatherQuery({ city, options: { enabled: !!city?.id } });
 
 	useEffect(() => {
 		if (data) {
@@ -27,44 +27,47 @@ function City({ city, setCurrentCity, setCities, cities }) {
 
 	const removeCity = (e) => {
 		e.stopPropagation();
-		let array = cities.filter((el, index) => {
+		let array = cities?.filter((el, index) => {
 			return el?.id !== city?.id;
 		});
-		setCities(array);
-		localStorage.setItem('cities', JSON.stringify(array.map((element) => element)));
-	};
 
-	if (isLoading) {
-		return (
-			<Spinner>
-				<img src="../loading-spinners.svg" />
-			</Spinner>
-		);
-	}
+		setCities([...array, { id: '' }]);
+		localStorage.setItem('cities', JSON.stringify([...array, { id: '' }]));
+	};
 
 	if (isError) {
 		return <div>{error.message}</div>;
 	}
 
-	return (
-		<>
-			<Tile onClick={() => setCurrentCity({ ...city, current: data })}>
-				<div id="container">
-					<h3>{city?.name}</h3>
-					<p>{Math.round(data?.main?.temp * 2) / 2} &#176;C</p>
-					<RemoveButton onClick={(e) => removeCity(e)}>
-						<img src="./close-icon.png" />
-					</RemoveButton>
-				</div>
-				<div className="icon">
-					<img src={`../icons/${data?.weather?.[0].icon}.svg`} />
-				</div>
-				<div className="clock">
-					<p>{hours <= 9 ? '0' + hours : hours}:</p>
-					<p>{minutes <= 9 ? '0' + minutes : minutes}</p>
-				</div>
-			</Tile>
-		</>
+	return city?.id ? (
+		<Tile onClick={() => setCurrentCity({ ...city, current: data })}>
+			{isLoading ? (
+				<Spinner>
+					<img src="../loading-spinners.svg" />
+				</Spinner>
+			) : (
+				<>
+					<div id="container">
+						<h3>{city?.name}</h3>
+
+						<RemoveButton onClick={(e) => removeCity(e)}>
+							<img src="./close-icon.png" />
+						</RemoveButton>
+					</div>
+					<div className="temperature">
+						<img src={`../icons/${data?.weather?.[0].icon}.svg`} />
+
+						<p>{Math.round(data?.main?.temp)} &#176;C</p>
+					</div>
+					<div className="clock">
+						<p>{hours <= 9 ? '0' + hours : hours}:</p>
+						<p>{minutes <= 9 ? '0' + minutes : minutes}</p>
+					</div>
+				</>
+			)}
+		</Tile>
+	) : (
+		<EmptyCell />
 	);
 }
 

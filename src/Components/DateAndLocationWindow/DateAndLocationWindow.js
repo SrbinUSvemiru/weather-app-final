@@ -2,6 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react';
 import { Window } from './styled-components';
 import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
 import { returnDate, offsetDate } from '../../Utils/utils';
+import { Box, Typography } from '@mui/material';
 
 function DateAndLocationWindow({ currentCity, animation }) {
 	const [hours, setHours] = useState();
@@ -23,6 +24,7 @@ function DateAndLocationWindow({ currentCity, animation }) {
 	const date = useMemo(() => {
 		if (currentCity !== undefined) return returnDate(currentCity?.current?.timezone);
 	}, [currentCity]);
+
 	return (
 		<Window
 			style={{
@@ -30,31 +32,24 @@ function DateAndLocationWindow({ currentCity, animation }) {
 				transform: animation.x.to((x) => `scale(${x})`),
 			}}
 		>
-			<div className="row ">
-				{date ? (
-					<div id="date">
-						<p id="day">{date[3]}</p>
-						<p>{date[2]}/</p>
-						<p>{date[1]}/</p>
-						<p>{date[0]}</p>
-					</div>
-				) : (
-					''
-				)}
-			</div>
-			<div className="row">
-				<p id="city-name">
+			<Box sx={{ padding: 0, display: 'flex', width: '100%', justifyContent: 'center' }}>
+				<Typography variant="h6" sx={{ fontWeight: 500 }}>
+					{date[3]} {date[2]}/{date[1]}/{date[0]}
+				</Typography>
+			</Box>
+			<Box sx={{ padding: 0, display: 'flex', justifyContent: 'center', width: '100%' }}>
+				<Typography variant="h5" sx={{ fontWeight: 700 }}>
 					{currentCity?.name}&nbsp;
-					<span>{currentCity?.country}</span>
-				</p>
-			</div>
-			<div className="row-clock">
-				<div id="expanded-clock">
-					<p>{hours <= 9 ? '0' + hours : hours}:</p>
-					<p>{minutes <= 9 ? '0' + minutes : minutes}:</p>
-					<p>{seconds <= 9 ? '0' + seconds : seconds}</p>
-				</div>
-			</div>
+				</Typography>
+				<Typography variant="h5" sx={{ fontWeight: 700, color: 'text.secondary' }}>
+					{currentCity?.country}
+				</Typography>
+			</Box>
+
+			<Typography variant="h6" sx={{ fontWeight: 700, color: 'text.secondary' }}>
+				{hours <= 9 ? '0' + hours : hours}:{minutes <= 9 ? '0' + minutes : minutes}:
+				{seconds <= 9 ? '0' + seconds : seconds}
+			</Typography>
 		</Window>
 	);
 }
