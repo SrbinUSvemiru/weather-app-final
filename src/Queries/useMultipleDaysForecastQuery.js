@@ -33,6 +33,7 @@ export const useMultipleDaysForecastQuery = ({ city, options }) => {
 					return {
 						day,
 						feels_like: getMinMax(dayData, 'main.feels_like', 'max'),
+						visibility: getMinMax(dayData, 'visibility', 'max'),
 						min_temp: getMinMax(dayData, 'main.temp_min', 'min'),
 						max_temp: getMinMax(dayData, 'main.temp_max', 'max'),
 						wind_speed: getMinMax(dayData, 'wind.speed', 'max'),

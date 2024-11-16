@@ -1,20 +1,32 @@
-import styled from "styled-components";
-import { animated } from "react-spring";
+import styled from 'styled-components';
+import { animated } from 'react-spring';
 
 export const Window = styled(animated.div)`
-  backdrop-filter: saturate(50%) blur(10px);
-  background: rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: saturate(50%) blur(10px);
+	background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 10px;
   overflow: hidden;
-  padding: 0.5rem;
+  padding: 1rem;
   width: 100%;
+  height: 100%;
   position: relative;
   cursor: pointer;
   user-select: none;
-  & #main-svg{
+  & #icon-container{
+   width: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   & #main-svg{
     width: 100px;
   }
+  }
+  
   & .row {
     display: flex;
     align-items: center;
@@ -58,15 +70,18 @@ export const Window = styled(animated.div)`
 `;
 
 export const Wrapper = styled(animated.div)`
-  background: rgb(144, 71, 175);
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0 auto;
-  background-image: linear-gradient(to right, #f83600 0%, #f9d423 100%);
-  border-radius: 10px;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: 0 auto;
+	// border: 1px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: saturate(50%) blur(10px);
+	background-image: linear-gradient(to right, #f83600 0%, #f9d423 100%);
+
+	border-radius: 10px;
 `;

@@ -2,17 +2,18 @@ import styled from 'styled-components';
 import { animated } from 'react-spring';
 
 export const Window = styled(animated.div)`
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 	backdrop-filter: saturate(50%) blur(10px);
-	background: rgba(0, 0, 0, 0.3);
-	box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+	background: rgba(0, 0, 0, 0.1);
 	border-radius: 10px;
 	overflow: hidden;
-	padding: 0.8rem;
+	padding: 1rem;
 	width: 100%;
 	position: relative;
 	height: 100%;
 	user-select: none;
 	display: flex;
+	align-items: center;
 	flex-direction: column;
 	justify-content: space-between;
 	& .row {

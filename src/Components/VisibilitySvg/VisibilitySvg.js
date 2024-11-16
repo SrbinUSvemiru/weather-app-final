@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
 import { NaturalCurve } from 'react-svg-curve';
-import { NumbersContainer, Container, ValueContainer, TemperatureTile } from './styled-components';
+import { NumbersContainer, Container, ValueContainer, humidityTile } from './styled-components';
 import { useSpring } from 'react-spring';
 
-function VisibilitySvg({ clicked, currentCity, activeWrapper, graphData }) {
+function VisibilitySvg({ clicked, currentCity, activeWrapper, graphData, width }) {
 	const humidity = graphData?.humidity?.[clicked];
 	const animation = useSpring({
 		from: { opacity: 0 },
@@ -13,14 +13,16 @@ function VisibilitySvg({ clicked, currentCity, activeWrapper, graphData }) {
 		},
 	});
 
+	console.log(humidity);
+
 	return (
 		<Container style={animation}>
-			<svg width="800" height="120" xmlns="http://www.w3.org/2000/svg">
+			<svg width={width} height="160" xmlns="http://www.w3.org/2000/svg">
 				<NaturalCurve
-					data={humidity?.map((value, index) => [
-						index * (800 / (humidity?.length - 1)),
-						-value * 2 +
-							60 +
+					data={humidity?.map((temp, index) => [
+						index * (width / (humidity?.length - 1)),
+						-temp * 2 +
+							80 +
 							(humidity?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
 								(humidity?.length - 1)) *
 								2 +
@@ -38,14 +40,14 @@ function VisibilitySvg({ clicked, currentCity, activeWrapper, graphData }) {
 						<ValueContainer
 							sumOfTemp={
 								-element * 2 +
-								60 +
+								80 +
 								(humidity?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
 									(humidity?.length - 1)) *
 									2 +
 								3
 							}
 						>
-							<p>{element}%</p>
+							{Math.round(element * 10) / 10}
 						</ValueContainer>
 					</NumbersContainer>
 				))}

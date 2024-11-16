@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { SvgContainer, TimeList, Container, ButtonHourly, ButtonDaily, Window } from './styled-components';
 import { nextFourtyEightHours, returnDays } from '../../Utils/utils';
 import { set, slice } from 'lodash';
@@ -8,14 +8,31 @@ import WindSvg from '../WindSvg/WindSvg';
 import UVSvg from '../UVSvg/UVSvg';
 import PrecipitationSvg from '../PrecipitationSvg/PrecipitationSvg';
 import VisibilitySvg from '../VisibilitySvg/VisibilitySvg';
+import { Typography } from '@mui/material';
 
 function GraphWindow({ daysForecast, currentCity, activeWrapper, animation }) {
 	const [clicked, setClicked] = useState('hourly');
 	const [hoursList, setHoursList] = useState();
 
+	const [width, setWidth] = useState(0);
+
 	const [graphData, setGraphData] = useState();
 
-	console.log(daysForecast);
+	const graphRef = useRef();
+
+	useEffect(() => {
+		if (graphRef.current) {
+			const observer = new ResizeObserver((entries) => {
+				for (let entry of entries) {
+					setWidth(() => (entry.contentRect.width > 800 ? entry.contentRect.width : 800));
+				}
+			});
+			observer.observe(graphRef.current);
+
+			// Cleanup observer
+			return () => observer.disconnect();
+		}
+	}, []);
 
 	useEffect(() => {
 		if (daysForecast) {
@@ -51,7 +68,7 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation }) {
 	useEffect(() => {
 		setHoursList(() => {
 			return nextFourtyEightHours(currentCity?.current?.timezone).map((hour) => {
-				return hour < 10 ? `0${hour}:00` : `${hour}:00`;
+				return hour < 10 ? `0${hour}` : `${hour}`;
 			});
 		});
 
@@ -65,23 +82,24 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation }) {
 				transform: animation.x.to((x) => `scale(${x})`),
 			}}
 		>
-			<Container>
+			<Container ref={graphRef}>
 				<div id="buttons-container">
 					<ButtonHourly onClick={() => setClicked('hourly')} value={clicked}>
-						48 hours
+						48 h
 					</ButtonHourly>
 					<ButtonDaily onClick={() => setClicked('daily')} value={clicked}>
-						7 days
+						Days
 					</ButtonDaily>
 				</div>
 				{graphData ? (
-					<SvgContainer>
+					<SvgContainer width={width}>
 						{activeWrapper === 'temperature' && (
 							<TemperatureSvg
 								graphData={graphData}
 								clicked={clicked}
 								hoursList={hoursList}
 								activeWrapper={activeWrapper}
+								width={width}
 							/>
 						)}
 						{activeWrapper === 'wind' && (
@@ -89,13 +107,15 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation }) {
 								graphData={graphData}
 								clicked={clicked}
 								hoursList={hoursList}
+								width={width}
 								activeWrapper={activeWrapper}
 							/>
 						)}
-						{activeWrapper === 'precipitation' || activeWrapper === 'humidity' ? (
+						{activeWrapper === 'precipitation' ? (
 							<PrecipitationSvg
 								graphData={graphData}
 								clicked={clicked}
+								width={width}
 								hoursList={hoursList}
 								activeWrapper={activeWrapper}
 							/>
@@ -104,17 +124,20 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation }) {
 							<VisibilitySvg
 								graphData={graphData}
 								clicked={clicked}
+								width={width}
 								hoursList={hoursList}
 								activeWrapper={activeWrapper}
 							/>
 						) : null}
+						<TimeList width={width}>
+							{clicked === 'hourly'
+								? hoursList?.map((hour) => <Typography variant="subtitle2"> {hour}h</Typography>)
+								: daysForecast?.days?.map((day) => (
+										<Typography variant="subtitle2">{day?.day}</Typography>
+									))}
+						</TimeList>
 					</SvgContainer>
 				) : null}
-				<TimeList>
-					{clicked === 'hourly'
-						? hoursList?.map((hour) => <div>{hour}</div>)
-						: daysForecast?.days?.map((day) => <div>{day?.day}</div>)}
-				</TimeList>
 			</Container>
 		</Window>
 	);

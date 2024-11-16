@@ -4,17 +4,16 @@ import { NaturalCurve } from 'react-svg-curve';
 import { NumbersContainer, Container, ValueContainer, TemperatureTile } from './styled-components';
 import { useSpring } from 'react-spring';
 
-function TemperatureSvg({ clicked, graphData, activeWrapper, animation }) {
-	console.log(graphData);
+function TemperatureSvg({ clicked, graphData, activeWrapper, animation, width }) {
 	const temperature = graphData?.temperature?.[clicked];
 	return (
 		<Container style={animation}>
-			<svg width="800" height="120" xmlns="http://www.w3.org/2000/svg">
+			<svg width={width} height="160" xmlns="http://www.w3.org/2000/svg">
 				<NaturalCurve
 					data={temperature?.map((temp, index) => [
-						index * (800 / (temperature?.length - 1)),
+						index * (width / (temperature?.length - 1)),
 						-temp * 2 +
-							60 +
+							80 +
 							(temperature?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
 								(temperature?.length - 1)) *
 								2 +
@@ -32,7 +31,7 @@ function TemperatureSvg({ clicked, graphData, activeWrapper, animation }) {
 						<ValueContainer
 							sumOfTemp={
 								-element * 2 +
-								60 +
+								80 +
 								(temperature?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
 									(temperature?.length - 1)) *
 									2 +

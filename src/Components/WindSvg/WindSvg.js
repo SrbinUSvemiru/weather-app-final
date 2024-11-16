@@ -4,8 +4,10 @@ import { NaturalCurve } from 'react-svg-curve';
 import { NumbersContainer, Container, ValueContainer, TemperatureTile } from './styled-components';
 import { useSpring } from 'react-spring';
 import { map } from 'lodash';
+import { Typography, Icon } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-const WindSvg = ({ clicked, graphData, activeWrapper }) => {
+const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
 	const wind = useMemo(() => map(graphData?.wind?.[clicked], (el) => el?.value), [graphData, clicked]);
 	const windDeg = useMemo(() => map(graphData?.wind?.[clicked], (el) => el?.deg), [graphData, clicked]);
 	const animation = useSpring({
@@ -14,15 +16,15 @@ const WindSvg = ({ clicked, graphData, activeWrapper }) => {
 			opacity: activeWrapper === 'wind' ? 1 : 0,
 		},
 	});
-
+	console.log(windDeg);
 	return (
 		<Container style={animation}>
-			<svg width="800" height="120" xmlns="http://www.w3.org/2000/svg">
+			<svg width={width} height="160" xmlns="http://www.w3.org/2000/svg">
 				<NaturalCurve
 					data={wind?.map((value, index) => [
-						index * (800 / (wind?.length - 1)),
+						index * (width / (wind?.length - 1)),
 						-value * 2 +
-							60 +
+							80 +
 							(wind?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
 								(wind?.length - 1)) *
 								2 +
@@ -40,7 +42,7 @@ const WindSvg = ({ clicked, graphData, activeWrapper }) => {
 						<ValueContainer
 							sumOfTemp={
 								-element * 2 +
-								60 +
+								80 +
 								(wind?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
 									(wind?.length - 1)) *
 									2 +
@@ -48,10 +50,28 @@ const WindSvg = ({ clicked, graphData, activeWrapper }) => {
 							}
 							degrees={windDeg}
 						>
-							<p>{Math.round(element * 3.6 * 10) / 10} km/h</p>
-							<div id="wind-arrow">
-								<img src="../wind-arrow.png" />
-							</div>
+							<Typography variant="subtitle1">{Math.round(element * 3.6)}</Typography>
+							<Icon
+								sx={{
+									position: 'absolute',
+									left: 0,
+									margin: 'auto',
+									transform: `rotate(${windDeg[index] - 90}deg)`,
+									top: `${
+										-element * 2 +
+										80 +
+										(wind?.reduce(
+											(previousValue, currentValue) => previousValue + currentValue,
+											0,
+										) /
+											(wind?.length - 1)) *
+											2 +
+										3 -
+										15
+									}px`,
+								}}
+								component={ArrowForwardIcon}
+							/>
 						</ValueContainer>
 					</NumbersContainer>
 				))}
