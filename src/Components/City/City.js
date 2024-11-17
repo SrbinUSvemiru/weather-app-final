@@ -4,6 +4,7 @@ import { RemoveButton, Tile, Spinner, EmptyCell } from './styled-components';
 import { offsetDate } from '../../Utils/utils';
 import { useCurrentWeatherQuery } from '../../Queries/useCurrentWeatherQuery';
 import { useQueryClient } from 'react-query';
+import { Grid2 as Grid, Typography } from '@mui/material';
 
 function City({ city, setCurrentCity, setCities, cities }) {
 	const [hours, setHours] = useState('');
@@ -46,24 +47,32 @@ function City({ city, setCurrentCity, setCities, cities }) {
 					<img src="../loading-spinners.svg" />
 				</Spinner>
 			) : (
-				<>
-					<div id="container">
-						<h3>{city?.name}</h3>
-
+				<Grid container>
+					<Grid size={11}>
+						<Typography variant="h6" noWrap fontWeight={700}>
+							{city?.name}
+						</Typography>
+					</Grid>
+					<Grid size={1}>
 						<RemoveButton onClick={(e) => removeCity(e)}>
 							<img src="./close-icon.png" />
 						</RemoveButton>
-					</div>
-					<div className="temperature">
-						<img src={`../icons/${data?.weather?.[0].icon}.svg`} />
-
-						<p>{Math.round(data?.main?.temp)} &#176;C</p>
-					</div>
-					<div className="clock">
-						<p>{hours <= 9 ? '0' + hours : hours}:</p>
-						<p>{minutes <= 9 ? '0' + minutes : minutes}</p>
-					</div>
-				</>
+					</Grid>
+					<Grid size={6}>
+						<div className="temperature">
+							<img src={`../icons/${data?.weather?.[0].icon}.svg`} />
+						</div>
+					</Grid>
+					<Grid size={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
+						<Typography variant="h3">{Math.round(data?.main?.temp)}</Typography>
+						<Typography variant="h5">&#176;C</Typography>
+					</Grid>
+					<Grid size={12} display={'flex'} justifyContent={'center'}>
+						<Typography variant="h6">
+							{hours <= 9 ? '0' + hours : hours}:{minutes <= 9 ? '0' + minutes : minutes}
+						</Typography>
+					</Grid>
+				</Grid>
 			)}
 		</Tile>
 	) : (

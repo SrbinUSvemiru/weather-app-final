@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useTransition, useSpring, useTrail } from 'react-spring';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTransition, useSpring, useTrail, useSpringRef, useChain } from 'react-spring';
 import { animated } from '@react-spring/web';
 import { Carousel, Detailed, Item, EmptyCell } from './styled-components';
 import './App.css';
 import City from './Components/City/City';
 import SearchBar from './Components/SearchBar/SearchBar';
 import Expanded from './Components/Expanded/Expanded';
-import { Images, multipleClassNames } from './Utils/utils';
+import { images } from './Utils/utils';
 import { v4 as uuid } from 'uuid';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { Container, Grid2 as Grid, Box } from '@mui/material';
@@ -16,6 +16,11 @@ const AnimatedGrid = animated(Grid);
 function App() {
 	const [open, setOpen] = useState(true);
 	const [currentCity, setCurrentCity] = useState({});
+	const [isTrailAnimating, setIsTrailAnimating] = useState(false);
+	const [isTrailVisible, setIsTrailVisible] = useState(true);
+
+	const firstSpringRef = useSpringRef();
+	const secondSpringRef = useSpringRef();
 
 	const { isXs, isSm, isMd } = useBreakpoint();
 
@@ -41,44 +46,33 @@ function App() {
 	}, []);
 
 	const { x, ...style } = useSpring({
-		config: { mass: 7, tension: 5000, friction: 200 },
-		delay: !open ? 300 : 0,
-		from: { opacity: 0, x: 0 },
+		ref: firstSpringRef,
+		config: { mass: 3, tension: 1500, friction: 150 },
+		from: { opacity: open ? 1 : 0, scale: open ? 1 : 0 },
 		to: {
 			opacity: !open ? 1 : 0,
-			x: !open ? 1 : 0,
-			border: '1px solid rgba(0, 0, 0, 0.1)',
-			boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-			backdropFilter: 'saturate(50%) blur(10px)',
-			background: 'rgba(0, 0, 0, 0.1)',
-			borderRadius: '10px',
-			willChange: 'transform, opacity',
-		},
-	});
-
-	const gridStyle = useSpring({
-		config: { mass: 7, tension: 2000, friction: 200 },
-		delay: 200,
-		from: { display: !open ? 'flex' : 'none' },
-		to: {
-			display: open ? 'flex' : 'none',
+			scale: !open ? 1 : 0,
 		},
 	});
 
 	const trail = useTrail(cities?.length, {
+		ref: secondSpringRef,
 		config: { mass: 3, tension: 1500, friction: 150 },
-		from: { opacity: open ? 0 : 1, x: open ? 0 : 1, display: open ? 'none' : 'flex' },
+		from: { opacity: open ? 0 : 1, x: open ? 0 : 1 },
 		to: {
 			opacity: open ? 1 : 0,
 			x: open ? 1 : 0,
-			display: !open ? 'none' : 'flex',
 		},
+
+		onRest: () => setIsTrailVisible(open),
 	});
 
 	const handleItemClick = (e) => {
 		e.stopPropagation();
-		setOpen(!open);
+		setOpen(false);
 	};
+
+	useChain(open ? [firstSpringRef, secondSpringRef] : [secondSpringRef, firstSpringRef], [0, 0.7]);
 
 	return (
 		<Container
@@ -87,19 +81,12 @@ function App() {
 				margin: 0,
 				height: '100vh',
 				minWidth: '100vw',
-				backgroundImage: 'linear-gradient( 45.3deg,  rgba(0,119,182,1) 3.6%, rgba(8,24,68,1) 87.6% )',
+				backgroundImage: 'url(../images/light2.jpg)',
+				backgroundSize: 'cover',
 				position: 'relative', // Enable pseudo-elements to position correctly
 				overflow: 'hidden',
 			}}
 		>
-			{/* {backgroundTransition((style, index) => (
-				<Carousel
-					style={{
-						...style,
-						backgroundImage: `url(../images/${Images[3]}.jpg)`,
-					}}
-				/>
-			))} */}
 			<Box
 				sx={{
 					padding: '0 !important',
@@ -117,15 +104,14 @@ function App() {
 				}}
 			>
 				<SearchBar setCities={setCities} cities={cities} setOpen={setOpen} />
-				{currentCity && !open ? (
+				{!currentCity || isTrailVisible ? null : (
 					<Expanded animation={{ ...style, x }} setOpen={setOpen} open={open} currentCity={currentCity} />
-				) : null}
-
-				{open ? (
+				)}
+				{isTrailVisible ? (
 					<AnimatedGrid
 						container
 						spacing={3}
-						style={gridStyle}
+						// style={gridStyle}
 						sx={{
 							maxWidth: () => {
 								if (isXs) {
@@ -137,7 +123,7 @@ function App() {
 								return '800px';
 							},
 							justifyContent: 'center',
-							mt: '3rem',
+							mt: '6rem',
 							paddingBottom: '3rem',
 						}}
 					>

@@ -174,7 +174,7 @@ export function uvIndex(index) {
 	return { color: colors[index - 1], description: description[index - 1], message: message[index - 1] };
 }
 
-export const Images = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven'];
+export const Images = ['light'];
 
 export function getCurrentLocation(list) {
 	const geolocationAPI = navigator.geolocation;

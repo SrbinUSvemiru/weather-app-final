@@ -13,10 +13,13 @@ export const Tile = styled(animated.div)`
 	cursor: pointer;
 	color: white;
 	padding: 1rem;
-	border: 1px solid rgba(0, 0, 0, 0.1);
+	/* From https://css.glass */
+	background: rgba(42, 33, 51, 0.25);
+	border-radius: 16px;
 	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-	backdrop-filter: saturate(50%) blur(10px);
-	background: rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(6.5px);
+	-webkit-backdrop-filter: blur(6.5px);
+	border: 1px solid rgba(42, 33, 51, 0.14);
 	border-radius: 10px;
 	will-change: transform, opacity;
 

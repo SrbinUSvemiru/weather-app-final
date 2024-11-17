@@ -41,9 +41,8 @@ export const UVWindow = ({ airPollution, animation, activeWrapper: wrapper, setA
 		<Window
 			style={{
 				...animation,
-				transform: animation.x.to((x) => `scale(${x})`),
 			}}
-			onClick={() => setActiveWrapper('UV')}
+			onClick={() => {}}
 		>
 			<Wrapper style={activeWrapper} />
 			<Grid container spacing={1}>

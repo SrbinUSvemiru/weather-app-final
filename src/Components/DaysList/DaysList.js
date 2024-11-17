@@ -20,7 +20,6 @@ function DaysList({ data, activeDay, index, offset, animation, setActiveDay }) {
 		<Window
 			style={{
 				...animation,
-				transform: animation.x.to((x) => `scale(${x})`),
 			}}
 			onClick={() => setActiveDay(index)}
 		>
