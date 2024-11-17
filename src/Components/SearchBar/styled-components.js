@@ -8,7 +8,7 @@ export const SearchBarContainer = styled.div`
 	background: white;
 	width: 100%;
 	padding: 1rem;
-	top: 0; // Distance from the top of the viewport
+	top: 0;
 	z-index: 60000; // Ensures it stays above other content
 	position: sticky;
 	& #search-bar {
@@ -35,8 +35,9 @@ export const SearchBarContainer = styled.div`
 		width: 280px;
 		position: absolute;
 		left: 0;
+		right: 0;
 		margin: auto;
-		top: 1.8rem;
+		top: 40px;
 		z-index: 100;
 		border-radius: 10px;
 		font-size: 1.3rem;

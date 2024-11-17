@@ -2,10 +2,13 @@ import styled from 'styled-components';
 import { animated } from 'react-spring';
 
 export const Window = styled(animated.div)`
-  border: 1px solid rgba(0, 0, 0, 0.1);
+ 
+	background: rgba(42, 33, 51, 0.25);
+	border-radius: 16px;
 	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-	backdrop-filter: saturate(50%) blur(10px);
-	background: rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(6.5px);
+	-webkit-backdrop-filter: blur(6.5px);
+	border: 1px solid rgba(42, 33, 51, 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,10 +81,5 @@ export const Wrapper = styled(animated.div)`
 	right: 0;
 	bottom: 0;
 	margin: 0 auto;
-	// border: 1px solid rgba(0, 0, 0, 0.1);
-	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-	backdrop-filter: saturate(50%) blur(10px);
-	background-image: linear-gradient(to right, #f83600 0%, #f9d423 100%);
-
 	border-radius: 10px;
 `;

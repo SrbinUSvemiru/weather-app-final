@@ -16,8 +16,6 @@ export function AppThemeProvider(props) {
 		[settings.theme.mode],
 	);
 
-	console.log(selectedTheme);
-
 	return (
 		<ThemeProvider theme={selectedTheme}>
 			<CssBaseline />

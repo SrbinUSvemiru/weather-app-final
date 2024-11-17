@@ -7,17 +7,18 @@ import OpacityIcon from '@mui/icons-material/Opacity';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import AirIcon from '@mui/icons-material/Air';
 import { Icon, Typography, Grid2 as Grid } from '@mui/material';
+import zIndex from '@mui/material/styles/zIndex';
 
-function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, animation }) {
+function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, animation, colors }) {
 	const { isXs, isSm } = useBreakpoint();
 
 	const activeWrapperPop = useSpring({
 		config: { mass: 2, tension: 3000, friction: 150 },
 		from: { opacity: 0, scale: '0%' },
 		to: {
-			opacity: activeWrapper === 'precipitation' ? 0.7 : 0,
+			opacity: activeWrapper === 'precipitation' ? 0.5 : 0,
 			scale: activeWrapper === 'precipitation' ? '100%' : '0%',
-			background: 'linear-gradient(to right, #0cebeb, #20e3b2, #29ffc6)',
+			background: `linear-gradient(to right,${colors?.[0]} 0%,${colors?.[1]} 100%)`,
 		},
 	});
 
@@ -25,29 +26,30 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 		config: { mass: 2, tension: 3000, friction: 150 },
 		from: { opacity: 0, scale: '0%' },
 		to: {
-			opacity: activeWrapper === 'wind' ? 0.8 : 0,
+			opacity: activeWrapper === 'wind' ? 0.5 : 0,
 			scale: activeWrapper === 'wind' ? '100%' : '0%',
-			background: 'linear-gradient(to right, #ee9ca7, #ffdde1)',
+			background: `linear-gradient(to right,${colors?.[0]} 0%,${colors?.[1]} 100%)`,
+			zIndex: -1,
 		},
 	});
 
 	const activeWrapperVisibility = useSpring({
 		config: { mass: 2, tension: 3000, friction: 150 },
-		from: { opacity: 0, scale: '0%' },
+		from: { opacity: 0, scale: '0%', zIndex: -1 },
 		to: {
-			opacity: activeWrapper === 'humidity' ? 0.8 : 0,
+			opacity: activeWrapper === 'humidity' ? 0.5 : 0,
 			scale: activeWrapper === 'humidity' ? '100%' : '0%',
-			background: 'linear-gradient(to right, #2193b0, #6dd5ed)',
+			zIndex: -1,
+			background: `linear-gradient(to right,${colors?.[0]} 0%,${colors?.[1]} 100%)`,
 		},
 	});
-	console.log(isXs);
+
 	return (
 		<Grid container spacing={2} sx={{ height: '100%' }}>
 			<Grid size={12}>
 				<Window
 					style={{
 						...animation,
-						transform: animation.x.to((x) => `scale(${x})`),
 					}}
 					onClick={() => setActiveWrapper('wind')}
 				>
@@ -66,7 +68,6 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 				<Window
 					style={{
 						...animation,
-						transform: animation.x.to((x) => `scale(${x})`),
 					}}
 					onClick={() => setActiveWrapper('precipitation')}
 					value="precipitation"
@@ -85,7 +86,6 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 				<Window
 					style={{
 						...animation,
-						transform: animation.x.to((x) => `scale(${x})`),
 					}}
 					onClick={() => setActiveWrapper('humidity')}
 					value="humidity"

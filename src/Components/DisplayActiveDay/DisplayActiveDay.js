@@ -20,13 +20,10 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 		return [hrs, mins];
 	}, [currentCity]);
 
-	console.log(activeDay);
-
 	return (
 		<Window
 			style={{
 				...animation,
-				transform: animation.x.to((x) => `scale(${x})`),
 			}}
 		>
 			<Grid container rowSpacing={1} columnSpacing={4}>

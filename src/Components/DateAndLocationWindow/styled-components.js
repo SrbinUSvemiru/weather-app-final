@@ -2,9 +2,13 @@ import styled from 'styled-components';
 import { animated } from 'react-spring';
 
 export const Window = styled(animated.div)`
+	/* From https://css.glass */
+	background: rgba(42, 33, 51, 0.25);
+	border-radius: 16px;
 	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-	backdrop-filter: saturate(50%) blur(10px);
-	background: rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(6.5px);
+	-webkit-backdrop-filter: blur(6.5px);
+	border: 1px solid rgba(42, 33, 51, 0.14);
 	border-radius: 10px;
 	overflow: hidden;
 	padding: 1rem;

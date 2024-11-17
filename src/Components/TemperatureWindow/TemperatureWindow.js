@@ -12,8 +12,9 @@ function TemperatureWindow({ currentCity, activeWrapper: wrapper, animation, set
 		config: { mass: 2, tension: 3000, friction: 150 },
 		from: { opacity: 0, scale: '0%' },
 		to: {
-			opacity: wrapper === 'temperature' ? 0.5 : 0,
+			opacity: wrapper === 'temperature' ? 0.7 : 0,
 			scale: wrapper === 'temperature' ? '100%' : '0%',
+			backgroundImage: 'linear-gradient(120deg, #f6d365 0%, #fda085 100%)',
 		},
 	});
 
@@ -21,7 +22,6 @@ function TemperatureWindow({ currentCity, activeWrapper: wrapper, animation, set
 		<Window
 			style={{
 				...animation,
-				transform: animation.x.to((x) => `scale(${x})`),
 			}}
 			onClick={() => setActiveWrapper('temperature')}
 		>
@@ -33,7 +33,7 @@ function TemperatureWindow({ currentCity, activeWrapper: wrapper, animation, set
 					</div>
 				</Grid>
 				<Grid size={{ xs: 6 }} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
-					<Typography variant={isLg || isXl ? 'h1' : 'h2'} sx={{ fontWeight: 600, zIndex: '3' }}>
+					<Typography variant={isLg || isXl ? 'h1' : 'h2'} sx={{ fontWeight: 600, zIndex: 3 }}>
 						{Math.round((currentCity?.current?.main?.temp * 2) / 2)}
 					</Typography>
 					<Typography variant={isLg ? 'h2' : 'h3'} sx={{ fontWeight: 600 }}>
@@ -41,12 +41,12 @@ function TemperatureWindow({ currentCity, activeWrapper: wrapper, animation, set
 					</Typography>
 				</Grid>
 				<Grid size={{ xs: 6 }} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-					<Typography variant="h6" sx={{ fontWeight: 600 }}>
+					<Typography variant="h6" sx={{ fontWeight: 600, zIndex: 3 }}>
 						{currentCity?.current?.weather?.[0]?.description}
 					</Typography>
 				</Grid>
 				<Grid size={{ xs: 6 }}>
-					<Typography variant="h6" sx={{ color: 'text.secondary' }}>
+					<Typography variant="h6" sx={{ color: 'text.secondary', zIndex: 3 }}>
 						Feels like {Math.round(currentCity?.current?.main?.feels_like * 10) / 10}
 						&#176;C
 					</Typography>

@@ -3,20 +3,21 @@ import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
 import { NaturalCurve } from 'react-svg-curve';
 import { NumbersContainer, Container, ValueContainer, TemperatureTile } from './styled-components';
 import { useSpring } from 'react-spring';
+import { Typography } from '@mui/material';
 
-function PrecipitationSvg({ graphData, activeWrapper, clicked, width }) {
+function PrecipitationSvg({ graphData, activeWrapper, animation, clicked, width, colors }) {
 	const precipitation = useMemo(() => graphData?.[activeWrapper]?.[clicked], [graphData, clicked, activeWrapper]);
-
-	const animation = useSpring({
-		from: { opacity: 0 },
-		to: {
-			opacity: activeWrapper === 'precipitation' ? 1 : 0,
-		},
-	});
 
 	return (
 		<Container style={animation}>
 			<svg width={width} height="160" xmlns="http://www.w3.org/2000/svg">
+				<defs>
+					{/* Define the gradient */}
+					<linearGradient id="gradientStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+						<stop offset="0%" stopColor={colors?.[0]} />
+						<stop offset="100%" stopColor={colors?.[1]} />
+					</linearGradient>
+				</defs>
 				<NaturalCurve
 					data={precipitation?.map((temp, index) => [
 						index * (width / (precipitation?.length - 1)),
@@ -30,7 +31,7 @@ function PrecipitationSvg({ graphData, activeWrapper, clicked, width }) {
 					strokeOpacity={0.9}
 					showPoints={false}
 					strokeWidth={3}
-					stroke="#29ffc6"
+					stroke="url(#gradientStroke)" // Reference the gradient here
 				/>
 			</svg>
 			<div className="container-for">
@@ -49,8 +50,9 @@ function PrecipitationSvg({ graphData, activeWrapper, clicked, width }) {
 								3
 							}
 						>
-							{Math.round(element * 5)}
-							<span>%</span>
+							<Typography variant="subtitle2" fontWeight={600}>
+								{Math.round(element * 5)}%
+							</Typography>
 						</ValueContainer>
 					</NumbersContainer>
 				))}

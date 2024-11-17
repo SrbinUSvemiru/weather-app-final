@@ -7,7 +7,7 @@ import { map } from 'lodash';
 import { Typography, Icon } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
+const WindSvg = ({ clicked, graphData, activeWrapper, width, colors }) => {
 	const wind = useMemo(() => map(graphData?.wind?.[clicked], (el) => el?.value), [graphData, clicked]);
 	const windDeg = useMemo(() => map(graphData?.wind?.[clicked], (el) => el?.deg), [graphData, clicked]);
 	const animation = useSpring({
@@ -16,10 +16,17 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
 			opacity: activeWrapper === 'wind' ? 1 : 0,
 		},
 	});
-	console.log(windDeg);
+
 	return (
 		<Container style={animation}>
 			<svg width={width} height="160" xmlns="http://www.w3.org/2000/svg">
+				<defs>
+					{/* Define the gradient */}
+					<linearGradient id="gradientStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+						<stop offset="0%" stopColor={colors?.[0]} />
+						<stop offset="100%" stopColor={colors?.[1]} />
+					</linearGradient>
+				</defs>
 				<NaturalCurve
 					data={wind?.map((value, index) => [
 						index * (width / (wind?.length - 1)),
@@ -33,7 +40,7 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
 					strokeOpacity={0.9}
 					showPoints={false}
 					strokeWidth={3}
-					stroke="#ffdde1"
+					stroke="url(#gradientStroke)" // Reference the gradient here
 				/>
 			</svg>
 			<div className="container-for">
