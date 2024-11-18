@@ -174,6 +174,18 @@ export function uvIndex(index) {
 	return { color: colors[index - 1], description: description[index - 1], message: message[index - 1] };
 }
 
+export const makeRandomNumbers = (num) => {
+	const array = [];
+	for (let i = 0; i < num; i++) {
+		const number = Math.random() * 10;
+		array.push(number);
+	}
+	return array;
+};
+
+export const trans = (x, y, s, z) =>
+	`perspective(600px) translateZ(${z}px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
+
 export const Images = ['light'];
 
 export function getCurrentLocation(list) {

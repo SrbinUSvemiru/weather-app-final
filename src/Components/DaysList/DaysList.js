@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
 import { Wrapper, Window, Day } from './styled-components';
 import { animated, useSpring } from 'react-spring';
-import { returnDay } from '../../Utils/utils';
+import { returnDay, trans } from '../../Utils/utils';
 import { useEffect } from 'react';
 import { Typography } from '@mui/material';
 
@@ -17,12 +17,7 @@ function DaysList({ data, activeDay, index, offset, animation, setActiveDay }) {
 	});
 
 	return (
-		<Window
-			style={{
-				...animation,
-			}}
-			onClick={() => setActiveDay(index)}
-		>
+		<Window style={{ ...animation, transform: animation?.xys.to(trans) }} onClick={() => setActiveDay(index)}>
 			<Wrapper style={activeWrapper} />
 			<Day>
 				<img src={`../icons/${data?.weather?.icon}.svg`} />

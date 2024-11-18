@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { SvgContainer, TimeList, Container, ButtonHourly, ButtonDaily, Window } from './styled-components';
-import { nextFourtyEightHours, returnDays } from '../../Utils/utils';
+import { nextFourtyEightHours, returnDays, trans } from '../../Utils/utils';
 import { set, slice } from 'lodash';
 import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
 import TemperatureSvg from '../TemperatureSvg/TemperatureSvg';
@@ -76,11 +76,7 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation, colo
 	}, [currentCity]);
 
 	return (
-		<Window
-			style={{
-				...animation,
-			}}
-		>
+		<Window style={{ ...animation, transform: animation?.xys.to(trans) }}>
 			<Container ref={graphRef}>
 				<Grid container spacing={3}>
 					<Grid size={12}>
@@ -167,8 +163,8 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation, colo
 								) : null}
 								<TimeList width={width}>
 									{clicked === 'hourly'
-										? hoursList?.map((hour) => (
-												<Typography variant="subtitle2" fontWeight={600}>
+										? hoursList?.map((hour, index) => (
+												<Typography variant="subtitle2" fontWeight={600} key={index}>
 													{' '}
 													{hour}h
 												</Typography>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
 import { Window, MessageContainer, StartAndFinishContainer, Container } from './styled-components';
-import { returnAlertTime } from '../../Utils/utils';
+import { returnAlertTime, trans } from '../../Utils/utils';
 import { useSpring, animated, easings, useTrail } from 'react-spring';
 
 function AlertMessageWindow(props) {
@@ -41,11 +41,7 @@ function AlertMessageWindow(props) {
 	});
 
 	return (
-		<Window
-			style={{
-				...props.animation,
-			}}
-		>
+		<Window style={{ ...props?.animation, transform: props?.animation?.xys.to(trans) }}>
 			{message !== null ? (
 				<>
 					<MessageContainer>

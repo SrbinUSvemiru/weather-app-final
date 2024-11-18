@@ -35,7 +35,7 @@ function TemperatureSvg({ clicked, graphData, activeWrapper, animation, width, c
 			</svg>
 			<div className="container-for">
 				{temperature?.map((element, index) => (
-					<NumbersContainer>
+					<NumbersContainer key={index}>
 						<ValueContainer
 							sumOfTemp={
 								-element * 2 +
