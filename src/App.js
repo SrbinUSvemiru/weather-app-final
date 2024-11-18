@@ -6,7 +6,7 @@ import './App.css';
 import City from './Components/City/City';
 import SearchBar from './Components/SearchBar/SearchBar';
 import Expanded from './Components/Expanded/Expanded';
-import { images } from './Utils/utils';
+import { images, makeRandomNumbers } from './Utils/utils';
 import { v4 as uuid } from 'uuid';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { Container, Grid2 as Grid, Box, Button, Drawer } from '@mui/material';
@@ -15,11 +15,11 @@ import { AppContext } from './context/AppContext/AppContext';
 
 const AnimatedGrid = animated(Grid);
 
-const calc = (x, y, rect) => [-(y - rect.top - rect.height / 2) / 17, (x - rect.left - rect.width / 3) / 13, 1.1];
+const calc = (x, y, rect) => [-(y - rect.top - rect.height / 2) / 17, (x - rect.left - rect.width / 3) / 13, 1.1, 0];
 
-const trans = (x, y, s) => `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
-
+const trans = (x, y, s, z) => `perspective(600px) translateZ(${z}px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
 function App() {
+	const rand = [2, 6, 4, 2, 3, 5, 1, 4, 2];
 	const [open, setOpen] = useState(true);
 	const [currentCity, setCurrentCity] = useState({});
 	const cardsRef = useRef([]);
@@ -29,16 +29,50 @@ function App() {
 
 	const { cities, setCities } = useContext(AppContext);
 
-	const [style, detailsApi] = useSpring(() => ({
-		from: { opacity: 0, scale: 0, x: 0 },
-	}));
+	// const [style, detailsApi] = useSpring(() => ({
+	// 	clamp: true,
+	// 	from: { opacity: 0, scale: 0, x: 0 },
+	// 	to: { opacity: 1, scale: 1, x: 0 },
+	// }));
+
+	const [detailesStyle, detailsApi] = useSprings(
+		9,
+		(i) => ({
+			delay: () => i * 100,
+			clamp: true,
+			config: {
+				tension: 200, // Controls the speed of the animation
+				friction: 50, // Higher values slow the animation down
+				mass: 1, // Higher values result in slower, heavier animations
+			},
+			from: {
+				opacity: 0,
+				scale: 0,
+				rotate: rand[i] * 20,
+				xys: [0, rand[i] * 20, 1, rand[i] * 100],
+			},
+			to: { opacity: 1, scale: 1, rotate: 0, xys: [0, 0, 1, 0] },
+		}),
+		[],
+	);
 
 	const [springs, api] = useSprings(
 		cities?.length,
 		(i) => ({
 			delay: () => i * 100,
-			from: { opacity: 0, scale: 0, rotate: -20, xys: [0, 0, 1] },
-			to: { opacity: 1, scale: 1, rotate: 0 },
+			clamp: true,
+			config: {
+				tension: 200, // Controls the speed of the animation
+				friction: 50, // Higher values slow the animation down
+				mass: 1, // Higher values result in slower, heavier animations
+			},
+			from: {
+				opacity: 0,
+				scale: 0,
+				rotate: -rand[i] * 20,
+				xys: [0, rand[i] * 20, 1, rand[i] * 200],
+			},
+			to: { opacity: 1, scale: 1, rotate: 0, xys: [0, 0, 1, 0] },
 		}),
 		[],
 	);
@@ -47,42 +81,54 @@ function App() {
 		api.start((i) =>
 			i === index
 				? {
-						xys: [0, 0, 1],
+						xys: [0, 0, 1, 0],
 						immediate: false,
 					}
 				: {},
 		);
 	}, []);
 
-	const handleMouseMove = useCallback((e, index) => {
-		const rect = cardsRef?.current[index]?.getBoundingClientRect();
-		if (rect && !isAnimating) {
-			api.start((i) =>
-				i === index
-					? {
-							xys: calc(e.clientX, e.clientY, rect),
-							immediate: false,
-						}
-					: {},
-			);
-		}
-	}, []);
+	const handleMouseMove = useCallback(
+		(e, index) => {
+			const rect = cardsRef?.current[index]?.getBoundingClientRect();
+			if (rect && !isAnimating) {
+				api.start((i) =>
+					i === index
+						? {
+								xys: calc(e.clientX, e.clientY, rect),
+								immediate: false,
+							}
+						: {},
+				);
+			}
+		},
+		[api],
+	);
 
 	const handleOpenCurrentWeather = (e) => {
 		api?.start((i) => ({
 			opacity: 0,
 			scale: 0,
-			xys: [0, 0, 1],
-			rotate: -20,
-			delay: () => i * 50,
+			xys: [0, rand[i] * 20, 1, rand[i] * 50],
+			rotate: -rand[i] * 20,
 			onStart: () => setIsAnimating(true),
 			onRest: (finished) => {
 				if (finished) {
+					console.log(finished);
 					setOpen(false);
 					detailsApi?.start((i) => ({
-						opacity: 1,
-						scale: 1,
-						x: 1,
+						from: {
+							opacity: 0,
+							scale: 0,
+							rotate: -rand[i] * 30,
+							xys: [0, rand[i] * 10, 1, rand[i] * 20],
+						},
+						to: {
+							opacity: 1,
+							scale: 1,
+							rotate: 0,
+							xys: [0, 0, 1, 0],
+						},
 					}));
 				}
 			},
@@ -93,14 +139,25 @@ function App() {
 		detailsApi?.start((i) => ({
 			opacity: 0,
 			scale: 0,
+			rotate: rand[i] * 30,
+			xys: [rand[i] * 20, 0, 1, rand[i] * 20],
 			onRest: (finished) => {
 				if (finished) {
 					setOpen(true);
+
 					api?.start((i) => ({
-						delay: () => 50 * (cities.length - i),
-						opacity: 1,
-						scale: 1,
-						rotate: 0,
+						from: {
+							opacity: 0,
+							scale: 0,
+							rotate: -rand[i] * 20,
+							xys: [0, rand[i] * 20, 1, rand[i] * 200],
+						},
+						to: {
+							opacity: 1,
+							scale: 1,
+							rotate: 0,
+							xys: [0, 0, 1, 0],
+						},
 						onRest: (finished) => {
 							if (finished) {
 								setIsAnimating(false);
@@ -151,7 +208,7 @@ function App() {
 					}}
 				>
 					{!open && (
-						<AnimatedGrid size={12} style={{ ...style }}>
+						<AnimatedGrid size={12}>
 							<Button
 								variant="filled"
 								sx={{
@@ -212,7 +269,7 @@ function App() {
 					</AnimatedGrid>
 				) : (
 					<Expanded
-						animation={style}
+						animation={detailesStyle}
 						open={open}
 						handleCloseCurrentWeather={handleCloseCurrentWeather}
 						currentCity={currentCity}

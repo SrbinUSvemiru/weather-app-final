@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { Window } from './styled-components';
 import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
-import { returnDate, offsetDate } from '../../Utils/utils';
+import { returnDate, offsetDate, trans } from '../../Utils/utils';
 import { Box, Typography } from '@mui/material';
 
 function DateAndLocationWindow({ currentCity, animation }) {
@@ -26,12 +26,7 @@ function DateAndLocationWindow({ currentCity, animation }) {
 	}, [currentCity]);
 
 	return (
-		<Window
-			style={{
-				...animation,
-				animationDelay: '1000',
-			}}
-		>
+		<Window style={{ ...animation, transform: animation?.xys.to(trans) }}>
 			<Box sx={{ padding: 0, display: 'flex', width: '100%', justifyContent: 'center' }}>
 				<Typography variant="h6" sx={{ fontWeight: 500 }}>
 					{date[3]} {date[2]}/{date[1]}/{date[0]}

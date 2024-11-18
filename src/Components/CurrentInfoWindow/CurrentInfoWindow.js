@@ -8,6 +8,7 @@ import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import AirIcon from '@mui/icons-material/Air';
 import { Icon, Typography, Grid2 as Grid } from '@mui/material';
 import zIndex from '@mui/material/styles/zIndex';
+import { trans } from '../../Utils/utils';
 
 function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, animation, colors }) {
 	const { isXs, isSm } = useBreakpoint();
@@ -48,9 +49,7 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 		<Grid container spacing={2} sx={{ height: '100%' }}>
 			<Grid size={12}>
 				<Window
-					style={{
-						...animation,
-					}}
+					style={{ ...animation, transform: animation?.xys.to(trans) }}
 					onClick={() => setActiveWrapper('wind')}
 				>
 					<Wrapper style={activeWrapperWind} />

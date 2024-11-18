@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
 import { Window, Uvi, Wrapper } from './styled-components';
-import { uvIndex } from '../../Utils/utils';
+import { uvIndex, trans } from '../../Utils/utils';
 import { useSpring } from 'react-spring';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { Grid2 as Grid, Typography } from '@mui/material';
@@ -38,12 +38,7 @@ export const UVWindow = ({ airPollution, animation, activeWrapper: wrapper, setA
 		if (airPollution !== undefined) return uvIndex(airPollution?.main?.aqi);
 	}, [airPollution]);
 	return (
-		<Window
-			style={{
-				...animation,
-			}}
-			onClick={() => {}}
-		>
+		<Window style={{ ...animation, transform: animation?.xys.to(trans) }} onClick={() => {}}>
 			<Wrapper style={activeWrapper} />
 			<Grid container spacing={1}>
 				<Grid size={3} sx={{ display: 'flex', flexDirection: 'column' }}>

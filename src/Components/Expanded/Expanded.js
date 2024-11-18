@@ -54,6 +54,8 @@ function Expanded({ currentCity, open, handleCloseCurrentWeather, animation }) {
 		options: { enabled: !open },
 	});
 
+	console.log(animation);
+
 	return !isLoadingAirPollution && !isLoadingForecast ? (
 		<Grid
 			container
@@ -68,16 +70,16 @@ function Expanded({ currentCity, open, handleCloseCurrentWeather, animation }) {
 			}}
 		>
 			<Grid size={{ xs: 12, sm: 6, md: 4 }}>
-				<DateAndLocationWindow currentCity={currentCity} animation={animation} />
+				<DateAndLocationWindow currentCity={currentCity} animation={animation[0]} />
 			</Grid>
 
 			<Grid size={{ xs: 12, sm: 6, md: 3 }}>
-				<AlertMessageWindow currentCity={currentCity} animation={animation} />
+				<AlertMessageWindow currentCity={currentCity} animation={animation[1]} />
 			</Grid>
 			<Grid size={{ xs: 12, sm: 6, md: 5 }}>
 				<UVWindow
 					airPollution={airPollution?.list?.[0]}
-					animation={animation}
+					animation={animation[2]}
 					setActiveWrapper={setActiveWrapper}
 					activeWrapper={activeWrapper}
 					colors={colors()[activeWrapper]}
@@ -87,7 +89,7 @@ function Expanded({ currentCity, open, handleCloseCurrentWeather, animation }) {
 			<Grid size={{ xs: 12, sm: 6, md: 5 }}>
 				<TemperatureWindow
 					currentCity={currentCity}
-					animation={animation}
+					animation={animation[3]}
 					setActiveWrapper={setActiveWrapper}
 					activeWrapper={activeWrapper}
 					colors={colors()[activeWrapper]}
@@ -98,7 +100,7 @@ function Expanded({ currentCity, open, handleCloseCurrentWeather, animation }) {
 				<CurrentInfoWindow
 					currentCity={{ ...currentCity }}
 					pop={daysForecast?.days?.[0]?.pop}
-					animation={animation}
+					animation={animation[4]}
 					setActiveWrapper={setActiveWrapper}
 					activeWrapper={activeWrapper}
 					colors={colors()[activeWrapper]}
@@ -109,18 +111,18 @@ function Expanded({ currentCity, open, handleCloseCurrentWeather, animation }) {
 				<DisplayActiveDay
 					activeDay={daysForecast?.days?.[activeDay]}
 					currentCity={currentCity}
-					animation={animation}
+					animation={animation[5]}
 				/>
 				<Grid container spacing={{ xs: 0.5, sm: 2 }} size={12}>
 					{daysForecast?.days?.map((day, index) => (
-						<Grid size={2}>
+						<Grid size={2} key={index}>
 							<DaysList
 								data={day}
 								index={index}
 								activeDay={activeDay}
 								currentCity={currentCity}
 								activeWrapper={activeWrapper}
-								animation={animation}
+								animation={animation[6]}
 								setActiveDay={setActiveDay}
 							/>
 						</Grid>
@@ -131,7 +133,7 @@ function Expanded({ currentCity, open, handleCloseCurrentWeather, animation }) {
 			<Grid size={12}>
 				<GraphWindow
 					currentCity={currentCity}
-					animation={animation}
+					animation={animation[7]}
 					daysForecast={daysForecast}
 					activeWrapper={activeWrapper}
 					colors={colors()[activeWrapper]}

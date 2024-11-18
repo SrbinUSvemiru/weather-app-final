@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useState, useMemo } from 'react';
 import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
 import { MainWeather, Window } from './styled-components';
-import { moonPhase } from '../../Utils/utils';
+import { moonPhase, trans } from '../../Utils/utils';
 
 import { Grid2 as Grid, Typography, Icon } from '@mui/material';
 
@@ -21,11 +21,7 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 	}, [currentCity]);
 
 	return (
-		<Window
-			style={{
-				...animation,
-			}}
-		>
+		<Window style={{ ...animation, transform: animation?.xys.to(trans) }}>
 			<Grid container rowSpacing={1} columnSpacing={4}>
 				<Grid
 					size={{ xs: 12, sm: 6 }}

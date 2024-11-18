@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
 import { Window, Wrapper } from './styled-components';
 import { useSpring } from 'react-spring';
+import { trans } from '../../Utils/utils';
 import { Grid2 as Grid, Typography } from '@mui/material';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 
@@ -20,10 +21,9 @@ function TemperatureWindow({ currentCity, activeWrapper: wrapper, animation, set
 
 	return (
 		<Window
-			style={{
-				...animation,
-			}}
+			style={{ ...animation, transform: animation?.xys.to(trans) }}
 			onClick={() => setActiveWrapper('temperature')}
+			key={1}
 		>
 			<Wrapper style={activeWrapper} />
 			<Grid container sx={{ zIndex: 5 }} spacing={1}>
