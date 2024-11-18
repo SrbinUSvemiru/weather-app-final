@@ -40,7 +40,7 @@ const colors = () => ({
 	wind: ['#abecd6', '#fbed96'],
 });
 
-function Expanded({ currentCity, open, setOpen, animation }) {
+function Expanded({ currentCity, open, handleCloseCurrentWeather, animation }) {
 	const [activeDay, setActiveDay] = useState(0);
 	const [activeWrapper, setActiveWrapper] = useState('temperature');
 	const { isXs, isSm, isMd } = useBreakpoint();
@@ -54,12 +54,6 @@ function Expanded({ currentCity, open, setOpen, animation }) {
 		options: { enabled: !open },
 	});
 
-	const handleBackClick = () => {
-		setActiveDay(0);
-		setActiveWrapper('temperature');
-		setOpen(true);
-	};
-
 	return !isLoadingAirPollution && !isLoadingForecast ? (
 		<Grid
 			container
@@ -67,23 +61,12 @@ function Expanded({ currentCity, open, setOpen, animation }) {
 			spacing={2}
 			sx={{
 				position: 'relative',
-				mt: '3rem',
 				padding: isXs ? '0.5rem' : '2rem',
 				width: '100%',
 				paddingBottom: '3rem',
 				maxWidth: isXs ? '380px' : '1200px',
 			}}
 		>
-			<AnimatedGrid size={12} style={{ ...animation }}>
-				<Button
-					variant="filled"
-					sx={{ width: '100%', height: '100%', fontWeight: 800, fontSize: '1rem' }}
-					startIcon={<ArrowBackSharpIcon />}
-					onClick={handleBackClick}
-				>
-					Back
-				</Button>
-			</AnimatedGrid>
 			<Grid size={{ xs: 12, sm: 6, md: 4 }}>
 				<DateAndLocationWindow currentCity={currentCity} animation={animation} />
 			</Grid>

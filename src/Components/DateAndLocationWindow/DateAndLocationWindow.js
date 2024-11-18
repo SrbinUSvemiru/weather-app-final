@@ -29,6 +29,7 @@ function DateAndLocationWindow({ currentCity, animation }) {
 		<Window
 			style={{
 				...animation,
+				animationDelay: '1000',
 			}}
 		>
 			<Box sx={{ padding: 0, display: 'flex', width: '100%', justifyContent: 'center' }}>

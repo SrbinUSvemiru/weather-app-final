@@ -6,4 +6,8 @@ export const defaultCities = () => [
 	{ id: uuid(), country: 'RS', name: 'Novi Sad', lat: '45.25167', lon: '19.83694' },
 	{ id: uuid(), country: 'RS', name: 'Zemun', lat: '44.8458', lon: '20.40116' },
 	{ id: uuid(), country: 'RS', name: 'Novi Beograd', lat: '44.80556', lon: '20.42417' },
+	{ id: uuid(), lat: '', lon: '' },
+	{ id: uuid(), lat: '', lon: '' },
+	{ id: uuid(), lat: '', lon: '' },
+	{ id: uuid(), lat: '', lon: '' },
 ];
