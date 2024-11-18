@@ -4,7 +4,9 @@ import { RemoveButton, Tile, Spinner, EmptyCell } from './styled-components';
 import { offsetDate } from '../../Utils/utils';
 import { useCurrentWeatherQuery } from '../../Queries/useCurrentWeatherQuery';
 import { useQueryClient } from 'react-query';
-import { Grid2 as Grid, Typography } from '@mui/material';
+import { Grid2 as Grid, Typography, Icon } from '@mui/material';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { v4 as uuid } from 'uuid';
 
 function City({ city, setCurrentCity, setCities, cities }) {
 	const [hours, setHours] = useState('');
@@ -32,15 +34,14 @@ function City({ city, setCurrentCity, setCities, cities }) {
 			return el?.id !== city?.id;
 		});
 
-		setCities([...array, { id: '' }]);
-		localStorage.setItem('cities', JSON.stringify([...array, { id: '' }]));
+		setCities([...array, { id: uuid(), lat: '', lon: '' }]);
 	};
 
 	if (isError) {
 		return <div>{error.message}</div>;
 	}
 
-	return city?.id ? (
+	return city?.lon && city?.lat ? (
 		<Tile onClick={() => setCurrentCity({ ...city, current: data })}>
 			{isLoading ? (
 				<Spinner>
@@ -54,9 +55,9 @@ function City({ city, setCurrentCity, setCities, cities }) {
 						</Typography>
 					</Grid>
 					<Grid size={1}>
-						<RemoveButton onClick={(e) => removeCity(e)}>
-							<img src="./close-icon.png" />
-						</RemoveButton>
+						<Icon onClick={(e) => removeCity(e)}>
+							<CloseOutlinedIcon />
+						</Icon>
 					</Grid>
 					<Grid size={6}>
 						<div className="temperature">

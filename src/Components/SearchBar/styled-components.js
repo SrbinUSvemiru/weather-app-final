@@ -3,20 +3,20 @@ import styled from 'styled-components';
 export const SearchBarContainer = styled.div`
 	color: white;
 	display: flex;
+	padding: 0.5rem;
 	align-items: center;
 	justify-content: center;
-	background: white;
-	width: 100%;
-	padding: 1rem;
-	top: 0;
-	z-index: 60000; // Ensures it stays above other content
-	position: sticky;
+	position: relative;
 	& #search-bar {
-		width: 250px;
-		background-color: rgba(0, 0, 0, 0.3);
-		border: none;
-		color: white;
+		background: rgba(42, 33, 51, 0.25);
+		padding: 0.1rem 1rem;
+		border-radius: 16px;
+		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(6.5px);
+		-webkit-backdrop-filter: blur(6.5px);
+		border: 1px solid rgba(42, 33, 51, 0.14);
 		cursor: pointer;
+		color: white;
 		font-size: 1.2rem;
 		border-radius: 10px;
 	}
@@ -37,7 +37,7 @@ export const SearchBarContainer = styled.div`
 		left: 0;
 		right: 0;
 		margin: auto;
-		top: 40px;
+		top: 27px;
 		z-index: 100;
 		border-radius: 10px;
 		font-size: 1.3rem;

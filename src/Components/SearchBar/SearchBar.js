@@ -29,8 +29,6 @@ function SearchBar({ setCities, cities, setOpen }) {
 	const handleAddCity = (obj) => {
 		const array = cities?.length ? cities : [];
 		const sliced = [{ ...obj, lon: obj?.lng, id: uuid() }, ...slice(array, 0, array?.length - 1)];
-
-		localStorage.setItem('cities', JSON.stringify(sliced));
 		setCities(sliced);
 
 		setSearchCities([]);

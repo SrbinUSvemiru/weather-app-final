@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTransition, useSpring, useTrail, useSpringRef, useChain } from 'react-spring';
+import React, { useCallback, useEffect, useContext, useState, useRef } from 'react';
+import { useSprings, useSpring, useTrail, useSpringRef, useChain } from 'react-spring';
 import { animated } from '@react-spring/web';
 import { Carousel, Detailed, Item, EmptyCell } from './styled-components';
 import './App.css';
@@ -9,70 +9,108 @@ import Expanded from './Components/Expanded/Expanded';
 import { images } from './Utils/utils';
 import { v4 as uuid } from 'uuid';
 import { useBreakpoint } from './hooks/useBreakpoint';
-import { Container, Grid2 as Grid, Box } from '@mui/material';
+import { Container, Grid2 as Grid, Box, Button, Drawer } from '@mui/material';
+import ArrowBackSharpIcon from '@mui/icons-material/ArrowBackSharp';
+import { AppContext } from './context/AppContext/AppContext';
 
 const AnimatedGrid = animated(Grid);
+
+const calc = (x, y, rect) => [-(y - rect.top - rect.height / 2) / 17, (x - rect.left - rect.width / 3) / 13, 1.1];
+
+const trans = (x, y, s) => `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
 
 function App() {
 	const [open, setOpen] = useState(true);
 	const [currentCity, setCurrentCity] = useState({});
-	const [isTrailAnimating, setIsTrailAnimating] = useState(false);
-	const [isTrailVisible, setIsTrailVisible] = useState(true);
-
-	const firstSpringRef = useSpringRef();
-	const secondSpringRef = useSpringRef();
-
+	const cardsRef = useRef([]);
+	const [isAnimating, setIsAnimating] = useState(false);
 	const { isXs, isSm, isMd } = useBreakpoint();
+	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-	const [cities, setCities] = useState([
-		{ id: uuid(), country: 'EG', name: 'New Cairo', lat: '30.03', lon: '31.47' },
-		{ id: uuid(), country: 'AR', name: 'Los Menucos', lat: '-40.84402', lon: '-68.08718' },
-		{ id: uuid(), country: 'RS', name: 'Novi Sad', lat: '45.25167', lon: '19.83694' },
-		{ id: uuid(), country: 'RS', name: 'Zemun', lat: '44.8458', lon: '20.40116' },
-		{ id: uuid(), country: 'RS', name: 'Novi Beograd', lat: '44.80556', lon: '20.42417' },
-		{ id: '' },
-		{ id: '' },
-		{ id: '' },
-		{ id: '' },
-	]);
+	const { cities, setCities } = useContext(AppContext);
 
-	useEffect(() => {
-		let retrieveStorage = JSON.parse(localStorage.getItem('cities'));
-		if (retrieveStorage?.length) {
-			setCities(retrieveStorage);
-		} else {
-			localStorage.setItem('cities', JSON.stringify(cities));
+	const [style, detailsApi] = useSpring(() => ({
+		from: { opacity: 0, scale: 0, x: 0 },
+	}));
+
+	const [springs, api] = useSprings(
+		cities?.length,
+		(i) => ({
+			delay: () => i * 100,
+			from: { opacity: 0, scale: 0, rotate: -20, xys: [0, 0, 1] },
+			to: { opacity: 1, scale: 1, rotate: 0 },
+		}),
+		[],
+	);
+
+	const handleMouseLeave = useCallback((index) => {
+		api.start((i) =>
+			i === index
+				? {
+						xys: [0, 0, 1],
+						immediate: false,
+					}
+				: {},
+		);
+	}, []);
+
+	const handleMouseMove = useCallback((e, index) => {
+		const rect = cardsRef?.current[index]?.getBoundingClientRect();
+		if (rect && !isAnimating) {
+			api.start((i) =>
+				i === index
+					? {
+							xys: calc(e.clientX, e.clientY, rect),
+							immediate: false,
+						}
+					: {},
+			);
 		}
 	}, []);
 
-	const { x, ...style } = useSpring({
-		ref: firstSpringRef,
-		config: { mass: 3, tension: 1500, friction: 150 },
-		from: { opacity: open ? 1 : 0, scale: open ? 1 : 0 },
-		to: {
-			opacity: !open ? 1 : 0,
-			scale: !open ? 1 : 0,
-		},
-	});
-
-	const trail = useTrail(cities?.length, {
-		ref: secondSpringRef,
-		config: { mass: 3, tension: 1500, friction: 150 },
-		from: { opacity: open ? 0 : 1, x: open ? 0 : 1 },
-		to: {
-			opacity: open ? 1 : 0,
-			x: open ? 1 : 0,
-		},
-
-		onRest: () => setIsTrailVisible(open),
-	});
-
-	const handleItemClick = (e) => {
-		e.stopPropagation();
-		setOpen(false);
+	const handleOpenCurrentWeather = (e) => {
+		api?.start((i) => ({
+			opacity: 0,
+			scale: 0,
+			xys: [0, 0, 1],
+			rotate: -20,
+			delay: () => i * 50,
+			onStart: () => setIsAnimating(true),
+			onRest: (finished) => {
+				if (finished) {
+					setOpen(false);
+					detailsApi?.start((i) => ({
+						opacity: 1,
+						scale: 1,
+						x: 1,
+					}));
+				}
+			},
+		}));
 	};
 
-	useChain(open ? [firstSpringRef, secondSpringRef] : [secondSpringRef, firstSpringRef], [0, 0.7]);
+	const handleCloseCurrentWeather = (e) => {
+		detailsApi?.start((i) => ({
+			opacity: 0,
+			scale: 0,
+			onRest: (finished) => {
+				if (finished) {
+					setOpen(true);
+					api?.start((i) => ({
+						delay: () => 50 * (cities.length - i),
+						opacity: 1,
+						scale: 1,
+						rotate: 0,
+						onRest: (finished) => {
+							if (finished) {
+								setIsAnimating(false);
+							}
+						},
+					}));
+				}
+			},
+		}));
+	};
 
 	return (
 		<Container
@@ -89,7 +127,7 @@ function App() {
 		>
 			<Box
 				sx={{
-					padding: '0 !important',
+					// padding: '0 !important',
 					margin: 0,
 					paddingTop: isXs ? '2rem' : '3rem',
 					display: 'flex',
@@ -103,15 +141,39 @@ function App() {
 					position: 'relative',
 				}}
 			>
-				<SearchBar setCities={setCities} cities={cities} setOpen={setOpen} />
-				{!currentCity || isTrailVisible ? null : (
-					<Expanded animation={{ ...style, x }} setOpen={setOpen} open={open} currentCity={currentCity} />
-				)}
-				{isTrailVisible ? (
+				<Box
+					sx={{
+						width: '100%',
+						padding: '2rem',
+						marginBottom: open ? '3rem' : '1rem',
+						display: 'flex',
+						justifyContent: 'center',
+					}}
+				>
+					{!open && (
+						<AnimatedGrid size={12} style={{ ...style }}>
+							<Button
+								variant="filled"
+								sx={{
+									width: '100%',
+									height: '100%',
+									fontWeight: 800,
+									fontSize: '1rem',
+									marginRight: '2rem',
+								}}
+								startIcon={<ArrowBackSharpIcon />}
+								onClick={handleCloseCurrentWeather}
+							>
+								Back
+							</Button>
+						</AnimatedGrid>
+					)}
+					{!open && isXs ? null : <SearchBar cities={cities} setCities={setCities} setOpen={setOpen} />}
+				</Box>
+				{open ? (
 					<AnimatedGrid
 						container
 						spacing={3}
-						// style={gridStyle}
 						sx={{
 							maxWidth: () => {
 								if (isXs) {
@@ -123,18 +185,20 @@ function App() {
 								return '800px';
 							},
 							justifyContent: 'center',
-							mt: '6rem',
 							paddingBottom: '3rem',
 						}}
 					>
-						{trail?.map(({ x, ...style }, index) => (
+						{springs?.map((style, index) => (
 							// CityContainer
 							<AnimatedGrid
 								size={{ xs: 12, sm: 6, md: 4 }}
 								key={index}
+								ref={(el) => (cardsRef.current[index] = el)}
 								sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-								style={{ ...style, transform: x.to((x) => `scale(${x})`) }}
-								onClick={(e) => (cities[index]?.id ? handleItemClick(e) : {})}
+								style={{ ...style, transform: style.xys.to(trans) }}
+								onClick={(e) => (cities[index]?.id ? handleOpenCurrentWeather(e) : {})}
+								onMouseLeave={() => handleMouseLeave(index)}
+								onMouseMove={(e) => handleMouseMove(e, index)}
 							>
 								<City
 									city={cities[index]}
@@ -146,7 +210,14 @@ function App() {
 							</AnimatedGrid>
 						))}
 					</AnimatedGrid>
-				) : null}
+				) : (
+					<Expanded
+						animation={style}
+						open={open}
+						handleCloseCurrentWeather={handleCloseCurrentWeather}
+						currentCity={currentCity}
+					/>
+				)}
 			</Box>
 		</Container>
 	);
