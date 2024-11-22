@@ -11,21 +11,22 @@ import { v4 as uuid } from 'uuid';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { Container, Grid2 as Grid, Box, Button, Drawer } from '@mui/material';
 import ArrowBackSharpIcon from '@mui/icons-material/ArrowBackSharp';
+import MenuIcon from '@mui/icons-material/Menu';
 import { AppContext } from './context/AppContext/AppContext';
 
 const AnimatedGrid = animated(Grid);
 
-const calc = (x, y, rect) => [-(y - rect.top - rect.height / 2) / 17, (x - rect.left - rect.width / 3) / 13, 1.1, 0];
-
 const trans = (x, y, s, z) => `perspective(600px) translateZ(${z}px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
 function App() {
-	const rand = [2, 6, 4, 2, 3, 5, 1, 4, 2];
 	const [open, setOpen] = useState(true);
 	const [currentCity, setCurrentCity] = useState({});
 	const cardsRef = useRef([]);
-	const [isAnimating, setIsAnimating] = useState(false);
+	const scrollableDivRef = useRef(null);
 	const { isXs, isSm, isMd } = useBreakpoint();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+	const [showHeader, setShowHeader] = useState(true);
+	const [lastScrollY, setLastScrollY] = useState(0);
 
 	const { cities, setCities } = useContext(AppContext);
 
@@ -41,17 +42,14 @@ function App() {
 			delay: () => i * 100,
 			clamp: true,
 			config: {
-				tension: 200, // Controls the speed of the animation
-				friction: 50, // Higher values slow the animation down
-				mass: 1, // Higher values result in slower, heavier animations
+				tension: 200,
+				friction: 50,
+				mass: 1,
 			},
 			from: {
 				opacity: 0,
-				scale: 0,
-				rotate: rand[i] * 20,
-				xys: [0, rand[i] * 20, 1, rand[i] * 100],
+				xys: [0, 0, 1, -(i + 3) * 100],
 			},
-			to: { opacity: 1, scale: 1, rotate: 0, xys: [0, 0, 1, 0] },
 		}),
 		[],
 	);
@@ -62,172 +60,250 @@ function App() {
 			delay: () => i * 100,
 			clamp: true,
 			config: {
-				tension: 200, // Controls the speed of the animation
-				friction: 50, // Higher values slow the animation down
-				mass: 1, // Higher values result in slower, heavier animations
+				tension: 200,
+				friction: 50,
+				mass: 1,
 			},
 			from: {
 				opacity: 0,
-				scale: 0,
-				rotate: -rand[i] * 20,
-				xys: [0, rand[i] * 20, 1, rand[i] * 200],
+				xys: [0, 0, 1, (i + 20) * 30],
 			},
-			to: { opacity: 1, scale: 1, rotate: 0, xys: [0, 0, 1, 0] },
+			to: { opacity: 1, xys: [0, 0, 1, 0] },
 		}),
 		[],
 	);
 
-	const handleMouseLeave = useCallback((index) => {
-		api.start((i) =>
-			i === index
-				? {
-						xys: [0, 0, 1, 0],
-						immediate: false,
-					}
-				: {},
-		);
-	}, []);
-
-	const handleMouseMove = useCallback(
-		(e, index) => {
-			const rect = cardsRef?.current[index]?.getBoundingClientRect();
-			if (rect && !isAnimating) {
-				api.start((i) =>
-					i === index
-						? {
-								xys: calc(e.clientX, e.clientY, rect),
-								immediate: false,
-							}
-						: {},
-				);
-			}
+	const handleMouseEnter = useCallback(
+		(index) => {
+			api.start((i) =>
+				i === index
+					? {
+							xys: [0, 0, 1.05, 0],
+						}
+					: {},
+			);
 		},
 		[api],
 	);
 
-	const handleOpenCurrentWeather = (e) => {
-		api?.start((i) => ({
-			opacity: 0,
-			scale: 0,
-			xys: [0, rand[i] * 20, 1, rand[i] * 50],
-			rotate: -rand[i] * 20,
-			onStart: () => setIsAnimating(true),
-			onRest: (finished) => {
-				if (finished) {
-					console.log(finished);
-					setOpen(false);
-					detailsApi?.start((i) => ({
-						from: {
-							opacity: 0,
-							scale: 0,
-							rotate: -rand[i] * 30,
-							xys: [0, rand[i] * 10, 1, rand[i] * 20],
-						},
-						to: {
-							opacity: 1,
-							scale: 1,
-							rotate: 0,
+	const handleMouseLeave = useCallback(
+		(index) => {
+			api.start((i) =>
+				i === index
+					? {
 							xys: [0, 0, 1, 0],
-						},
-					}));
-				}
+						}
+					: {},
+			);
+		},
+		[api],
+	);
+
+	const handleOpenCurrentWeather = (index) => {
+		if (!cities[index]?.lat || !cities[index]?.lon) {
+			return;
+		}
+		setOpen(false);
+		api?.start((i) => ({
+			delay: () => i * 50,
+			to: {
+				opacity: 0,
+				xys: [0, 0, 0, -(i + 20) * 30],
+			},
+		}));
+		detailsApi?.start((i) => ({
+			delay: () => i * 50 + 300,
+			from: {
+				opacity: 0,
+				xys: [0, 0, 0, (i + 20) * 30],
+			},
+			to: {
+				opacity: 1,
+				xys: [0, 0, 1, 0],
 			},
 		}));
 	};
 
 	const handleCloseCurrentWeather = (e) => {
+		// Reverse the animations
+		setOpen(true);
 		detailsApi?.start((i) => ({
-			opacity: 0,
-			scale: 0,
-			rotate: rand[i] * 30,
-			xys: [rand[i] * 20, 0, 1, rand[i] * 20],
-			onRest: (finished) => {
-				if (finished) {
-					setOpen(true);
-
-					api?.start((i) => ({
-						from: {
-							opacity: 0,
-							scale: 0,
-							rotate: -rand[i] * 20,
-							xys: [0, rand[i] * 20, 1, rand[i] * 200],
-						},
-						to: {
-							opacity: 1,
-							scale: 1,
-							rotate: 0,
-							xys: [0, 0, 1, 0],
-						},
-						onRest: (finished) => {
-							if (finished) {
-								setIsAnimating(false);
-							}
-						},
-					}));
-				}
+			delay: () => i * 50,
+			to: {
+				opacity: 0,
+				xys: [0, 0, 0, -(i + 20) * 30], // Reverse the final state to match the initial state of handleOpen
+			},
+		}));
+		api?.start((i) => ({
+			delay: () => i * 50 + 300,
+			from: {
+				opacity: 0,
+				xys: [0, 0, 0, (i + 20) * 30],
+			},
+			to: {
+				opacity: 1,
+				xys: [0, 0, 1, 0],
 			},
 		}));
 	};
 
+	useEffect(() => {
+		const handleScroll = () => {
+			const currentScrollY = scrollableDivRef.current.scrollTop;
+
+			if (currentScrollY > lastScrollY && currentScrollY > 20) {
+				// Hide header when scrolling down
+				setShowHeader(false);
+			} else {
+				// Show header when scrolling up
+				setShowHeader(true);
+			}
+
+			setLastScrollY(currentScrollY);
+		};
+
+		const scrollableDiv = scrollableDivRef.current;
+
+		if (scrollableDiv && isXs) {
+			scrollableDiv.addEventListener('scroll', handleScroll);
+		}
+
+		return () => {
+			if (scrollableDiv) {
+				scrollableDiv.removeEventListener('scroll', handleScroll);
+			}
+		};
+	}, [lastScrollY, isXs]);
+
+	const toggleDrawer = (value) => setIsDrawerOpen(value);
+
 	return (
-		<Container
-			sx={{
-				padding: '0 !important',
-				margin: 0,
-				height: '100vh',
-				minWidth: '100vw',
-				backgroundImage: 'url(../images/light2.jpg)',
-				backgroundSize: 'cover',
-				position: 'relative', // Enable pseudo-elements to position correctly
-				overflow: 'hidden',
-			}}
-		>
-			<Box
+		<>
+			<Container
 				sx={{
-					// padding: '0 !important',
+					padding: '0 !important',
 					margin: 0,
-					paddingTop: isXs ? '2rem' : '3rem',
-					display: 'flex',
-					flexDirection: 'column',
-					justifyContent: 'start',
-					alignItems: 'center',
-					width: '100%',
-					height: '100%',
-					overflow: 'scroll',
-					zIndex: 2,
-					position: 'relative',
+					height: '100vh',
+					minWidth: '100vw',
+					background: '#222831',
+					position: 'relative', // Enable pseudo-elements to position correctly
+					overflow: 'hidden',
 				}}
 			>
-				<Box
-					sx={{
-						width: '100%',
-						padding: '2rem',
-						marginBottom: open ? '3rem' : '1rem',
-						display: 'flex',
-						justifyContent: 'center',
-					}}
-				>
-					{!open && (
-						<AnimatedGrid size={12}>
+				<Drawer open={isDrawerOpen} onClose={() => toggleDrawer(false)} anchor="left">
+					<Box
+						sx={{
+							width: '100vw',
+							height: '100%',
+							background: '#222831',
+							padding: '2rem',
+						}}
+					>
+						<Box
+							sx={{
+								display: 'flex',
+								width: '100%',
+								alignItems: 'center',
+								justifyContent: 'space-between',
+							}}
+						>
 							<Button
 								variant="filled"
 								sx={{
-									width: '100%',
-									height: '100%',
+									display: 'flex',
+									justifyContent: 'center',
+									alignItems: 'center',
+									fontWeight: 800,
+									fontSize: '1rem',
+								}}
+								onClick={() => toggleDrawer(false)}
+							>
+								<MenuIcon sx={{ fontSize: '2.7rem' }} />
+							</Button>
+							<SearchBar
+								cities={cities}
+								setCities={setCities}
+								setOpen={setOpen}
+								isDrawerOpen={isDrawerOpen}
+								setIsDrawerOpen={toggleDrawer}
+							/>
+						</Box>
+					</Box>
+				</Drawer>
+				<Box
+					ref={scrollableDivRef}
+					sx={{
+						// padding: '0 !important',
+						margin: 0,
+						display: 'flex',
+						flexDirection: 'column',
+						top: showHeader ? 0 : '-64px', // Adjust this based on the header's height
+						transition: 'top 0.3s ease-in-out',
+						justifyContent: 'start',
+						alignItems: 'center',
+						width: '100%',
+						height: '100%',
+						overflowY: 'scroll',
+						zIndex: 2,
+						position: 'relative',
+					}}
+				>
+					<Box
+						sx={{
+							paddingTop: isXs ? '1rem' : '3rem',
+							width: '100%',
+							position: isXs ? 'sticky' : 'relative',
+							top: 0,
+							background: '#222831',
+							display: 'flex',
+							zIndex: 300,
+							justifyContent: isXs && !open ? 'space-between' : 'center',
+						}}
+					>
+						{!open && (
+							<Button
+								variant="filled"
+								sx={{
 									fontWeight: 800,
 									fontSize: '1rem',
 									marginRight: '2rem',
 								}}
-								startIcon={<ArrowBackSharpIcon />}
 								onClick={handleCloseCurrentWeather}
 							>
-								Back
+								<ArrowBackSharpIcon sx={{ fontSize: '2.7rem' }} />
 							</Button>
-						</AnimatedGrid>
-					)}
-					{!open && isXs ? null : <SearchBar cities={cities} setCities={setCities} setOpen={setOpen} />}
-				</Box>
-				{open ? (
+						)}
+						{isXs && (
+							<Button
+								variant="filled"
+								sx={{
+									display: 'flex',
+									justifyContent: 'center',
+									alignItems: 'center',
+									fontWeight: 800,
+									fontSize: '1rem',
+								}}
+								onClick={() => toggleDrawer(true)}
+							>
+								<MenuIcon sx={{ fontSize: '2.7rem' }} />
+							</Button>
+						)}
+						{!open || isXs ? null : (
+							<SearchBar
+								cities={cities}
+								setCities={setCities}
+								setOpen={setOpen}
+								isDrawerOpen={isDrawerOpen}
+								setIsDrawerOpen={toggleDrawer}
+							/>
+						)}
+					</Box>
+					<Expanded
+						animation={detailesStyle}
+						open={open}
+						handleCloseCurrentWeather={handleCloseCurrentWeather}
+						currentCity={currentCity}
+					/>
 					<AnimatedGrid
 						container
 						spacing={3}
@@ -242,6 +318,9 @@ function App() {
 								return '800px';
 							},
 							justifyContent: 'center',
+							position: 'absolute',
+							top: isXs ? 90 : 150,
+							zIndex: open ? 100 : -100,
 							paddingBottom: '3rem',
 						}}
 					>
@@ -253,9 +332,9 @@ function App() {
 								ref={(el) => (cardsRef.current[index] = el)}
 								sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
 								style={{ ...style, transform: style.xys.to(trans) }}
-								onClick={(e) => (cities[index]?.id ? handleOpenCurrentWeather(e) : {})}
+								onClick={(e) => handleOpenCurrentWeather(index)}
+								onMouseEnter={() => handleMouseEnter(index)}
 								onMouseLeave={() => handleMouseLeave(index)}
-								onMouseMove={(e) => handleMouseMove(e, index)}
 							>
 								<City
 									city={cities[index]}
@@ -267,16 +346,9 @@ function App() {
 							</AnimatedGrid>
 						))}
 					</AnimatedGrid>
-				) : (
-					<Expanded
-						animation={detailesStyle}
-						open={open}
-						handleCloseCurrentWeather={handleCloseCurrentWeather}
-						currentCity={currentCity}
-					/>
-				)}
-			</Box>
-		</Container>
+				</Box>
+			</Container>
+		</>
 	);
 }
 

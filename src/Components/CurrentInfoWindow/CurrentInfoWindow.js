@@ -46,7 +46,7 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 	});
 
 	return (
-		<Grid container spacing={2} sx={{ height: '100%' }}>
+		<Grid container spacing={{ xs: 1, sm: 2 }} sx={{ height: '100%' }}>
 			<Grid size={12}>
 				<Window
 					style={{ ...animation, transform: animation?.xys.to(trans) }}
@@ -65,9 +65,7 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 			</Grid>
 			<Grid size={12}>
 				<Window
-					style={{
-						...animation,
-					}}
+					style={{ ...animation, transform: animation?.xys.to(trans) }}
 					onClick={() => setActiveWrapper('precipitation')}
 					value="precipitation"
 				>
@@ -83,9 +81,7 @@ function CurrentInfoWindow({ currentCity, pop, activeWrapper, setActiveWrapper, 
 			</Grid>
 			<Grid size={12}>
 				<Window
-					style={{
-						...animation,
-					}}
+					style={{ ...animation, transform: animation?.xys.to(trans) }}
 					onClick={() => setActiveWrapper('humidity')}
 					value="humidity"
 				>
