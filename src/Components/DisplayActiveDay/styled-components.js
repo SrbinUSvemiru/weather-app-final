@@ -60,12 +60,9 @@ export const MainWeather = styled.div`
 
 export const Window = styled(animated.div)`
 	/* From https://css.glass */
-	background: rgba(42, 33, 51, 0.25);
+	background: rgba(251, 247, 255, 0.15);
 	border-radius: 16px;
-	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-	backdrop-filter: blur(6.5px);
-	-webkit-backdrop-filter: blur(6.5px);
-	border: 1px solid rgba(42, 33, 51, 0.14);
+	border: 1px solid rgba(251, 247, 255, 0.22);
 	border-radius: 10px;
 	overflow: hidden;
 	padding: 1rem;
