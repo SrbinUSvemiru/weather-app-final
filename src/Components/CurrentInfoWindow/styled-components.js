@@ -5,7 +5,7 @@ export const Window = styled(animated.div)`
 	/* From https://css.glass */
 	background: rgba(251, 247, 255, 0.15);
 	border-radius: 16px;
-	border: 1px solid rgba(251, 247, 255, 0.22);
+	border: 2px solid rgba(251, 247, 255, 0.22);
 	border-radius: 10px;
 	overflow: hidden;
 	padding: 0.5rem 1rem;

@@ -21,14 +21,13 @@ function App() {
 	const [open, setOpen] = useState(true);
 	const [currentCity, setCurrentCity] = useState({});
 	const cardsRef = useRef([]);
-
 	const { isXs, isSm, isMd } = useBreakpoint();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
 	const { cities, setCities } = useContext(AppContext);
 
 	// const [style, detailsApi] = useSpring(() => ({
-	// 	clamp: true,
+	//
 	// 	from: { opacity: 0, scale: 0, x: 0 },
 	// 	to: { opacity: 1, scale: 1, x: 0 },
 	// }));
@@ -37,7 +36,7 @@ function App() {
 		9,
 		(i) => ({
 			delay: () => i * 100,
-			clamp: true,
+
 			config: {
 				tension: 200,
 				friction: 50,
@@ -55,7 +54,7 @@ function App() {
 		cities?.length,
 		(i) => ({
 			delay: () => i * 100,
-			clamp: true,
+
 			config: {
 				tension: 200,
 				friction: 50,
@@ -63,37 +62,11 @@ function App() {
 			},
 			from: {
 				opacity: 0,
-				xys: [0, 0, 1, (i + 20) * 30],
+				xys: [0, 0, 1, (i + 10) * 20],
 			},
 			to: { opacity: 1, xys: [0, 0, 1, 0] },
 		}),
 		[],
-	);
-
-	const handleMouseEnter = useCallback(
-		(index) => {
-			api.start((i) =>
-				i === index
-					? {
-							xys: [0, 0, 1.05, 0],
-						}
-					: {},
-			);
-		},
-		[api],
-	);
-
-	const handleMouseLeave = useCallback(
-		(index) => {
-			api.start((i) =>
-				i === index
-					? {
-							xys: [0, 0, 1, 0],
-						}
-					: {},
-			);
-		},
-		[api],
 	);
 
 	const handleOpenCurrentWeather = (index) => {
@@ -105,14 +78,14 @@ function App() {
 			delay: () => i * 50,
 			to: {
 				opacity: 0,
-				xys: [0, 0, 0, -(i + 20) * 30],
+				xys: [0, 0, 0, -(i + 10) * 20],
 			},
 		}));
 		detailsApi?.start((i) => ({
 			delay: () => i * 50 + 300,
 			from: {
 				opacity: 0,
-				xys: [0, 0, 0, (i + 20) * 30],
+				xys: [0, 0, 0, (i + 10) * 20],
 			},
 			to: {
 				opacity: 1,
@@ -123,19 +96,20 @@ function App() {
 
 	const handleCloseCurrentWeather = (e) => {
 		// Reverse the animations
+
 		setOpen(true);
 		detailsApi?.start((i) => ({
 			delay: () => i * 50,
 			to: {
 				opacity: 0,
-				xys: [0, 0, 0, -(i + 20) * 30], // Reverse the final state to match the initial state of handleOpen
+				xys: [0, 0, 0, -(i + 10) * 20], // Reverse the final state to match the initial state of handleOpen
 			},
 		}));
 		api?.start((i) => ({
 			delay: () => i * 50 + 300,
 			from: {
 				opacity: 0,
-				xys: [0, 0, 0, (i + 20) * 30],
+				xys: [0, 0, 0, (i + 10) * 20],
 			},
 			to: {
 				opacity: 1,
@@ -210,6 +184,7 @@ function App() {
 						width: '100%',
 						height: '100%',
 						overflowY: 'scroll',
+						overflowX: 'hidden',
 						zIndex: 2,
 						position: 'relative',
 					}}
@@ -300,8 +275,6 @@ function App() {
 								sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
 								style={{ ...style, transform: style.xys.to(trans) }}
 								onClick={(e) => handleOpenCurrentWeather(index)}
-								onMouseEnter={() => handleMouseEnter(index)}
-								onMouseLeave={() => handleMouseLeave(index)}
 							>
 								<City
 									city={cities[index]}

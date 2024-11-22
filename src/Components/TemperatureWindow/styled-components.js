@@ -5,7 +5,7 @@ export const Window = styled(animated.div)`
  
 	background: rgba(251, 247, 255, 0.15);
 	border-radius: 16px;
-	border: 1px solid rgba(251, 247, 255, 0.22);
+	border: 2px solid rgba(251, 247, 255, 0.22);
   display: flex;
   align-items: center;
   justify-content: center;

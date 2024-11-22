@@ -14,7 +14,7 @@ export const Tile = styled(animated.div)`
 	padding: 1rem;
 	background: rgba(251, 247, 255, 0.15);
 	border-radius: 16px;
-	border: 1px solid rgba(251, 247, 255, 0.22);
+	border: ${(props) => (props?.hovered ? '2px solid #ff5722' : `2px solid rgba(251, 247, 255, 0.22)`)};
 	will-change: transform, opacity;
 
 	& .temperature {
