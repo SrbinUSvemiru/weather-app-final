@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 import { TextField, IconButton, List, ListItemButton, Typography, Box } from '@mui/material';
 import Search from '@mui/icons-material/Search';
 
-function SearchBar({ setCities, cities, setOpen, setIsDrawerOpen, isDrawerOpen, scrollableDivRef }) {
+function SearchBar({ setCities, cities, setOpen, setIsDrawerOpen, isDrawerOpen, handleCloseCurrentWeather }) {
 	const [cityName, setCityName] = useState('');
 	const [searchCities, setSearchCities] = useState([]);
 
@@ -30,11 +30,12 @@ function SearchBar({ setCities, cities, setOpen, setIsDrawerOpen, isDrawerOpen, 
 		const array = cities?.length ? cities : [];
 		const sliced = [{ ...obj, lon: obj?.lng, id: uuid() }, ...slice(array, 0, array?.length - 1)];
 		setCities(sliced);
-
 		setSearchCities([]);
 		setCityName('');
-		setOpen(true);
 		setIsDrawerOpen(false);
+		if (isDrawerOpen) {
+			handleCloseCurrentWeather();
+		}
 	};
 
 	const handleLocationClick = () => {

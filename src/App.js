@@ -21,12 +21,9 @@ function App() {
 	const [open, setOpen] = useState(true);
 	const [currentCity, setCurrentCity] = useState({});
 	const cardsRef = useRef([]);
-	const scrollableDivRef = useRef(null);
+
 	const { isXs, isSm, isMd } = useBreakpoint();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-	const [showHeader, setShowHeader] = useState(true);
-	const [lastScrollY, setLastScrollY] = useState(0);
 
 	const { cities, setCities } = useContext(AppContext);
 
@@ -147,34 +144,6 @@ function App() {
 		}));
 	};
 
-	useEffect(() => {
-		const handleScroll = () => {
-			const currentScrollY = scrollableDivRef.current.scrollTop;
-
-			if (currentScrollY > lastScrollY && currentScrollY > 20) {
-				// Hide header when scrolling down
-				setShowHeader(false);
-			} else {
-				// Show header when scrolling up
-				setShowHeader(true);
-			}
-
-			setLastScrollY(currentScrollY);
-		};
-
-		const scrollableDiv = scrollableDivRef.current;
-
-		if (scrollableDiv && isXs) {
-			scrollableDiv.addEventListener('scroll', handleScroll);
-		}
-
-		return () => {
-			if (scrollableDiv) {
-				scrollableDiv.removeEventListener('scroll', handleScroll);
-			}
-		};
-	}, [lastScrollY, isXs]);
-
 	const toggleDrawer = (value) => setIsDrawerOpen(value);
 
 	return (
@@ -223,7 +192,7 @@ function App() {
 							<SearchBar
 								cities={cities}
 								setCities={setCities}
-								setOpen={setOpen}
+								handleCloseCurrentWeather={handleCloseCurrentWeather}
 								isDrawerOpen={isDrawerOpen}
 								setIsDrawerOpen={toggleDrawer}
 							/>
@@ -231,14 +200,11 @@ function App() {
 					</Box>
 				</Drawer>
 				<Box
-					ref={scrollableDivRef}
 					sx={{
 						// padding: '0 !important',
 						margin: 0,
 						display: 'flex',
 						flexDirection: 'column',
-						top: showHeader ? 0 : '-64px', // Adjust this based on the header's height
-						transition: 'top 0.3s ease-in-out',
 						justifyContent: 'start',
 						alignItems: 'center',
 						width: '100%',
@@ -293,6 +259,7 @@ function App() {
 								cities={cities}
 								setCities={setCities}
 								setOpen={setOpen}
+								handleCloseCurrentWeather={handleCloseCurrentWeather}
 								isDrawerOpen={isDrawerOpen}
 								setIsDrawerOpen={toggleDrawer}
 							/>
