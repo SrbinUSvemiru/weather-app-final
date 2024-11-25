@@ -58,12 +58,11 @@ function City({ city, setCurrentCity, setCities, cities }) {
 				</Spinner>
 			) : (
 				<Grid container>
-					<Grid size={11}>
+					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 						<Typography variant="h6" noWrap fontWeight={700}>
 							{city?.name}
 						</Typography>
-					</Grid>
-					<Grid size={1}>
+
 						<Icon onClick={(e) => removeCity(e)}>
 							<CloseOutlinedIcon />
 						</Icon>

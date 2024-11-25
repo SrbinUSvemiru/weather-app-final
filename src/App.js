@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useContext, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useContext, useState, useRef, useTransition } from 'react';
 import { useSprings, useSpring, useTrail, useSpringRef, useChain } from 'react-spring';
 import { animated } from '@react-spring/web';
 import { Carousel, Detailed, Item, EmptyCell } from './styled-components';
@@ -32,19 +32,19 @@ function App() {
 	// 	to: { opacity: 1, scale: 1, x: 0 },
 	// }));
 
-	const [detailesStyle, detailsApi] = useSprings(
+	const [detailsStyle, detailsApi] = useSprings(
 		9,
 		(i) => ({
 			delay: () => i * 100,
 
 			config: {
-				tension: 200,
+				tension: 1000,
 				friction: 50,
-				mass: 1,
+				mass: 3,
 			},
 			from: {
 				opacity: 0,
-				xys: [0, 0, 1, -(i + 3) * 100],
+				xys: [0, 0, 1, -(i + 3) * 50],
 			},
 		}),
 		[],
@@ -54,7 +54,6 @@ function App() {
 		cities?.length,
 		(i) => ({
 			delay: () => i * 100,
-
 			config: {
 				tension: 200,
 				friction: 50,
@@ -62,7 +61,7 @@ function App() {
 			},
 			from: {
 				opacity: 0,
-				xys: [0, 0, 1, (i + 10) * 20],
+				xys: [0, 0, 0, (i + 10) * 20],
 			},
 			to: { opacity: 1, xys: [0, 0, 1, 0] },
 		}),
@@ -85,7 +84,7 @@ function App() {
 			delay: () => i * 50 + 300,
 			from: {
 				opacity: 0,
-				xys: [0, 0, 0, (i + 10) * 20],
+				xys: [0, 0, 0, (i + 10) * 10],
 			},
 			to: {
 				opacity: 1,
@@ -102,7 +101,7 @@ function App() {
 			delay: () => i * 50,
 			to: {
 				opacity: 0,
-				xys: [0, 0, 0, -(i + 10) * 20], // Reverse the final state to match the initial state of handleOpen
+				xys: [0, 0, 0, -(i + 10) * 10], // Reverse the final state to match the initial state of handleOpen
 			},
 		}));
 		api?.start((i) => ({
@@ -241,7 +240,7 @@ function App() {
 						)}
 					</Box>
 					<Expanded
-						animation={detailesStyle}
+						animation={detailsStyle}
 						open={open}
 						handleCloseCurrentWeather={handleCloseCurrentWeather}
 						currentCity={currentCity}
