@@ -1,11 +1,12 @@
 import { useQuery } from 'react-query';
-import { QUERY_KEYS } from '../constants/queryKeys';
-import fetchFromServer from '../Utils/fetchFromServer';
-import { CURRENT_WEATHER_URL } from '../constants/server';
-import { returnDay, getMinMax } from '../Utils/utils';
 
-export const useMultipleDaysForecastQuery = ({ city, options }) => {
-	return useQuery(
+import { QUERY_KEYS } from '../constants/queryKeys';
+import { CURRENT_WEATHER_URL } from '../constants/server';
+import fetchFromServer from '../utils/fetchFromServer';
+import { getMinMax, returnDay } from '../utils/utils';
+
+export const useMultipleDaysForecastQuery = ({ city, options }) =>
+	useQuery(
 		QUERY_KEYS.CityWeatherMultipleDays(city),
 		async () => {
 			try {
@@ -54,4 +55,3 @@ export const useMultipleDaysForecastQuery = ({ city, options }) => {
 		},
 		{ ...options, staleTime: Infinity },
 	);
-};

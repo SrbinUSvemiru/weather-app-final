@@ -1,5 +1,3 @@
-
-
 const defaultErrorHandler = (errorMessage) => {
 	console.error('fetchFromServer error: ', errorMessage);
 };

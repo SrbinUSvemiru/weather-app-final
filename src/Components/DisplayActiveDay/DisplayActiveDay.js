@@ -1,12 +1,10 @@
-import React from 'react';
-import { useEffect, useState, useMemo } from 'react';
-import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
-import { MainWeather, Window } from './styled-components';
-import { moonPhase, trans } from '../../Utils/utils';
+import { Grid2 as Grid, Typography } from '@mui/material';
+import React, { useMemo } from 'react';
 
-import { Grid2 as Grid, Typography, Icon } from '@mui/material';
+import { trans } from '../../utils/utils';
+import { Window } from './styled-components';
 
-function DisplayActiveDay({ currentCity, activeDay, animation }) {
+const DisplayActiveDay = ({ currentCity, activeDay, animation }) => {
 	const sunrise = useMemo(() => {
 		const d = new Date(currentCity?.current?.sys?.sunrise * 1000 + currentCity?.current?.timezone * 1000);
 		let hrs = d.getUTCHours();
@@ -22,15 +20,15 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 
 	return (
 		<Window style={{ ...animation, transform: animation?.xys.to(trans) }}>
-			<Grid container rowSpacing={1} columnSpacing={4}>
+			<Grid columnSpacing={4} container rowSpacing={1}>
 				<Grid
 					size={{ xs: 12, sm: 6 }}
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
-					<Typography variant="h6" noWrap sx={{ color: 'text.secondary' }}>
+					<Typography noWrap sx={{ color: 'text.secondary' }} variant="h6">
 						temp max
 					</Typography>
-					<Typography variant="h6" noWrap>
+					<Typography noWrap variant="h6">
 						{Math.round(activeDay?.max_temp * 10) / 10}&#176;C
 					</Typography>
 				</Grid>
@@ -38,10 +36,10 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 					size={{ xs: 12, sm: 6 }}
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
-					<Typography variant="h6" noWrap sx={{ color: 'text.secondary' }}>
+					<Typography noWrap sx={{ color: 'text.secondary' }} variant="h6">
 						temp min
 					</Typography>
-					<Typography variant="h6" noWrap>
+					<Typography noWrap variant="h6">
 						{Math.round(activeDay?.min_temp * 10) / 10}
 						&#176;C
 					</Typography>
@@ -50,7 +48,7 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 					size={{ xs: 12, sm: 6 }}
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
-					<Typography variant="h6" sx={{ color: 'text.secondary' }}>
+					<Typography sx={{ color: 'text.secondary' }} variant="h6">
 						wind
 					</Typography>
 					<Typography variant="h6">{Math.round(activeDay?.wind_speed * 3.5)} km/h</Typography>
@@ -59,7 +57,7 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 					size={{ xs: 12, sm: 6 }}
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
-					<Typography variant="h6" sx={{ color: 'text.secondary' }}>
+					<Typography sx={{ color: 'text.secondary' }} variant="h6">
 						pressure
 					</Typography>
 					<Typography variant="h6">{activeDay?.pressure} mb</Typography>
@@ -68,7 +66,7 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 					size={{ xs: 12, sm: 6 }}
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
-					<Typography variant="h6" noWrap sx={{ color: 'text.secondary' }}>
+					<Typography noWrap sx={{ color: 'text.secondary' }} variant="h6">
 						sunrise
 					</Typography>
 					<Typography variant="h6">
@@ -80,7 +78,7 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 					size={{ xs: 12, sm: 6 }}
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
-					<Typography variant="h6" noWrap sx={{ color: 'text.secondary' }}>
+					<Typography noWrap sx={{ color: 'text.secondary' }} variant="h6">
 						sunset
 					</Typography>
 					<Typography variant="h6">
@@ -92,7 +90,7 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 					size={{ xs: 12, sm: 6 }}
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
-					<Typography variant="h6" sx={{ color: 'text.secondary' }}>
+					<Typography sx={{ color: 'text.secondary' }} variant="h6">
 						visibility
 					</Typography>
 					<Typography variant="h6">{activeDay?.visibility} m</Typography>
@@ -101,7 +99,7 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 					size={{ xs: 12, sm: 6 }}
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
-					<Typography variant="h6" sx={{ color: 'text.secondary' }}>
+					<Typography sx={{ color: 'text.secondary' }} variant="h6">
 						highest UV
 					</Typography>
 					<Typography variant="h6">
@@ -112,6 +110,6 @@ function DisplayActiveDay({ currentCity, activeDay, animation }) {
 			</Grid>
 		</Window>
 	);
-}
+};
 
 export default DisplayActiveDay;

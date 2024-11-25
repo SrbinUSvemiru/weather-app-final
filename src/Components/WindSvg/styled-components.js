@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { animated } from 'react-spring';
+import styled from 'styled-components';
 
 export const NumbersContainer = styled.div`
 	height: 100%;

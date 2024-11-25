@@ -1,4 +1,7 @@
+import { defaultCities } from './defaultCities';
+
 export const DEFAULT_SETTINGS = {
-	preferences: { system: 'metric' },
-	theme: { mode: 'dark' },
+	preferences: { units: 'metric' },
+	theme: { variant: 'default', mode: 'dark' },
+	cities: [...defaultCities()],
 };

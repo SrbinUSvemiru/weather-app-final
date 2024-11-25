@@ -1,22 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { animated } from 'react-spring';
+import { Box, List, ListItemButton, TextField, Typography } from '@mui/material';
 import citiesList from 'cities.json';
-import { SearchBarContainer } from './styled-components';
-import { isEqual, slice, filter } from 'lodash';
+import { slice } from 'lodash';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
-import { TextField, IconButton, List, ListItemButton, Typography, Box } from '@mui/material';
-import Search from '@mui/icons-material/Search';
 
-function SearchBar({ setCities, cities, setOpen, setIsDrawerOpen, isDrawerOpen, handleCloseCurrentWeather }) {
+import { AppContext } from '../../context/AppContext/provider';
+
+const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, handleCloseCurrentWeather }) => {
 	const [cityName, setCityName] = useState('');
 	const [searchCities, setSearchCities] = useState([]);
+
+	const { cities, setCities } = useContext(AppContext);
 
 	const containerRef = useRef(null);
 
 	useEffect(() => {
-		const list = citiesList?.filter((post) => {
-			return post?.name?.toLowerCase()?.startsWith(cityName.toLowerCase()) || '';
-		});
+		const list = citiesList?.filter((post) => post?.name?.toLowerCase()?.startsWith(cityName.toLowerCase()) || '');
 
 		const sorted = list.sort(function (a, b) {
 			return a?.name?.length - b?.name?.length;
@@ -38,22 +37,22 @@ function SearchBar({ setCities, cities, setOpen, setIsDrawerOpen, isDrawerOpen, 
 		}
 	};
 
-	const handleLocationClick = () => {
-		if (navigator.geolocation) {
-			const geolocationAPI = navigator.geolocation;
-			geolocationAPI.getCurrentPosition((position) => {
-				let lat = position.coords.latitude.toString().slice(0, 4);
-				let lng = position.coords.longitude.toString().slice(0, 4);
+	// const handleLocationClick = () => {
+	// 	if (navigator.geolocation) {
+	// 		const geolocationAPI = navigator.geolocation;
+	// 		geolocationAPI.getCurrentPosition((position) => {
+	// 			let lat = position.coords.latitude.toString().slice(0, 4);
+	// 			let lng = position.coords.longitude.toString().slice(0, 4);
 
-				const array = filter(
-					citiesList,
-					(city) => city.lat.toString().slice(0, 4) === lat && city.lng.toString().slice(0, 4) === lng,
-				);
+	// 			const array = filter(
+	// 				citiesList,
+	// 				(city) => city.lat.toString().slice(0, 4) === lat && city.lng.toString().slice(0, 4) === lng,
+	// 			);
 
-				setSearchCities(array);
-			});
-		}
-	};
+	// 			setSearchCities(array);
+	// 		});
+	// 	}
+	// };
 
 	const handleOutsideClick = (e) => {
 		if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -70,19 +69,30 @@ function SearchBar({ setCities, cities, setOpen, setIsDrawerOpen, isDrawerOpen, 
 	}, []);
 
 	return (
-		<Box searchCities={searchCities} ref={containerRef} sx={{ width: isDrawerOpen ? '100%' : '300px' }}>
+		<Box ref={containerRef} sx={{ width: isDrawerOpen ? '100%' : '300px', position: 'relative' }}>
 			<TextField
-				id="search-bar"
 				className="text"
-				value={cityName}
+				id="search-bar"
+				label="Enter a city name"
 				onInput={(e) => {
 					setCityName(e.target.value);
 				}}
-				label="Enter a city name"
-				variant="outlined"
 				placeholder="Search..."
 				size="small"
-				sx={{ position: 'relative', background: '#2d4059', padding: 0, width: '100%' }}
+				sx={{
+					width: '100%',
+					'& .MuiInputBase-root': {
+						backgroundColor: 'primary.main', // Use theme's primary color
+					},
+					'& .MuiOutlinedInput-notchedOutline': {
+						borderColor: 'primary.light', // Optional: Set the border color
+					},
+					'&:hover .MuiOutlinedInput-notchedOutline': {
+						borderColor: 'secondary.main', // Optional: Border on hover
+					},
+				}}
+				value={cityName}
+				variant="outlined"
 			/>
 			{/* <IconButton type="submit" aria-label="search">
 					<Search style={{ fill: 'blue' }} />
@@ -91,37 +101,28 @@ function SearchBar({ setCities, cities, setOpen, setIsDrawerOpen, isDrawerOpen, 
 			<List
 				sx={{
 					position: 'absolute',
-					top: 33,
+					top: 40,
+					backgroundColor: 'primary.light',
 					width: '100%',
 					display: cityName ? 'block' : 'none',
-					background: '#2d4059',
 					overflowY: 'scroll',
 					maxHeight: '500px',
 					borderRadius: '0px 0px 16px 16px',
-					'&::-webkit-scrollbar': {
-						width: '8px', // Width of the scrollbar
-					},
-					'&::-webkit-scrollbar-thumb': {
-						background: '#888', // Color of the scrollbar thumb
-						borderRadius: '8px', // Rounded corners for the scrollbar thumb
-					},
-					'&::-webkit-scrollbar-thumb:hover': {
-						background: '#555', // Darker color on hover
-					},
-					'&::-webkit-scrollbar-track': {
-						background: '#2d4059', // Color of the scrollbar track
-					},
 				}}
 			>
 				{searchCities?.map((city, index) => (
-					<ListItemButton sx={{ padding: '0.5rem' }} onClick={() => handleAddCity(city)}>
-						<Typography variant="subtitle1" fontWeight={700}>
+					<ListItemButton
+						key={index}
+						onClick={() => handleAddCity(city)}
+						sx={{ padding: '0.5rem', background: 'primary.light' }}
+					>
+						<Typography fontWeight={700} variant="subtitle1">
 							{city?.name}
 						</Typography>
 						<Typography
-							variant="subtitle1"
 							fontWeight={700}
 							sx={{ color: 'text.secondary', marginLeft: '0.5rem' }}
+							variant="subtitle1"
 						>
 							{city?.country}
 						</Typography>
@@ -130,6 +131,6 @@ function SearchBar({ setCities, cities, setOpen, setIsDrawerOpen, isDrawerOpen, 
 			</List>
 		</Box>
 	);
-}
+};
 
 export default SearchBar;

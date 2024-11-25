@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
-import { Window, MessageContainer, StartAndFinishContainer, Container } from './styled-components';
-import { returnAlertTime, trans } from '../../Utils/utils';
-import { useSpring, animated, easings, useTrail } from 'react-spring';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { animated, easings, useSpring } from 'react-spring';
 
-function AlertMessageWindow(props) {
+import { useGetFetchedQuery } from '../../queries/useCitiesQuery';
+import { returnAlertTime, trans } from '../../utils/utils';
+import { MessageContainer, StartAndFinishContainer, Window } from './styled-components';
+
+const AlertMessageWindow = (props) => {
 	const [message, setMessage] = useState();
 	const [width, setWidth] = useState();
 
@@ -60,7 +61,7 @@ function AlertMessageWindow(props) {
 							</p>
 						</div>
 						<div id="warning">
-							<img src="./warning.png" />
+							<img alt="warning" src="./warning.png" />
 						</div>
 					</StartAndFinishContainer>
 				</>
@@ -74,13 +75,13 @@ function AlertMessageWindow(props) {
 					<StartAndFinishContainer>
 						<p id="enjoy">Enjoy your day!</p>
 						<div id="warning">
-							<img src="./smiley.png" />
+							<img alt="smiley" src="./smiley.png" />
 						</div>
 					</StartAndFinishContainer>
 				</>
 			)}
 		</Window>
 	);
-}
+};
 
 export default AlertMessageWindow;

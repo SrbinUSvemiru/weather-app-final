@@ -1,16 +1,15 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { SvgContainer, TimeList, Container, ButtonHourly, ButtonDaily, Window } from './styled-components';
-import { nextFourtyEightHours, returnDays, trans } from '../../Utils/utils';
+import { Button, Grid2 as Grid, Typography } from '@mui/material';
 import { set, slice } from 'lodash';
-import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
-import TemperatureSvg from '../TemperatureSvg/TemperatureSvg';
-import WindSvg from '../WindSvg/WindSvg';
-import UVSvg from '../UVSvg/UVSvg';
-import PrecipitationSvg from '../PrecipitationSvg/PrecipitationSvg';
-import VisibilitySvg from '../VisibilitySvg/VisibilitySvg';
-import { Typography, Grid2 as Grid, Button } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 
-function GraphWindow({ daysForecast, currentCity, activeWrapper, animation, colors }) {
+import { nextFourtyEightHours, trans } from '../../utils/utils';
+import PrecipitationSvg from '../PrecipitationSvg/PrecipitationSvg';
+import TemperatureSvg from '../TemperatureSvg/TemperatureSvg';
+import VisibilitySvg from '../VisibilitySvg/VisibilitySvg';
+import WindSvg from '../WindSvg/WindSvg';
+import { Container, SvgContainer, TimeList, Window } from './styled-components';
+
+const GraphWindow = ({ daysForecast, currentCity, activeWrapper, animation, colors }) => {
 	const [clicked, setClicked] = useState('hourly');
 	const [hoursList, setHoursList] = useState();
 
@@ -66,11 +65,9 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation, colo
 	}, [daysForecast]);
 
 	useEffect(() => {
-		setHoursList(() => {
-			return nextFourtyEightHours(currentCity?.current?.timezone).map((hour) => {
-				return hour < 10 ? `0${hour}` : `${hour}`;
-			});
-		});
+		setHoursList(() =>
+			nextFourtyEightHours(currentCity?.current?.timezone).map((hour) => (hour < 10 ? `0${hour}` : `${hour}`)),
+		);
 
 		setClicked('hourly');
 	}, [currentCity]);
@@ -81,10 +78,10 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation, colo
 				<Grid container spacing={3}>
 					<Grid size={12}>
 						<Button
-							size="small"
-							variant={clicked === 'hourly' ? 'contained' : 'outlined'}
 							disableElevation
 							name="hourly"
+							onClick={() => setClicked('hourly')}
+							size="small"
 							sx={{
 								color: 'white',
 								backgroundImage:
@@ -92,16 +89,17 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation, colo
 										? `linear-gradient(to right,${colors?.[0]} 0%,${colors?.[1]} 100%)`
 										: 'transparent',
 							}}
-							onClick={() => setClicked('hourly')}
+							variant={clicked === 'hourly' ? 'contained' : 'outlined'}
 						>
-							<Typography variant="subtitle1" fontWeight={700} fontSize={'0.8rem'}>
+							<Typography fontSize={'0.8rem'} fontWeight={700} variant="subtitle1">
 								48h
 							</Typography>
 						</Button>
 						<Button
-							size="small"
-							variant={clicked === 'daily' ? 'contained' : 'outlined'}
 							disableElevation
+							name="hourly"
+							onClick={() => setClicked('daily')}
+							size="small"
 							sx={{
 								ml: '1rem',
 								color: 'white',
@@ -110,10 +108,9 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation, colo
 										? `linear-gradient(to right,${colors?.[0]} 0%,${colors?.[1]} 100%)`
 										: 'transparent',
 							}}
-							name="hourly"
-							onClick={() => setClicked('daily')}
+							variant={clicked === 'daily' ? 'contained' : 'outlined'}
 						>
-							<Typography fontSize={'0.8rem'} variant="subtitle1" fontWeight={700}>
+							<Typography fontSize={'0.8rem'} fontWeight={700} variant="subtitle1">
 								days
 							</Typography>
 						</Button>
@@ -123,54 +120,54 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation, colo
 							<SvgContainer width={width}>
 								{activeWrapper === 'temperature' && (
 									<TemperatureSvg
-										graphData={graphData}
-										clicked={clicked}
-										hoursList={hoursList}
 										activeWrapper={activeWrapper}
-										width={width}
+										clicked={clicked}
 										colors={colors}
+										graphData={graphData}
+										hoursList={hoursList}
+										width={width}
 									/>
 								)}
 								{activeWrapper === 'wind' && (
 									<WindSvg
-										graphData={graphData}
+										activeWrapper={activeWrapper}
 										clicked={clicked}
+										colors={colors}
+										graphData={graphData}
 										hoursList={hoursList}
 										width={width}
-										activeWrapper={activeWrapper}
-										colors={colors}
 									/>
 								)}
 								{activeWrapper === 'precipitation' ? (
 									<PrecipitationSvg
-										graphData={graphData}
-										clicked={clicked}
-										width={width}
-										hoursList={hoursList}
 										activeWrapper={activeWrapper}
+										clicked={clicked}
 										colors={colors}
+										graphData={graphData}
+										hoursList={hoursList}
+										width={width}
 									/>
 								) : null}
 								{activeWrapper === 'humidity' ? (
 									<VisibilitySvg
-										graphData={graphData}
-										clicked={clicked}
-										width={width}
-										hoursList={hoursList}
 										activeWrapper={activeWrapper}
+										clicked={clicked}
 										colors={colors}
+										graphData={graphData}
+										hoursList={hoursList}
+										width={width}
 									/>
 								) : null}
 								<TimeList width={width}>
 									{clicked === 'hourly'
 										? hoursList?.map((hour, index) => (
-												<Typography variant="subtitle2" fontWeight={600} key={index}>
+												<Typography fontWeight={600} key={index} variant="subtitle2">
 													{' '}
 													{hour}h
 												</Typography>
 											))
-										: daysForecast?.days?.map((day) => (
-												<Typography variant="subtitle2" fontWeight={600}>
+										: daysForecast?.days?.map((day, index) => (
+												<Typography fontWeight={600} key={index} variant="subtitle2">
 													{day?.day}
 												</Typography>
 											))}
@@ -182,6 +179,6 @@ function GraphWindow({ daysForecast, currentCity, activeWrapper, animation, colo
 			</Container>
 		</Window>
 	);
-}
+};
 
 export default GraphWindow;

@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
-import { NaturalCurve } from 'react-svg-curve';
-import { NumbersContainer, Container, ValueContainer, TemperatureTile } from './styled-components';
-import { useSpring } from 'react-spring';
-import { map } from 'lodash';
-import { Typography, Icon } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Icon, Typography } from '@mui/material';
+import { map } from 'lodash';
+import React, { useMemo } from 'react';
+import { useSpring } from 'react-spring';
+import { NaturalCurve } from 'react-svg-curve';
+
+import { Container, NumbersContainer, ValueContainer } from './styled-components';
 
 const WindSvg = ({ clicked, graphData, activeWrapper, width, colors }) => {
 	const wind = useMemo(() => map(graphData?.wind?.[clicked], (el) => el?.value), [graphData, clicked]);
@@ -19,10 +19,10 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width, colors }) => {
 
 	return (
 		<Container style={animation}>
-			<svg width={width} height="160" xmlns="http://www.w3.org/2000/svg">
+			<svg height="160" width={width} xmlns="http://www.w3.org/2000/svg">
 				<defs>
 					{/* Define the gradient */}
-					<linearGradient id="gradientStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+					<linearGradient id="gradientStroke" x1="0%" x2="100%" y1="0%" y2="0%">
 						<stop offset="0%" stopColor={colors?.[0]} />
 						<stop offset="100%" stopColor={colors?.[1]} />
 					</linearGradient>
@@ -37,16 +37,17 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width, colors }) => {
 								2 +
 							3,
 					])}
-					strokeOpacity={0.9}
 					showPoints={false}
-					strokeWidth={3}
 					stroke="url(#gradientStroke)" // Reference the gradient here
+					strokeOpacity={0.9}
+					strokeWidth={3}
 				/>
 			</svg>
 			<div className="container-for">
 				{wind?.map((element, index) => (
-					<NumbersContainer>
+					<NumbersContainer key={index}>
 						<ValueContainer
+							degrees={windDeg}
 							sumOfTemp={
 								-element * 2 +
 								80 +
@@ -55,10 +56,10 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width, colors }) => {
 									2 +
 								3
 							}
-							degrees={windDeg}
 						>
 							<Typography variant="subtitle1">{Math.round(element * 3.6)}</Typography>
 							<Icon
+								component={ArrowForwardIcon}
 								sx={{
 									position: 'absolute',
 									left: 0,
@@ -77,7 +78,6 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width, colors }) => {
 										15
 									}px`,
 								}}
-								component={ArrowForwardIcon}
 							/>
 						</ValueContainer>
 					</NumbersContainer>

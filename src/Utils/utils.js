@@ -1,4 +1,4 @@
-import { join, concat } from 'lodash';
+import { concat, join } from 'lodash';
 
 export function offsetDate(offset) {
 	var d = new Date(new Date().getTime() + offset * 1000);
@@ -9,19 +9,16 @@ export function offsetDate(offset) {
 	return [hrs, mins, secs];
 }
 
-const getNestedValue = (obj, path) => {
-	return path.split('.').reduce((acc, key) => acc && acc[key], obj);
-};
+const getNestedValue = (obj, path) => path.split('.').reduce((acc, key) => acc && acc[key], obj);
 
-export const getMinMax = (arr, field, minOrMax) => {
-	return arr.reduce(
+export const getMinMax = (arr, field, minOrMax) =>
+	arr.reduce(
 		(acc, curr) => {
 			const value = getNestedValue(curr, field);
 			return minOrMax === 'min' ? Math.min(acc, value) : Math.max(acc, value);
 		},
 		minOrMax === 'min' ? Infinity : -Infinity,
 	);
-};
 
 export function returnAlertTime(dt, offset) {
 	var d = new Date(dt * 1000 + offset * 1000);
@@ -127,9 +124,7 @@ export function nextFourtyEightHours(offset) {
 		}
 		currentHour = currentHour + 1;
 	}
-	let array = hours.filter((element, index) => {
-		return index % 3 === 0;
-	});
+	let array = hours.filter((element, index) => index % 3 === 0);
 	return array;
 }
 
@@ -194,12 +189,8 @@ export function getCurrentLocation(list) {
 		let lat = position.coords.latitude.toString().slice(0, 4);
 		let lng = position.coords.longitude.toString().slice(0, 4);
 
-		let firstFilter = list.filter((city) => {
-			return city.lat.toString().slice(0, 4) === lat;
-		});
-		let secondFilter = firstFilter.filter((city) => {
-			return city.lng.toString().slice(0, 4) === lng;
-		});
+		let firstFilter = list.filter((city) => city.lat.toString().slice(0, 4) === lat);
+		let secondFilter = firstFilter.filter((city) => city.lng.toString().slice(0, 4) === lng);
 
 		return secondFilter;
 	});
