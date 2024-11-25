@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { animated } from 'react-spring';
+import styled from 'styled-components';
 
 export const Tile = styled(animated.div)`
 	width: 100%;
@@ -14,7 +14,7 @@ export const Tile = styled(animated.div)`
 	padding: 1rem;
 	background: rgba(251, 247, 255, 0.15);
 	border-radius: 16px;
-	border: ${(props) => (props?.hovered ? '2px solid #ff5722' : `2px solid rgba(251, 247, 255, 0.22)`)};
+	border: ${(props) => (props?.hovered === 'hovered' ? '2px solid #ff5722' : `2px solid rgba(251, 247, 255, 0.22)`)};
 	will-change: transform, opacity;
 
 	& .temperature {

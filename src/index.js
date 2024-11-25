@@ -1,11 +1,13 @@
+import './index.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import { QueryClientProvider, QueryClient } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { AppContextProvider } from './context/AppContext/AppContext';
-import { AppThemeProvider } from './context/ThemeContext/ThemeContext';
+
+import App from './App';
+import { AppContextProvider } from './context/AppContext';
+import { AppThemeProvider } from './context/ThemeContext';
 
 const queryClient = new QueryClient();
 

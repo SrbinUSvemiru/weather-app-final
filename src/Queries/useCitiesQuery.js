@@ -1,5 +1,3 @@
-import { useQuery } from 'react-query';
-
 import { useQueryClient } from 'react-query';
 
 export const useGetFetchedQuery = (name) => {

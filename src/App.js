@@ -1,50 +1,43 @@
-import React, { useCallback, useEffect, useContext, useState, useRef } from 'react';
-import { useSprings, useSpring, useTrail, useSpringRef, useChain } from 'react-spring';
-import { animated } from '@react-spring/web';
-import { Carousel, Detailed, Item, EmptyCell } from './styled-components';
 import './App.css';
-import City from './Components/City/City';
-import SearchBar from './Components/SearchBar/SearchBar';
-import Expanded from './Components/Expanded/Expanded';
-import { images, makeRandomNumbers } from './Utils/utils';
-import { v4 as uuid } from 'uuid';
-import { useBreakpoint } from './hooks/useBreakpoint';
-import { Container, Grid2 as Grid, Box, Button, Drawer } from '@mui/material';
+
 import ArrowBackSharpIcon from '@mui/icons-material/ArrowBackSharp';
 import MenuIcon from '@mui/icons-material/Menu';
-import { AppContext } from './context/AppContext/AppContext';
+import { Box, Button, Container, Drawer, Grid2 as Grid } from '@mui/material';
+import { animated } from '@react-spring/web';
+import React, { useContext, useRef, useState } from 'react';
+import { useSprings } from 'react-spring';
+
+import City from './components/City/City';
+import Expanded from './components/Expanded/Expanded';
+import SearchBar from './components/SearchBar/SearchBar';
+import { AppContext } from './context/AppContext';
+import { useBreakpoint } from './hooks/useBreakpoint';
 
 const AnimatedGrid = animated(Grid);
 
 const trans = (x, y, s, z) => `perspective(600px) translateZ(${z}px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
-function App() {
+const App = () => {
 	const [open, setOpen] = useState(true);
 	const [currentCity, setCurrentCity] = useState({});
 	const cardsRef = useRef([]);
-	const { isXs, isSm, isMd } = useBreakpoint();
+	const { isXs, isSm } = useBreakpoint();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-	const { cities, setCities } = useContext(AppContext);
+	const { cities } = useContext(AppContext);
 
-	// const [style, detailsApi] = useSpring(() => ({
-	//
-	// 	from: { opacity: 0, scale: 0, x: 0 },
-	// 	to: { opacity: 1, scale: 1, x: 0 },
-	// }));
-
-	const [detailesStyle, detailsApi] = useSprings(
+	const [detailsStyle, detailsApi] = useSprings(
 		9,
 		(i) => ({
 			delay: () => i * 100,
 
 			config: {
-				tension: 200,
+				tension: 500,
 				friction: 50,
-				mass: 1,
+				mass: 3,
 			},
 			from: {
 				opacity: 0,
-				xys: [0, 0, 1, -(i + 3) * 100],
+				xys: [0, 0, 1, -(i + 3) * 50],
 			},
 		}),
 		[],
@@ -54,7 +47,6 @@ function App() {
 		cities?.length,
 		(i) => ({
 			delay: () => i * 100,
-
 			config: {
 				tension: 200,
 				friction: 50,
@@ -62,7 +54,7 @@ function App() {
 			},
 			from: {
 				opacity: 0,
-				xys: [0, 0, 1, (i + 10) * 20],
+				xys: [0, 0, 0, (i + 10) * 20],
 			},
 			to: { opacity: 1, xys: [0, 0, 1, 0] },
 		}),
@@ -82,10 +74,10 @@ function App() {
 			},
 		}));
 		detailsApi?.start((i) => ({
-			delay: () => i * 50 + 300,
+			delay: () => i * 50 + 100,
 			from: {
 				opacity: 0,
-				xys: [0, 0, 0, (i + 10) * 20],
+				xys: [0, 0, 0, (i + 10) * 10],
 			},
 			to: {
 				opacity: 1,
@@ -94,19 +86,17 @@ function App() {
 		}));
 	};
 
-	const handleCloseCurrentWeather = (e) => {
-		// Reverse the animations
-
+	const handleCloseCurrentWeather = () => {
 		setOpen(true);
 		detailsApi?.start((i) => ({
 			delay: () => i * 50,
 			to: {
 				opacity: 0,
-				xys: [0, 0, 0, -(i + 10) * 20], // Reverse the final state to match the initial state of handleOpen
+				xys: [0, 0, 0, -(i + 10) * 10],
 			},
 		}));
 		api?.start((i) => ({
-			delay: () => i * 50 + 300,
+			delay: () => i * 50 + 100,
 			from: {
 				opacity: 0,
 				xys: [0, 0, 0, (i + 10) * 20],
@@ -128,17 +118,17 @@ function App() {
 					margin: 0,
 					height: '100vh',
 					minWidth: '100vw',
-					background: '#222831',
-					position: 'relative', // Enable pseudo-elements to position correctly
+					backgroundColor: 'background.default',
+					position: 'relative',
 					overflow: 'hidden',
 				}}
 			>
-				<Drawer open={isDrawerOpen} onClose={() => toggleDrawer(false)} anchor="left">
+				<Drawer anchor="left" onClose={() => toggleDrawer(false)} open={isDrawerOpen}>
 					<Box
 						sx={{
 							width: '100vw',
 							height: '100%',
-							background: '#222831',
+							background: 'background.main',
 							padding: '2rem',
 						}}
 					>
@@ -151,21 +141,22 @@ function App() {
 							}}
 						>
 							<Button
-								variant="filled"
+								onClick={() => toggleDrawer(false)}
 								sx={{
 									display: 'flex',
 									justifyContent: 'center',
 									alignItems: 'center',
 									fontWeight: 800,
 									fontSize: '1rem',
+									'&:hover': {
+										color: 'secondary.main',
+									},
 								}}
-								onClick={() => toggleDrawer(false)}
+								variant="filled"
 							>
 								<MenuIcon sx={{ fontSize: '2.7rem' }} />
 							</Button>
 							<SearchBar
-								cities={cities}
-								setCities={setCities}
 								handleCloseCurrentWeather={handleCloseCurrentWeather}
 								isDrawerOpen={isDrawerOpen}
 								setIsDrawerOpen={toggleDrawer}
@@ -203,48 +194,52 @@ function App() {
 					>
 						{!open && (
 							<Button
-								variant="filled"
+								onClick={handleCloseCurrentWeather}
 								sx={{
 									fontWeight: 800,
 									fontSize: '1rem',
 									marginRight: '2rem',
+									'&:hover': {
+										color: 'secondary.main',
+									},
 								}}
-								onClick={handleCloseCurrentWeather}
+								variant="filled"
 							>
 								<ArrowBackSharpIcon sx={{ fontSize: '2.7rem' }} />
 							</Button>
 						)}
 						{isXs && (
 							<Button
-								variant="filled"
+								onClick={() => toggleDrawer(true)}
 								sx={{
 									display: 'flex',
 									justifyContent: 'center',
 									alignItems: 'center',
 									fontWeight: 800,
 									fontSize: '1rem',
+									'&:hover': {
+										color: 'secondary.main',
+									},
 								}}
-								onClick={() => toggleDrawer(true)}
+								variant="filled"
 							>
 								<MenuIcon sx={{ fontSize: '2.7rem' }} />
 							</Button>
 						)}
 						{!open || isXs ? null : (
 							<SearchBar
-								cities={cities}
-								setCities={setCities}
-								setOpen={setOpen}
 								handleCloseCurrentWeather={handleCloseCurrentWeather}
 								isDrawerOpen={isDrawerOpen}
 								setIsDrawerOpen={toggleDrawer}
+								setOpen={setOpen}
 							/>
 						)}
 					</Box>
 					<Expanded
-						animation={detailesStyle}
-						open={open}
-						handleCloseCurrentWeather={handleCloseCurrentWeather}
+						animation={detailsStyle}
 						currentCity={currentCity}
+						handleCloseCurrentWeather={handleCloseCurrentWeather}
+						open={open}
 					/>
 					<AnimatedGrid
 						container
@@ -269,20 +264,14 @@ function App() {
 						{springs?.map((style, index) => (
 							// CityContainer
 							<AnimatedGrid
-								size={{ xs: 12, sm: 6, md: 4 }}
 								key={index}
+								onClick={() => handleOpenCurrentWeather(index)}
 								ref={(el) => (cardsRef.current[index] = el)}
-								sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+								size={{ xs: 12, sm: 6, md: 4 }}
 								style={{ ...style, transform: style.xys.to(trans) }}
-								onClick={(e) => handleOpenCurrentWeather(index)}
+								sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
 							>
-								<City
-									city={cities[index]}
-									index={index}
-									setCurrentCity={setCurrentCity}
-									cities={cities}
-									setCities={setCities}
-								/>
+								<City city={cities[index]} index={index} setCurrentCity={setCurrentCity} />
 							</AnimatedGrid>
 						))}
 					</AnimatedGrid>
@@ -290,6 +279,6 @@ function App() {
 			</Container>
 		</>
 	);
-}
+};
 
 export default App;

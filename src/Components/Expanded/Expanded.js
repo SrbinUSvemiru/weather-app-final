@@ -1,35 +1,19 @@
-import React, { useState, useEffect } from 'react';
-
-import {
-	LeftSideContainer,
-	RightSideContainer,
-	Container,
-	Window,
-	TopContainer,
-	Visibility,
-	Moon,
-	DaysRow,
-	ArrowBack,
-	MoonWindow,
-} from './styled-components';
-
-import ArrowBackSharpIcon from '@mui/icons-material/ArrowBackSharp';
-import GraphWindow from '../GraphWindow/GraphWindow';
-
-import { useGetFetchedQuery } from '../../Queries/useCitiesQuery';
-import { useCurrentAirPolutionQuery } from '../../Queries/useCurrentAirPolutionQuery';
-import DaysList from '../DaysList/DaysList';
+import { Grid2 as Grid } from '@mui/material';
 import { animated } from '@react-spring/web';
-import DisplayActiveDay from '../DisplayActiveDay/DisplayActiveDay';
-import TemperatureWindow from '../TemperatureWindow/TemperatureWindow';
-import UVWindow from '../UVWindow/UVWindow';
+import React, { useState } from 'react';
+
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { useCurrentAirPolutionQuery } from '../../queries/useCurrentAirPolutionQuery';
+import { useMultipleDaysForecastQuery } from '../../queries/useMultipleDaysForecastQuery';
+import { trans } from '../../utils/utils';
+import AlertMessageWindow from '../AlertMessageWindow/AlertMessageWindow';
 import CurrentInfoWindow from '../CurrentInfoWindow/CurrentInfoWindow';
 import DateAndLocationWindow from '../DateAndLocationWindow/DateAndLocationWindow';
-import AlertMessageWindow from '../AlertMessageWindow/AlertMessageWindow';
-import { useMultipleDaysForecastQuery } from '../../Queries/useMultipleDaysForecastQuery';
-import { Grid2 as Grid, Button } from '@mui/material';
-import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { moonPhase, trans } from '../../Utils/utils';
+import DaysList from '../DaysList/DaysList';
+import DisplayActiveDay from '../DisplayActiveDay/DisplayActiveDay';
+import GraphWindow from '../GraphWindow/GraphWindow';
+import TemperatureWindow from '../TemperatureWindow/TemperatureWindow';
+import UVWindow from '../UVWindow/UVWindow';
 
 const AnimatedGrid = animated(Grid);
 
@@ -40,10 +24,10 @@ const colors = () => ({
 	wind: ['#abecd6', '#fbed96'],
 });
 
-function Expanded({ currentCity, open, handleCloseCurrentWeather, animation }) {
+const Expanded = ({ currentCity, open, animation }) => {
 	const [activeDay, setActiveDay] = useState(0);
 	const [activeWrapper, setActiveWrapper] = useState('temperature');
-	const { isXs, isSm, isMd } = useBreakpoint();
+	const { isXs } = useBreakpoint();
 
 	const { data: daysForecast, isLoading: isLoadingForecast } = useMultipleDaysForecastQuery({
 		city: currentCity,
@@ -71,76 +55,76 @@ function Expanded({ currentCity, open, handleCloseCurrentWeather, animation }) {
 			}}
 		>
 			<Grid size={{ xs: 12, sm: 6, md: 4 }}>
-				<DateAndLocationWindow currentCity={currentCity} animation={animation[0]} />
+				<DateAndLocationWindow animation={animation[0]} currentCity={currentCity} />
 			</Grid>
 
 			{isXs ? (
 				<Grid size={{ xs: 12, sm: 6, md: 5 }}>
 					<TemperatureWindow
-						currentCity={currentCity}
-						animation={animation[3]}
-						setActiveWrapper={setActiveWrapper}
 						activeWrapper={activeWrapper}
+						animation={animation[3]}
 						colors={colors()[activeWrapper]}
+						currentCity={currentCity}
+						setActiveWrapper={setActiveWrapper}
 					/>
 				</Grid>
 			) : null}
 			<Grid size={{ xs: 12, sm: 6, md: 3 }}>
-				<AlertMessageWindow currentCity={currentCity} animation={animation[1]} />
+				<AlertMessageWindow animation={animation[1]} currentCity={currentCity} />
 			</Grid>
 			<Grid size={{ xs: 12, sm: 6, md: 5 }}>
 				<UVWindow
+					activeWrapper={activeWrapper}
 					airPollution={airPollution?.list?.[0]}
 					animation={animation[2]}
-					setActiveWrapper={setActiveWrapper}
-					activeWrapper={activeWrapper}
 					colors={colors()[activeWrapper]}
+					setActiveWrapper={setActiveWrapper}
 				/>
 			</Grid>
 			{!isXs ? (
 				<Grid size={{ xs: 12, sm: 6, md: 5 }}>
 					<TemperatureWindow
-						currentCity={currentCity}
-						animation={animation[3]}
-						setActiveWrapper={setActiveWrapper}
 						activeWrapper={activeWrapper}
+						animation={animation[3]}
 						colors={colors()[activeWrapper]}
+						currentCity={currentCity}
+						setActiveWrapper={setActiveWrapper}
 					/>
 				</Grid>
 			) : null}
 
 			<Grid size={{ xs: 12, sm: 2, md: 1 }}>
 				<CurrentInfoWindow
+					activeWrapper={activeWrapper}
+					animation={animation[4]}
+					colors={colors()[activeWrapper]}
 					currentCity={{ ...currentCity }}
 					pop={daysForecast?.days?.[0]?.pop}
-					animation={animation[4]}
 					setActiveWrapper={setActiveWrapper}
-					activeWrapper={activeWrapper}
-					colors={colors()[activeWrapper]}
 				/>
 			</Grid>
 
-			<Grid size={{ xs: 12, sm: 10, md: 6 }} container spacing={{ xs: 1, sm: 2 }}>
+			<Grid container size={{ xs: 12, sm: 10, md: 6 }} spacing={{ xs: 1, sm: 2 }}>
 				<DisplayActiveDay
 					activeDay={daysForecast?.days?.[activeDay]}
-					currentCity={currentCity}
 					animation={animation[5]}
+					currentCity={currentCity}
 				/>
 				<AnimatedGrid
 					container
-					spacing={{ xs: 0.5, sm: 2 }}
 					size={12}
+					spacing={{ xs: 0.5, sm: 2 }}
 					style={{ ...animation?.[6], transform: animation?.[6]?.xys.to(trans) }}
 				>
 					{daysForecast?.days?.map((day, index) => (
-						<Grid size={2} key={index}>
+						<Grid key={index} size={2}>
 							<DaysList
-								data={day}
-								index={index}
 								activeDay={activeDay}
-								currentCity={currentCity}
 								activeWrapper={activeWrapper}
 								animation={animation[6]}
+								currentCity={currentCity}
+								data={day}
+								index={index}
 								setActiveDay={setActiveDay}
 							/>
 						</Grid>
@@ -150,15 +134,15 @@ function Expanded({ currentCity, open, handleCloseCurrentWeather, animation }) {
 
 			<Grid size={12}>
 				<GraphWindow
-					currentCity={currentCity}
-					animation={animation[7]}
-					daysForecast={daysForecast}
 					activeWrapper={activeWrapper}
+					animation={animation[7]}
 					colors={colors()[activeWrapper]}
+					currentCity={currentCity}
+					daysForecast={daysForecast}
 				/>
 			</Grid>
 		</Grid>
 	) : null;
-}
+};
 
 export default Expanded;

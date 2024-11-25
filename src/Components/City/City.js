@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useSpring, config, animated } from 'react-spring';
-import { RemoveButton, Tile, Spinner, EmptyCell } from './styled-components';
-import { offsetDate } from '../../Utils/utils';
-import { useCurrentWeatherQuery } from '../../Queries/useCurrentWeatherQuery';
-import { useQueryClient } from 'react-query';
-import { Grid2 as Grid, Typography, Icon } from '@mui/material';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { Grid2 as Grid, Icon, Typography } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
-function City({ city, setCurrentCity, setCities, cities }) {
+import { AppContext } from '../../context/AppContext/provider';
+import { useCurrentWeatherQuery } from '../../queries/useCurrentWeatherQuery';
+import { offsetDate } from '../../utils/utils';
+import { EmptyCell, Spinner, Tile } from './styled-components';
+
+const City = ({ city, setCurrentCity }) => {
 	const [hovered, setHovered] = useState(false);
 	const [hours, setHours] = useState('');
 	const [minutes, setMinutes] = useState('');
-	const [seconds, setSeconds] = useState('');
+	const [, setSeconds] = useState('');
+
+	const { cities, setCities } = useContext(AppContext);
 
 	const { isLoading, data, isError, error } = useCurrentWeatherQuery({
 		city,
@@ -30,13 +32,12 @@ function City({ city, setCurrentCity, setCities, cities }) {
 
 			return () => clearInterval(interval);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isLoading]);
 
 	const removeCity = (e) => {
 		e.stopPropagation();
-		let array = cities?.filter((el, index) => {
-			return el?.id !== city?.id;
-		});
+		let array = cities?.filter((el) => el?.id !== city?.id);
 
 		setCities([...array, { id: uuid(), lat: '', lon: '' }]);
 	};
@@ -47,24 +48,30 @@ function City({ city, setCurrentCity, setCities, cities }) {
 
 	return city?.lon && city?.lat ? (
 		<Tile
-			hovered={hovered}
+			hovered={hovered ? 'hovered' : 'not-hovered'}
 			onClick={() => setCurrentCity({ ...city, current: data })}
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
 		>
 			{isLoading ? (
 				<Spinner>
-					<img src="../loading-spinners.svg" />
+					<img alt="loading" src="../loading-spinners.svg" />
 				</Spinner>
 			) : (
-				<Grid container>
-					<Grid size={11}>
-						<Typography variant="h6" noWrap fontWeight={700}>
+				<Grid container sx={{ width: '100%' }}>
+					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+						<Typography fontWeight={700} noWrap variant="h6">
 							{city?.name}
 						</Typography>
-					</Grid>
-					<Grid size={1}>
-						<Icon onClick={(e) => removeCity(e)}>
+
+						<Icon
+							onClick={(e) => removeCity(e)}
+							sx={{
+								'&:hover': {
+									color: 'secondary.main',
+								},
+							}}
+						>
 							<CloseOutlinedIcon />
 						</Icon>
 					</Grid>
@@ -73,11 +80,11 @@ function City({ city, setCurrentCity, setCities, cities }) {
 							<img src={`../icons/${data?.weather?.[0].icon}.svg`} />
 						</div>
 					</Grid> */}
-					<Grid size={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
+					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
 						<Typography variant="h3">{Math.round(data?.main?.temp)}</Typography>
 						<Typography variant="h5">&#176;C</Typography>
 					</Grid>
-					<Grid size={12} display={'flex'} justifyContent={'center'}>
+					<Grid display={'flex'} justifyContent={'center'} size={12}>
 						<Typography variant="h6">
 							{hours <= 9 ? '0' + hours : hours}:{minutes <= 9 ? '0' + minutes : minutes}
 						</Typography>
@@ -88,6 +95,6 @@ function City({ city, setCurrentCity, setCities, cities }) {
 	) : (
 		<EmptyCell />
 	);
-}
+};
 
 export default City;
