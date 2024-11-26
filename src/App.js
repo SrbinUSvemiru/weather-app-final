@@ -4,7 +4,7 @@ import ArrowBackSharpIcon from '@mui/icons-material/ArrowBackSharp';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Box, Button, Container, Drawer, Grid2 as Grid } from '@mui/material';
 import { animated } from '@react-spring/web';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useSprings } from 'react-spring';
 
 import City from './components/City/City';
@@ -18,12 +18,12 @@ const AnimatedGrid = animated(Grid);
 const trans = (x, y, s, z) => `perspective(600px) translateZ(${z}px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
 const App = () => {
 	const [open, setOpen] = useState(true);
-	const [currentCity, setCurrentCity] = useState({});
-	const cardsRef = useRef([]);
+
 	const { isXs, isSm } = useBreakpoint();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
 	const { cities } = useContext(AppContext);
+	const [cityToReplace, setCityToReplace] = useState('');
 
 	const [detailsStyle, detailsApi] = useSprings(
 		9,
@@ -43,28 +43,25 @@ const App = () => {
 		[],
 	);
 
-	const [springs, api] = useSprings(
-		cities?.length,
-		(i) => ({
-			delay: () => i * 100,
-			config: {
-				tension: 200,
-				friction: 50,
-				mass: 1,
-			},
-			from: {
-				opacity: 0,
-				xys: [0, 0, 0, (i + 10) * 20],
-			},
-			to: { opacity: 1, xys: [0, 0, 1, 0] },
-		}),
-		[],
-	);
+	const [springs, api] = useSprings(cities?.length, (i) => ({
+		delay: () => i * 100,
+		config: {
+			tension: 200,
+			friction: 50,
+			mass: 1,
+		},
+		from: {
+			opacity: 0,
+			xys: [0, 0, 0, (i + 10) * 20],
+		},
+		to: { opacity: 1, xys: [0, 0, 1, 0] },
+	}));
 
 	const handleOpenCurrentWeather = (index) => {
 		if (!cities[index]?.lat || !cities[index]?.lon) {
 			return;
 		}
+
 		setOpen(false);
 		api?.start((i) => ({
 			delay: () => i * 50,
@@ -74,7 +71,7 @@ const App = () => {
 			},
 		}));
 		detailsApi?.start((i) => ({
-			delay: () => i * 50 + 100,
+			delay: () => i * 50 + 150,
 			from: {
 				opacity: 0,
 				xys: [0, 0, 0, (i + 10) * 10],
@@ -157,8 +154,10 @@ const App = () => {
 								<MenuIcon sx={{ fontSize: '2.7rem' }} />
 							</Button>
 							<SearchBar
+								cityToReplace={cityToReplace}
 								handleCloseCurrentWeather={handleCloseCurrentWeather}
 								isDrawerOpen={isDrawerOpen}
+								setCityToReplace={setCityToReplace}
 								setIsDrawerOpen={toggleDrawer}
 							/>
 						</Box>
@@ -228,8 +227,10 @@ const App = () => {
 						)}
 						{!open || isXs ? null : (
 							<SearchBar
+								cityToReplace={cityToReplace}
 								handleCloseCurrentWeather={handleCloseCurrentWeather}
 								isDrawerOpen={isDrawerOpen}
+								setCityToReplace={setCityToReplace}
 								setIsDrawerOpen={toggleDrawer}
 								setOpen={setOpen}
 							/>
@@ -237,7 +238,6 @@ const App = () => {
 					</Box>
 					<Expanded
 						animation={detailsStyle}
-						currentCity={currentCity}
 						handleCloseCurrentWeather={handleCloseCurrentWeather}
 						open={open}
 					/>
@@ -264,14 +264,19 @@ const App = () => {
 						{springs?.map((style, index) => (
 							// CityContainer
 							<AnimatedGrid
+								id={index}
 								key={index}
 								onClick={() => handleOpenCurrentWeather(index)}
-								ref={(el) => (cardsRef.current[index] = el)}
 								size={{ xs: 12, sm: 6, md: 4 }}
 								style={{ ...style, transform: style.xys.to(trans) }}
 								sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
 							>
-								<City city={cities[index]} index={index} setCurrentCity={setCurrentCity} />
+								<City
+									city={cities[index]}
+									isDrawerOpen={isDrawerOpen}
+									setCityToReplace={setCityToReplace}
+									setIsDrawerOpen={setIsDrawerOpen}
+								/>
 							</AnimatedGrid>
 						))}
 					</AnimatedGrid>

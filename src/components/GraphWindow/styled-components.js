@@ -5,12 +5,10 @@ export const SvgContainer = styled.div`
 	width: 100%;
 	position: relative;
 	overflow-y: scroll;
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Edge */
-  }
-  
-}
+	scrollbar-width: none; /* Firefox */
+	&::-webkit-scrollbar {
+		display: none; /* Chrome, Safari, Edge */
+	}
 	& .container-for {
 		position: absolute;
 		width: ${(props) => props?.width}px;

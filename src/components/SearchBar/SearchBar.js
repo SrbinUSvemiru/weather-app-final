@@ -1,36 +1,58 @@
 import { Box, List, ListItemButton, TextField, Typography } from '@mui/material';
 import citiesList from 'cities.json';
-import { slice } from 'lodash';
+import { findIndex, map, set, slice, sortBy } from 'lodash';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { AppContext } from '../../context/AppContext/provider';
 
-const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, handleCloseCurrentWeather }) => {
-	const [cityName, setCityName] = useState('');
+const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToReplace, handleCloseCurrentWeather }) => {
+	const [inputCityName, setInputCityName] = useState('');
 	const [searchCities, setSearchCities] = useState([]);
+	const [isListOpen, setIsListOpen] = useState(false);
+
+	const textFieldRef = useRef(null);
 
 	const { cities, setCities } = useContext(AppContext);
 
 	const containerRef = useRef(null);
 
 	useEffect(() => {
-		const list = citiesList?.filter((post) => post?.name?.toLowerCase()?.startsWith(cityName.toLowerCase()) || '');
+		const list = inputCityName
+			? citiesList?.filter((post) => post?.name?.toLowerCase()?.startsWith(inputCityName?.toLowerCase()))
+			: [];
 
 		const sorted = list.sort(function (a, b) {
 			return a?.name?.length - b?.name?.length;
 		});
 		const sliced = sorted?.slice(0, 20);
 
-		setSearchCities(sliced);
-	}, [cityName, cities]);
+		setSearchCities(sliced?.length ? sliced : [{ name: 'No results...' }]);
+	}, [inputCityName, cities, cityToReplace]);
 
 	const handleAddCity = (obj) => {
-		const array = cities?.length ? cities : [];
-		const sliced = [{ ...obj, lon: obj?.lng, id: uuid() }, ...slice(array, 0, array?.length - 1)];
-		setCities(sliced);
+		let updatedCities = cities?.length ? [...cities] : [];
+		const replaceIdx = findIndex(updatedCities, (el) => el?.id === cityToReplace);
+		const emptyIdx = findIndex(updatedCities, (el) => !el?.lon || !el?.lat);
+
+		const newCity = { ...obj, lon: obj?.lng, id: uuid(), weight: 1 };
+		if (replaceIdx > -1) {
+			set(newCity, 'weight', updatedCities[replaceIdx].weight);
+			updatedCities[replaceIdx] = newCity;
+		} else if (emptyIdx > -1) {
+			set(newCity, 'weight', updatedCities[emptyIdx].weight);
+			updatedCities[emptyIdx] = newCity;
+		} else {
+			updatedCities = [
+				{ ...newCity },
+				...map(slice(updatedCities, 0, updatedCities?.length - 1), (el) => ({ ...el, weight: el?.weight + 1 })),
+			];
+		}
+
+		setCities(sortBy(updatedCities, 'weight'));
 		setSearchCities([]);
-		setCityName('');
+		setInputCityName('');
+		setCityToReplace('');
 		setIsDrawerOpen(false);
 		if (isDrawerOpen) {
 			handleCloseCurrentWeather();
@@ -56,8 +78,8 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, handleCloseCurrentWeather })
 
 	const handleOutsideClick = (e) => {
 		if (containerRef.current && !containerRef.current.contains(e.target)) {
-			setCityName('');
-			setSearchCities([]);
+			setIsListOpen(false);
+			setCityToReplace('');
 		}
 	};
 
@@ -66,16 +88,31 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, handleCloseCurrentWeather })
 		return () => {
 			document.removeEventListener('mousedown', handleOutsideClick);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		if (cityToReplace) {
+			setIsListOpen(true);
+		}
+	}, [cityToReplace]);
+
+	useEffect(() => {
+		if (isListOpen && textFieldRef.current) {
+			textFieldRef.current.focus();
+		}
+	}, [isListOpen]);
 
 	return (
 		<Box ref={containerRef} sx={{ width: isDrawerOpen ? '100%' : '300px', position: 'relative' }}>
 			<TextField
 				className="text"
 				id="search-bar"
-				label="Enter a city name"
+				inputRef={textFieldRef}
+				label="Enter city name"
+				onFocus={() => setIsListOpen(true)}
 				onInput={(e) => {
-					setCityName(e.target.value);
+					setInputCityName(e.target.value);
 				}}
 				placeholder="Search..."
 				size="small"
@@ -91,44 +128,46 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, handleCloseCurrentWeather })
 						borderColor: 'secondary.main', // Optional: Border on hover
 					},
 				}}
-				value={cityName}
+				value={inputCityName}
 				variant="outlined"
 			/>
 			{/* <IconButton type="submit" aria-label="search">
 					<Search style={{ fill: 'blue' }} />
 				</IconButton> */}
-
-			<List
-				sx={{
-					position: 'absolute',
-					top: 40,
-					backgroundColor: 'primary.light',
-					width: '100%',
-					display: cityName ? 'block' : 'none',
-					overflowY: 'scroll',
-					maxHeight: '500px',
-					borderRadius: '0px 0px 16px 16px',
-				}}
-			>
-				{searchCities?.map((city, index) => (
-					<ListItemButton
-						key={index}
-						onClick={() => handleAddCity(city)}
-						sx={{ padding: '0.5rem', background: 'primary.light' }}
-					>
-						<Typography fontWeight={700} variant="subtitle1">
-							{city?.name}
-						</Typography>
-						<Typography
-							fontWeight={700}
-							sx={{ color: 'text.secondary', marginLeft: '0.5rem' }}
-							variant="subtitle1"
+			{isListOpen ? (
+				<List
+					sx={{
+						position: 'absolute',
+						top: 40,
+						backgroundColor: 'primary.light',
+						width: '100%',
+						display: inputCityName ? 'block' : 'none',
+						overflowY: 'scroll',
+						maxHeight: '500px',
+						borderRadius: '0px 0px 16px 16px',
+					}}
+				>
+					{map(searchCities, (city, index) => (
+						<ListItemButton
+							disabled={!city?.lat || !city?.lng}
+							key={index}
+							onClick={() => handleAddCity(city)}
+							sx={{ padding: '0.5rem', background: 'primary.light' }}
 						>
-							{city?.country}
-						</Typography>
-					</ListItemButton>
-				))}
-			</List>
+							<Typography fontWeight={700} variant="subtitle1">
+								{city?.name}
+							</Typography>
+							<Typography
+								fontWeight={700}
+								sx={{ color: 'text.secondary', marginLeft: '0.5rem' }}
+								variant="subtitle1"
+							>
+								{city?.country}
+							</Typography>
+						</ListItemButton>
+					))}
+				</List>
+			) : null}
 		</Box>
 	);
 };

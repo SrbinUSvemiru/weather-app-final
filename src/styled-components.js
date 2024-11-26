@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { animated } from 'react-spring';
+import styled from 'styled-components';
 
 export const Grid = styled.div`
 	display: grid;
@@ -48,4 +48,43 @@ export const Carousel = styled(animated.div)`
 	background-position: center;
 	left: 0;
 	background-size: cover;
+`;
+
+export const Wrapper = styled(animated.div)`
+	position: absolute;
+	width: 102%;
+	height: 102%;
+	top: 50%;
+	z-index: -1;
+	margin: 0 auto;
+	transform: translateY(-50%);
+	border-radius: 10px;
+	display: felx;
+	align-items: center;
+	justify-content: center;
+	&::after {
+		content: '';
+		width: 90%;
+		height: 90%;
+		border-radius: 10px;
+		background: rgb(66, 71, 80);
+		position: absolute;
+		z-index: -1; /* Place behind the content of Wrapper */
+	}
+`;
+
+export const Window = styled(animated.div)`
+	background: rgba(251, 247, 255, 0.15);
+	border-radius: 16px;
+	border: 2px solid ${(props) => (props?.bordercolor ? props?.bordercolor : 'rgba(251, 247, 255, 0.22)')};
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 10px;
+	overflow: hidden;
+	padding: 1rem;
+	height: 100%;
+	position: relative;
+	cursor: pointer;
+	user-select: none;
 `;

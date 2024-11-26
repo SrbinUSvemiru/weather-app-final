@@ -9,13 +9,18 @@ import VisibilitySvg from '../VisibilitySvg/VisibilitySvg';
 import WindSvg from '../WindSvg/WindSvg';
 import { Container, SvgContainer, TimeList, Window } from './styled-components';
 
-const GraphWindow = ({ daysForecast, currentCity, activeWrapper, animation, colors }) => {
+const GraphWindow = ({ daysForecast, selectedCity, activeWrapper, animation, colors }) => {
 	const [clicked, setClicked] = useState('hourly');
 	const [hoursList, setHoursList] = useState();
 
 	const [width, setWidth] = useState(0);
 
-	const [graphData, setGraphData] = useState();
+	const [graphData, setGraphData] = useState({
+		temperature: { daily: [], hourly: [] },
+		wind: { daily: [], hourly: [] },
+		humidity: { daily: [], hourly: [] },
+		precipitation: { daily: [], hourly: [] },
+	});
 
 	const graphRef = useRef();
 
@@ -66,11 +71,11 @@ const GraphWindow = ({ daysForecast, currentCity, activeWrapper, animation, colo
 
 	useEffect(() => {
 		setHoursList(() =>
-			nextFourtyEightHours(currentCity?.current?.timezone).map((hour) => (hour < 10 ? `0${hour}` : `${hour}`)),
+			nextFourtyEightHours(selectedCity?.current?.timezone).map((hour) => (hour < 10 ? `0${hour}` : `${hour}`)),
 		);
 
 		setClicked('hourly');
-	}, [currentCity]);
+	}, [selectedCity]);
 
 	return (
 		<Window style={{ ...animation, transform: animation?.xys.to(trans) }}>

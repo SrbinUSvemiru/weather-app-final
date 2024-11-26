@@ -15,13 +15,16 @@ export const AppContextProvider = (props) => {
 	const [settings, setSettings] = useState(getStorageItem('weather-app-settings', DEFAULT_SETTINGS));
 	const [theme, setTheme] = useState(settings?.theme || { mode: 'dark', variant: 'default' });
 	const [cities, setCities] = useState(getStorageItem('weather-app-settings')?.cities || defaultCities());
+	const [selectedCity, setSelectedCity] = useState({});
 
 	useEffect(() => {
 		setStorageItem('weather-app-settings', { theme, cities, preferences: { units: settings?.preferences?.units } });
 	}, [cities, settings, theme]);
 
 	return (
-		<AppContext.Provider value={{ settings, setSettings, cities, setCities, theme, setTheme }}>
+		<AppContext.Provider
+			value={{ settings, setSettings, cities, setCities, theme, setTheme, setSelectedCity, selectedCity }}
+		>
 			{props.children}
 		</AppContext.Provider>
 	);

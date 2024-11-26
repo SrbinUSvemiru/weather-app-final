@@ -1,7 +1,8 @@
 import { Grid2 as Grid } from '@mui/material';
 import { animated } from '@react-spring/web';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
+import { AppContext } from '../../context/AppContext';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useCurrentAirPolutionQuery } from '../../queries/useCurrentAirPolutionQuery';
 import { useMultipleDaysForecastQuery } from '../../queries/useMultipleDaysForecastQuery';
@@ -24,17 +25,19 @@ const colors = () => ({
 	wind: ['#abecd6', '#fbed96'],
 });
 
-const Expanded = ({ currentCity, open, animation }) => {
+const Expanded = ({ open, animation }) => {
 	const [activeDay, setActiveDay] = useState(0);
 	const [activeWrapper, setActiveWrapper] = useState('temperature');
 	const { isXs } = useBreakpoint();
 
+	const { selectedCity } = useContext(AppContext);
+
 	const { data: daysForecast, isLoading: isLoadingForecast } = useMultipleDaysForecastQuery({
-		city: currentCity,
+		city: selectedCity,
 		options: { enabled: !open },
 	});
 	const { data: airPollution, isLoading: isLoadingAirPollution } = useCurrentAirPolutionQuery({
-		city: currentCity,
+		city: selectedCity,
 		options: { enabled: !open },
 	});
 
@@ -55,7 +58,7 @@ const Expanded = ({ currentCity, open, animation }) => {
 			}}
 		>
 			<Grid size={{ xs: 12, sm: 6, md: 4 }}>
-				<DateAndLocationWindow animation={animation[0]} currentCity={currentCity} />
+				<DateAndLocationWindow animation={animation[0]} selectedCity={selectedCity} />
 			</Grid>
 
 			{isXs ? (
@@ -64,13 +67,13 @@ const Expanded = ({ currentCity, open, animation }) => {
 						activeWrapper={activeWrapper}
 						animation={animation[3]}
 						colors={colors()[activeWrapper]}
-						currentCity={currentCity}
+						selectedCity={selectedCity}
 						setActiveWrapper={setActiveWrapper}
 					/>
 				</Grid>
 			) : null}
 			<Grid size={{ xs: 12, sm: 6, md: 3 }}>
-				<AlertMessageWindow animation={animation[1]} currentCity={currentCity} />
+				<AlertMessageWindow animation={animation[1]} selectedCity={selectedCity} />
 			</Grid>
 			<Grid size={{ xs: 12, sm: 6, md: 5 }}>
 				<UVWindow
@@ -87,7 +90,7 @@ const Expanded = ({ currentCity, open, animation }) => {
 						activeWrapper={activeWrapper}
 						animation={animation[3]}
 						colors={colors()[activeWrapper]}
-						currentCity={currentCity}
+						selectedCity={selectedCity}
 						setActiveWrapper={setActiveWrapper}
 					/>
 				</Grid>
@@ -98,18 +101,20 @@ const Expanded = ({ currentCity, open, animation }) => {
 					activeWrapper={activeWrapper}
 					animation={animation[4]}
 					colors={colors()[activeWrapper]}
-					currentCity={{ ...currentCity }}
 					pop={daysForecast?.days?.[0]?.pop}
+					selectedCity={selectedCity}
 					setActiveWrapper={setActiveWrapper}
 				/>
 			</Grid>
 
 			<Grid container size={{ xs: 12, sm: 10, md: 6 }} spacing={{ xs: 1, sm: 2 }}>
-				<DisplayActiveDay
-					activeDay={daysForecast?.days?.[activeDay]}
-					animation={animation[5]}
-					currentCity={currentCity}
-				/>
+				<Grid size={12}>
+					<DisplayActiveDay
+						activeDay={daysForecast?.days?.[activeDay]}
+						animation={animation[5]}
+						selectedCity={selectedCity}
+					/>
+				</Grid>
 				<AnimatedGrid
 					container
 					size={12}
@@ -122,7 +127,6 @@ const Expanded = ({ currentCity, open, animation }) => {
 								activeDay={activeDay}
 								activeWrapper={activeWrapper}
 								animation={animation[6]}
-								currentCity={currentCity}
 								data={day}
 								index={index}
 								setActiveDay={setActiveDay}
@@ -137,8 +141,8 @@ const Expanded = ({ currentCity, open, animation }) => {
 					activeWrapper={activeWrapper}
 					animation={animation[7]}
 					colors={colors()[activeWrapper]}
-					currentCity={currentCity}
 					daysForecast={daysForecast}
+					selectedCity={selectedCity}
 				/>
 			</Grid>
 		</Grid>

@@ -3,8 +3,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSpring } from 'react-spring';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { Window, Wrapper } from '../../styled-components';
 import { trans, uvIndex } from '../../utils/utils';
-import { Uvi, Window, Wrapper } from './styled-components';
+import { Uvi } from './styled-components';
 
 export const UVWindow = ({ airPollution, animation, activeWrapper: wrapper }) => {
 	const [width, setWidth] = useState(0);
@@ -43,7 +44,7 @@ export const UVWindow = ({ airPollution, animation, activeWrapper: wrapper }) =>
 	return (
 		<Window onClick={() => {}} style={{ ...animation, transform: animation?.xys.to(trans) }}>
 			<Wrapper style={activeWrapper} />
-			<Grid container spacing={1}>
+			<Grid container spacing={1} sx={{ height: '100%' }}>
 				<Grid size={3} sx={{ display: 'flex', flexDirection: 'column' }}>
 					<Typography noWrap variant="h6" zIndex={2}>
 						{' '}
