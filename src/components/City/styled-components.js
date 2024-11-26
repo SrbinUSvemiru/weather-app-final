@@ -47,12 +47,18 @@ export const Tile = styled(animated.div)`
 export const EmptyCell = styled(animated.div)`
 	width: 100%;
 	height: 100%;
-	background-color: rgba(9, 18, 35, 0.2);
+	background-color: ${(props) => props?.backgroundcolor};
 	border-radius: 10px;
-	min-height: 170px;
+	min-height: 156px;
 	width: 260px;
-	padding: 1rem;
-	border: 3px dashed rgba(0, 0, 0, 0.2);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	opacity: 0.5;
+	border: 3px dashed ${(props) => props?.bordercolorhovered};
+	&:hover {
+		opacity: 1;
+	}
 `;
 
 export const Spinner = styled.div`

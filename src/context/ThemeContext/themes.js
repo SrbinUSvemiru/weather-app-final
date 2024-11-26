@@ -32,7 +32,7 @@ export const defaultDark = {
 		main: '#2d4059',
 		light: '#123456',
 		// dark: '#7856d4',
-		// highlight: '#9d80ef',
+		highlight: '#0077b6',
 	},
 	secondary: {
 		main: '#ff5722',

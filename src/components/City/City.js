@@ -1,20 +1,27 @@
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { Grid2 as Grid, Icon, Typography } from '@mui/material';
+import { Grid2 as Grid, Icon, Typography, useTheme } from '@mui/material';
+import { findIndex } from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { AppContext } from '../../context/AppContext/provider';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useCurrentWeatherQuery } from '../../queries/useCurrentWeatherQuery';
 import { offsetDate } from '../../utils/utils';
 import { EmptyCell, Spinner, Tile } from './styled-components';
 
-const City = ({ city, setCurrentCity }) => {
+const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 	const [hovered, setHovered] = useState(false);
 	const [hours, setHours] = useState('');
 	const [minutes, setMinutes] = useState('');
 	const [, setSeconds] = useState('');
 
-	const { cities, setCities } = useContext(AppContext);
+	const { isXs } = useBreakpoint();
+
+	const theme = useTheme();
+
+	const { cities, setCities, setSelectedCity } = useContext(AppContext);
 
 	const { isLoading, data, isError, error } = useCurrentWeatherQuery({
 		city,
@@ -37,9 +44,22 @@ const City = ({ city, setCurrentCity }) => {
 
 	const removeCity = (e) => {
 		e.stopPropagation();
-		let array = cities?.filter((el) => el?.id !== city?.id);
+		const updatedCities = cities?.length ? [...cities] : [];
+		const idx = findIndex(updatedCities, (el) => el?.id === city?.id);
 
-		setCities([...array, { id: uuid(), lat: '', lon: '' }]);
+		if (idx > -1) {
+			updatedCities[idx] = { id: uuid(), lat: '', lon: '', weight: updatedCities[idx]?.weight };
+		}
+
+		setCities(updatedCities);
+	};
+
+	const handleAddCity = (e) => {
+		e.stopPropagation();
+		if (isXs) {
+			setIsDrawerOpen(true);
+		}
+		setCityToReplace(city?.id);
 	};
 
 	if (isError) {
@@ -49,7 +69,7 @@ const City = ({ city, setCurrentCity }) => {
 	return city?.lon && city?.lat ? (
 		<Tile
 			hovered={hovered ? 'hovered' : 'not-hovered'}
-			onClick={() => setCurrentCity({ ...city, current: data })}
+			onClick={() => setSelectedCity({ ...city, current: data })}
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
 		>
@@ -69,6 +89,7 @@ const City = ({ city, setCurrentCity }) => {
 							sx={{
 								'&:hover': {
 									color: 'secondary.main',
+									scale: 1.2,
 								},
 							}}
 						>
@@ -93,7 +114,26 @@ const City = ({ city, setCurrentCity }) => {
 			)}
 		</Tile>
 	) : (
-		<EmptyCell />
+		<EmptyCell
+			backgroundcolor={theme?.palette?.primary?.main}
+			bordercolor={theme?.palette?.primary?.light}
+			bordercolorhovered={theme?.palette?.primary?.highlight}
+		>
+			<Icon
+				onClick={(e) => handleAddCity(e)}
+				sx={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					width: '100%',
+					height: '100%',
+					cursor: 'pointer',
+					color: 'primary.highlight',
+				}}
+			>
+				<AddCircleOutlineOutlinedIcon sx={{ fontSize: '2rem', width: '100%' }} />
+			</Icon>
+		</EmptyCell>
 	);
 };
 

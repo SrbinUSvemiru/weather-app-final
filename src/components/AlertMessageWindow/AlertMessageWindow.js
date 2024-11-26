@@ -1,9 +1,11 @@
+import { Box } from '@mui/material';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animated, easings, useSpring } from 'react-spring';
 
 import { useGetFetchedQuery } from '../../queries/useCitiesQuery';
+import { Window } from '../../styled-components';
 import { returnAlertTime, trans } from '../../utils/utils';
-import { MessageContainer, StartAndFinishContainer, Window } from './styled-components';
+import { MessageContainer, StartAndFinishContainer } from './styled-components';
 
 const AlertMessageWindow = (props) => {
 	const [message, setMessage] = useState();
@@ -43,43 +45,45 @@ const AlertMessageWindow = (props) => {
 
 	return (
 		<Window style={{ ...props?.animation, transform: props?.animation?.xys.to(trans) }}>
-			{message !== null ? (
-				<>
-					<MessageContainer>
-						<animated.p ref={ref} style={messageLoop}>
-							{message?.text === '' ? message?.event : message?.text}
-						</animated.p>
-					</MessageContainer>
+			<Box sx={{ width: '100%', height: '100%', minWidth: '200px', position: 'relative', overflow: 'hidden' }}>
+				{message !== null ? (
+					<>
+						<MessageContainer>
+							<animated.p ref={ref} style={messageLoop}>
+								{message?.text === '' ? message?.event : message?.text}
+							</animated.p>
+						</MessageContainer>
 
-					<StartAndFinishContainer>
-						<div>
-							<p>
-								From {message?.start.date} {message?.start.time}
-							</p>
-							<p>
-								Until {message?.end.date} {message?.end.time}
-							</p>
-						</div>
-						<div id="warning">
-							<img alt="warning" src="./warning.png" />
-						</div>
-					</StartAndFinishContainer>
-				</>
-			) : (
-				<>
-					<MessageContainer>
-						<animated.p ref={ref} style={messageLoop}>
-							No current alerts...
-						</animated.p>
-					</MessageContainer>
-					<StartAndFinishContainer>
-						<p id="enjoy">Enjoy your day!</p>
-						<div id="warning">
-							<img alt="smiley" src="./smiley.png" />
-						</div>
-					</StartAndFinishContainer>
-				</>
-			)}
+						<StartAndFinishContainer>
+							<div>
+								<p>
+									From {message?.start.date} {message?.start.time}
+								</p>
+								<p>
+									Until {message?.end.date} {message?.end.time}
+								</p>
+							</div>
+							<div id="warning">
+								<img alt="warning" src="./warning.png" />
+							</div>
+						</StartAndFinishContainer>
+					</>
+				) : (
+					<>
+						<MessageContainer>
+							<animated.p ref={ref} style={messageLoop}>
+								No current alerts...
+							</animated.p>
+						</MessageContainer>
+						<StartAndFinishContainer>
+							<p id="enjoy">Enjoy your day!</p>
+							<div id="warning">
+								<img alt="smiley" src="./smiley.png" />
+							</div>
+						</StartAndFinishContainer>
+					</>
+				)}
+			</Box>
 		</Window>
 	);
 };
