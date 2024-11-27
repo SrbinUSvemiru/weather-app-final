@@ -1,4 +1,4 @@
-import { Box, List, ListItemButton, TextField, Typography } from '@mui/material';
+import { Box, List, ListItemButton, TextField, Typography, useTheme } from '@mui/material';
 import citiesList from 'cities.json';
 import { findIndex, map, set, slice, sortBy } from 'lodash';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -10,6 +10,8 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 	const [inputCityName, setInputCityName] = useState('');
 	const [searchCities, setSearchCities] = useState([]);
 	const [isListOpen, setIsListOpen] = useState(false);
+
+	const theme = useTheme();
 
 	const textFieldRef = useRef(null);
 
@@ -142,7 +144,8 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 						position: 'absolute',
 						top: 35,
 						zIndex: 100,
-						backgroundColor: 'primary.light',
+						backgroundColor: 'background.window',
+						border: `1px solid ${theme?.palette?.primary?.dark}`,
 						width: '100%',
 						display: inputCityName ? 'block' : 'none',
 						overflowY: 'scroll',

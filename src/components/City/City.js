@@ -1,6 +1,6 @@
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { Grid2 as Grid, Icon, Typography, useTheme } from '@mui/material';
+import { Grid2 as Grid, Icon, Typography } from '@mui/material';
 import { findIndex } from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
@@ -18,8 +18,6 @@ const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 	const [, setSeconds] = useState('');
 
 	const { isXs } = useBreakpoint();
-
-	const theme = useTheme();
 
 	const { cities, setCities, setSelectedCity } = useContext(AppContext);
 
@@ -124,11 +122,7 @@ const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 			)}
 		</Tile>
 	) : (
-		<EmptyCell
-			backgroundcolor={theme?.palette?.primary?.main}
-			bordercolor={theme?.palette?.primary?.light}
-			bordercolorhovered={theme?.palette?.primary?.highlight}
-		>
+		<EmptyCell>
 			<Icon
 				onClick={(e) => handleAddCity(e)}
 				sx={{
@@ -138,7 +132,7 @@ const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 					width: '100%',
 					height: '100%',
 					cursor: 'pointer',
-					color: 'primary.highlight',
+					color: 'text.secondary',
 				}}
 			>
 				<AddCircleOutlineOutlinedIcon sx={{ fontSize: '2rem', width: '100%' }} />

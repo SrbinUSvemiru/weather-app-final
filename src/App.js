@@ -319,7 +319,15 @@ const App = () => {
 						)}
 
 						{isXs ? null : (
-							<Box sx={{ padding: 0, width: '100%', alignItems: 'center', display: 'flex' }}>
+							<Box
+								sx={{
+									padding: 0,
+									width: '100%',
+									alignItems: 'center',
+									justifyContent: 'center',
+									display: 'flex',
+								}}
+							>
 								<SearchBar
 									cityToReplace={cityToReplace}
 									handleCloseCurrentWeather={handleCloseCurrentWeather}
