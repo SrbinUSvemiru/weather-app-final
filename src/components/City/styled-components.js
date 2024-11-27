@@ -12,9 +12,12 @@ export const Tile = styled(animated.div)`
 	cursor: pointer;
 	color: white;
 	padding: 1rem;
-	background: rgba(251, 247, 255, 0.15);
+	background: ${({ theme }) => theme?.palette?.background?.window};
 	border-radius: 16px;
-	border: ${(props) => (props?.hovered === 'hovered' ? '2px solid #ff5722' : `2px solid rgba(251, 247, 255, 0.22)`)};
+	border: ${(props) =>
+		props?.hovered === 'hovered'
+			? `1px solid ${props?.theme?.palette?.secondary?.main}`
+			: `1px solid rgba(251, 247, 255, 0.22)`};
 	will-change: transform, opacity;
 
 	& .temperature {
@@ -47,7 +50,7 @@ export const Tile = styled(animated.div)`
 export const EmptyCell = styled(animated.div)`
 	width: 100%;
 	height: 100%;
-	background-color: ${(props) => props?.backgroundcolor};
+	background-color: ${({ theme }) => theme?.palette?.primary?.main};
 	border-radius: 10px;
 	min-height: 156px;
 	width: 260px;
@@ -55,7 +58,7 @@ export const EmptyCell = styled(animated.div)`
 	justify-content: center;
 	align-items: center;
 	opacity: 0.5;
-	border: 3px dashed ${(props) => props?.bordercolorhovered};
+	border: 1px dashed ${({ theme }) => theme?.palette?.primary?.highlight};
 	&:hover {
 		opacity: 1;
 	}

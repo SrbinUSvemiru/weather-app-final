@@ -1,14 +1,16 @@
 import AirIcon from '@mui/icons-material/Air';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import OpacityIcon from '@mui/icons-material/Opacity';
-import { Grid2 as Grid, Icon, Typography } from '@mui/material';
+import { Grid2 as Grid, Icon, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import { useSpring } from 'react-spring';
 
 import { Window, Wrapper } from '../../styled-components';
 import { trans } from '../../utils/utils';
 
-const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper, animation, colors }) => {
+const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper, animation }) => {
+	const theme = useTheme();
+
 	const activeWrapperPop = useSpring({
 		config: { mass: 1, tension: 500, friction: 50 },
 		from: { opacity: 0, transform: 'translateY(-50%) scale(0)' },
@@ -17,7 +19,7 @@ const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper,
 				opacity: activeWrapper === 'precipitation' ? 1 : 0,
 				transform:
 					activeWrapper === 'precipitation' ? 'translateY(-50%) scale(1.1)' : 'translateY(-50%) scale(0)',
-				background: `linear-gradient(to right,${colors?.[0]} 0%,${colors?.[1]} 100%)`,
+				background: `linear-gradient(to right, ${theme?.palette?.wrapper?.precipitation?.light} 0%, ${theme?.palette?.wrapper?.precipitation?.dark} 100%)`,
 			},
 
 			{ opacity: 0 },
@@ -31,7 +33,7 @@ const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper,
 			{
 				opacity: activeWrapper === 'wind' ? 1 : 0,
 				transform: activeWrapper === 'wind' ? 'translateY(-50%) scale(1.1)' : 'translateY(-50%) scale(0)',
-				background: `linear-gradient(to right, ${colors?.[0]} 0%, ${colors?.[1]} 100%)`,
+				background: `linear-gradient(to right, ${theme?.palette?.wrapper?.wind?.light} 0%, ${theme?.palette?.wrapper?.wind?.dark} 100%)`,
 			},
 
 			{ opacity: 0 },
@@ -45,7 +47,7 @@ const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper,
 			{
 				opacity: activeWrapper === 'humidity' ? 1 : 0,
 				transform: activeWrapper === 'humidity' ? 'translateY(-50%) scale(1.1)' : 'translateY(-50%) scale(0)',
-				background: `linear-gradient(to right,${colors?.[0]} 0%,${colors?.[1]} 100%)`,
+				background: `linear-gradient(to right, ${theme?.palette?.wrapper?.humidity?.light} 0%, ${theme?.palette?.wrapper?.humidity?.dark} 100%)`,
 			},
 			{ opacity: 0 },
 		],
@@ -55,7 +57,7 @@ const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper,
 		<Grid container spacing={{ xs: 1, sm: 2 }} sx={{ height: '100%' }}>
 			<Grid size={{ xs: 4, sm: 12 }}>
 				<Window
-					bordercolor={activeWrapper === 'wind' ? colors?.[1] : ''}
+					bordercolor={activeWrapper === 'wind' ? theme?.palette?.wrapper?.wind?.light : ''}
 					onClick={() => setActiveWrapper('wind')}
 					style={{ ...animation, transform: animation?.xys.to(trans), flexDirection: 'column' }}
 				>
@@ -66,7 +68,7 @@ const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper,
 							zIndex: 2,
 							mb: '0.2rem',
 							width: '30px',
-							color: activeWrapper === 'wind' ? colors?.[1] : 'text.secondary',
+							color: activeWrapper === 'wind' ? theme?.palette?.wrapper?.wind?.light : 'text.secondary',
 						}}
 					>
 						<AirIcon />
@@ -79,7 +81,7 @@ const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper,
 			</Grid>
 			<Grid size={{ xs: 4, sm: 12 }}>
 				<Window
-					bordercolor={activeWrapper === 'precipitation' ? colors?.[1] : ''}
+					bordercolor={activeWrapper === 'precipitation' ? theme?.palette?.wrapper?.precipitation?.light : ''}
 					onClick={() => setActiveWrapper('precipitation')}
 					style={{ ...animation, transform: animation?.xys.to(trans), flexDirection: 'column' }}
 					value="precipitation"
@@ -91,7 +93,10 @@ const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper,
 							zIndex: 2,
 							mb: '0.2rem',
 							width: '30px',
-							color: activeWrapper === 'precipitation' ? colors?.[1] : 'text.secondary',
+							color:
+								activeWrapper === 'precipitation'
+									? theme?.palette?.wrapper?.precipitation?.light
+									: 'text.secondary',
 						}}
 					>
 						<BeachAccessIcon />
@@ -103,7 +108,7 @@ const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper,
 			</Grid>
 			<Grid size={{ xs: 4, sm: 12 }}>
 				<Window
-					bordercolor={activeWrapper === 'humidity' ? colors?.[0] : ''}
+					bordercolor={activeWrapper === 'humidity' ? theme?.palette?.wrapper?.humidity?.light : ''}
 					onClick={() => setActiveWrapper('humidity')}
 					style={{ ...animation, transform: animation?.xys.to(trans), flexDirection: 'column' }}
 					value="humidity"
@@ -114,7 +119,10 @@ const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper,
 							zIndex: 2,
 							mb: '0.2rem',
 							width: '30px',
-							color: activeWrapper === 'humidity' ? colors?.[0] : 'text.secondary',
+							color:
+								activeWrapper === 'humidity'
+									? theme?.palette?.wrapper?.humidity?.light
+									: 'text.secondary',
 						}}
 					>
 						<OpacityIcon />

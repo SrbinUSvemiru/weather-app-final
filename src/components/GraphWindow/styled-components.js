@@ -101,9 +101,10 @@ export const DegreesContainer = styled.div`
 
 export const Window = styled(animated.div)`
 	/* From https://css.glass */
-	background: rgba(251, 247, 255, 0.15);
+	background: ${({ theme }) => theme?.palette?.background?.window};
 	border-radius: 16px;
-	border: 2px solid rgba(251, 247, 255, 0.22);
+	border: ${(props) =>
+		props?.bordercolor ? `1px solid ${props?.bordercolor}` : '1px solid rgba(251, 247, 255, 0.22)'};
 	border-radius: 10px;
 	overflow: hidden;
 	padding: 1rem;

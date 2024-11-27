@@ -1,4 +1,4 @@
-import { Button, Grid2 as Grid, Typography } from '@mui/material';
+import { Button, Grid2 as Grid, Typography, useTheme } from '@mui/material';
 import { set, slice } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -12,6 +12,8 @@ import { Container, SvgContainer, TimeList, Window } from './styled-components';
 const GraphWindow = ({ daysForecast, selectedCity, activeWrapper, animation, colors }) => {
 	const [clicked, setClicked] = useState('hourly');
 	const [hoursList, setHoursList] = useState();
+
+	const theme = useTheme();
 
 	const [width, setWidth] = useState(0);
 
@@ -78,7 +80,10 @@ const GraphWindow = ({ daysForecast, selectedCity, activeWrapper, animation, col
 	}, [selectedCity]);
 
 	return (
-		<Window style={{ ...animation, transform: animation?.xys.to(trans) }}>
+		<Window
+			bordercolor={theme?.palette?.wrapper?.[activeWrapper]?.light}
+			style={{ ...animation, transform: animation?.xys.to(trans) }}
+		>
 			<Container ref={graphRef}>
 				<Grid container spacing={3}>
 					<Grid size={12}>
@@ -88,11 +93,12 @@ const GraphWindow = ({ daysForecast, selectedCity, activeWrapper, animation, col
 							onClick={() => setClicked('hourly')}
 							size="small"
 							sx={{
-								color: 'white',
+								color: 'text.primary',
 								backgroundImage:
 									clicked === 'hourly'
-										? `linear-gradient(to right,${colors?.[0]} 0%,${colors?.[1]} 100%)`
+										? `linear-gradient(to right,${theme?.palette?.wrapper?.[activeWrapper]?.light} 0%,${theme?.palette?.wrapper?.[activeWrapper]?.dark} 100%)`
 										: 'transparent',
+								borderColor: theme?.palette?.wrapper?.[activeWrapper]?.light,
 							}}
 							variant={clicked === 'hourly' ? 'contained' : 'outlined'}
 						>
@@ -107,15 +113,21 @@ const GraphWindow = ({ daysForecast, selectedCity, activeWrapper, animation, col
 							size="small"
 							sx={{
 								ml: '1rem',
-								color: 'white',
+
 								backgroundImage:
 									clicked === 'daily'
-										? `linear-gradient(to right,${colors?.[0]} 0%,${colors?.[1]} 100%)`
+										? `linear-gradient(to right,${theme?.palette?.wrapper?.[activeWrapper]?.light} 0%,${theme?.palette?.wrapper?.[activeWrapper]?.dark} 100%)`
 										: 'transparent',
+								borderColor: theme?.palette?.wrapper?.[activeWrapper]?.light,
 							}}
 							variant={clicked === 'daily' ? 'contained' : 'outlined'}
 						>
-							<Typography fontSize={'0.8rem'} fontWeight={700} variant="subtitle1">
+							<Typography
+								fontSize={'0.8rem'}
+								fontWeight={700}
+								sx={{ color: 'text.primary' }}
+								variant="subtitle1"
+							>
 								days
 							</Typography>
 						</Button>
@@ -166,13 +178,23 @@ const GraphWindow = ({ daysForecast, selectedCity, activeWrapper, animation, col
 								<TimeList width={width}>
 									{clicked === 'hourly'
 										? hoursList?.map((hour, index) => (
-												<Typography fontWeight={600} key={index} variant="subtitle2">
+												<Typography
+													fontWeight={600}
+													key={index}
+													sx={{ color: 'text.primary' }}
+													variant="subtitle2"
+												>
 													{' '}
 													{hour}h
 												</Typography>
 											))
 										: daysForecast?.days?.map((day, index) => (
-												<Typography fontWeight={600} key={index} variant="subtitle2">
+												<Typography
+													fontWeight={600}
+													key={index}
+													sx={{ color: 'text.primary' }}
+													variant="subtitle2"
+												>
 													{day?.day}
 												</Typography>
 											))}

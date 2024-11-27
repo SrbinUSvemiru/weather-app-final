@@ -1,10 +1,12 @@
-import { Grid2 as Grid, Typography } from '@mui/material';
+import { Grid2 as Grid, Typography, useTheme } from '@mui/material';
 import React, { useMemo } from 'react';
 
 import { Window } from '../../styled-components';
 import { trans } from '../../utils/utils';
 
 const DisplayActiveDay = ({ selectedCity, activeDay, animation }) => {
+	const theme = useTheme();
+
 	const sunrise = useMemo(() => {
 		const d = new Date(selectedCity?.current?.sys?.sunrise * 1000 + selectedCity?.current?.timezone * 1000);
 		let hrs = d.getUTCHours();
@@ -19,7 +21,10 @@ const DisplayActiveDay = ({ selectedCity, activeDay, animation }) => {
 	}, [selectedCity]);
 
 	return (
-		<Window bordercolor={'#c779d0'} style={{ ...animation, transform: animation?.xys.to(trans) }}>
+		<Window
+			bordercolor={theme?.palette?.wrapper?.days?.light}
+			style={{ ...animation, transform: animation?.xys.to(trans) }}
+		>
 			<Grid columnSpacing={4} container rowSpacing={1}>
 				<Grid
 					size={{ xs: 12, sm: 6 }}

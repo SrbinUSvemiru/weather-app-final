@@ -1,4 +1,4 @@
-import { Grid2 as Grid, Icon, Typography } from '@mui/material';
+import { Grid2 as Grid, Icon, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import { useSpring } from 'react-spring';
 
@@ -9,6 +9,8 @@ import { trans } from '../../utils/utils';
 const TemperatureWindow = ({ selectedCity, activeWrapper: wrapper, animation, setActiveWrapper }) => {
 	const { isLg, isXl } = useBreakpoint();
 
+	const theme = useTheme();
+
 	const activeWrapper = useSpring({
 		config: { mass: 1, tension: 500, friction: 50 },
 		from: { opacity: 0, transform: 'translateY(-50%) scale(0)' },
@@ -16,7 +18,7 @@ const TemperatureWindow = ({ selectedCity, activeWrapper: wrapper, animation, se
 			{
 				opacity: wrapper === 'temperature' ? 1 : 0,
 				transform: wrapper === 'temperature' ? 'translateY(-50%) scale(1.1)' : 'translateY(-50%) scale(0)',
-				backgroundImage: 'linear-gradient(120deg, #f6d365 0%, #fda085 100%)',
+				backgroundImage: `linear-gradient(120deg, ${theme?.palette?.wrapper?.temperature?.light} 0%, ${theme?.palette?.wrapper?.temperature?.dark} 100%)`,
 			},
 			{ opacity: 0 },
 		],
@@ -24,7 +26,7 @@ const TemperatureWindow = ({ selectedCity, activeWrapper: wrapper, animation, se
 
 	return (
 		<Window
-			bordercolor={wrapper === 'temperature' ? '#fda085' : ''}
+			bordercolor={wrapper === 'temperature' ? theme?.palette?.wrapper?.temperature?.light : ''}
 			key={1}
 			onClick={() => setActiveWrapper('temperature')}
 			style={{ ...animation, transform: animation?.xys.to(trans) }}
