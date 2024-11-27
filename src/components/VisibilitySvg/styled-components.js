@@ -14,7 +14,7 @@ export const NumbersContainer = styled.div`
 export const Container = styled(animated.div)`
 	width: 100%;
 	& ${NumbersContainer} + ${NumbersContainer} {
-		border-left: 2px dashed rgba(255, 255, 255, 0.1);
+		border-left: 2px dashed rgba(0, 0, 0, 0.5);
 	}
 `;
 

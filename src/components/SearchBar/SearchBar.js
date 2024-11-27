@@ -104,10 +104,19 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 	}, [isListOpen]);
 
 	return (
-		<Box ref={containerRef} sx={{ width: isDrawerOpen ? '100%' : '300px', position: 'relative' }}>
+		<Box
+			ref={containerRef}
+			sx={{
+				width: isDrawerOpen ? '100%' : '300px',
+				position: 'relative',
+				borderRadius: '16px',
+				padding: 0,
+				display: 'flex',
+				alignItems: 'center',
+			}}
+		>
 			<TextField
 				className="text"
-				id="search-bar"
 				inputRef={textFieldRef}
 				label="Enter city name"
 				onFocus={() => setIsListOpen(true)}
@@ -117,16 +126,9 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 				placeholder="Search..."
 				size="small"
 				sx={{
+					padding: 0,
+					borderRadius: '16px',
 					width: '100%',
-					'& .MuiInputBase-root': {
-						backgroundColor: 'primary.main', // Use theme's primary color
-					},
-					'& .MuiOutlinedInput-notchedOutline': {
-						borderColor: 'primary.light', // Optional: Set the border color
-					},
-					'&:hover .MuiOutlinedInput-notchedOutline': {
-						borderColor: 'secondary.main', // Optional: Border on hover
-					},
 				}}
 				value={inputCityName}
 				variant="outlined"
@@ -138,7 +140,8 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 				<List
 					sx={{
 						position: 'absolute',
-						top: 40,
+						top: 35,
+						zIndex: 100,
 						backgroundColor: 'primary.light',
 						width: '100%',
 						display: inputCityName ? 'block' : 'none',
@@ -152,7 +155,7 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 							disabled={!city?.lat || !city?.lng}
 							key={index}
 							onClick={() => handleAddCity(city)}
-							sx={{ padding: '0.5rem', background: 'primary.light' }}
+							sx={{ padding: '0.3rem 1rem', background: 'primary.light' }}
 						>
 							<Typography fontWeight={700} variant="subtitle1">
 								{city?.name}

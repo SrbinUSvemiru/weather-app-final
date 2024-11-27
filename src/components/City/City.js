@@ -80,13 +80,19 @@ const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 			) : (
 				<Grid container sx={{ width: '100%' }}>
 					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-						<Typography fontWeight={700} noWrap variant="h6">
+						<Typography
+							fontWeight={700}
+							noWrap
+							sx={{ color: hovered ? 'secondary.main' : 'text.primary' }}
+							variant="h6"
+						>
 							{city?.name}
 						</Typography>
 
 						<Icon
 							onClick={(e) => removeCity(e)}
 							sx={{
+								color: 'text.primary',
 								'&:hover': {
 									color: 'secondary.main',
 									scale: 1.2,
@@ -102,11 +108,15 @@ const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 						</div>
 					</Grid> */}
 					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
-						<Typography variant="h3">{Math.round(data?.main?.temp)}</Typography>
-						<Typography variant="h5">&#176;C</Typography>
+						<Typography sx={{ color: 'text.primary' }} variant="h3">
+							{Math.round(data?.main?.temp)}
+						</Typography>
+						<Typography sx={{ color: 'text.primary' }} variant="h5">
+							&#176;C
+						</Typography>
 					</Grid>
 					<Grid display={'flex'} justifyContent={'center'} size={12}>
-						<Typography variant="h6">
+						<Typography sx={{ color: 'text.primary' }} variant="h6">
 							{hours <= 9 ? '0' + hours : hours}:{minutes <= 9 ? '0' + minutes : minutes}
 						</Typography>
 					</Grid>

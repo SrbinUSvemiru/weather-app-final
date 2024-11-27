@@ -64,27 +64,46 @@ export const Wrapper = styled(animated.div)`
 	justify-content: center;
 	&::after {
 		content: '';
-		width: 90%;
+		width: 91%;
 		height: 90%;
 		border-radius: 10px;
-		background: rgb(66, 71, 80);
+		background: ${({ theme }) => theme?.palette?.background?.window};
 		position: absolute;
 		z-index: -1; /* Place behind the content of Wrapper */
 	}
 `;
 
 export const Window = styled(animated.div)`
-	background: rgba(251, 247, 255, 0.15);
+	background: ${({ theme }) => theme?.palette?.background?.window};
 	border-radius: 16px;
-	border: 2px solid ${(props) => (props?.bordercolor ? props?.bordercolor : 'rgba(251, 247, 255, 0.22)')};
+	border: ${(props) =>
+		props?.bordercolor ? `1px solid ${props?.bordercolor}` : `1px solid rgba(251, 247, 255, 0.22)`};
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-radius: 10px;
 	overflow: hidden;
 	padding: 1rem;
 	height: 100%;
 	position: relative;
 	cursor: pointer;
+	width: 100%;
 	user-select: none;
+`;
+
+export const NumbersContainer = styled.div`
+	height: 100%;
+	width: 100%;
+	position: relative;
+	font-size: 0.7rem;
+	opacity: 1;
+	display: flex;
+	justify-content: center;
+	z-index: -1;
+`;
+
+export const Container = styled(animated.div)`
+	& ${NumbersContainer} + ${NumbersContainer} {
+		${({ theme }) =>
+			`border-left: 2px dashed  ${theme?.palette?.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(121, 151, 162, 0.2)'}`};
+	}
 `;

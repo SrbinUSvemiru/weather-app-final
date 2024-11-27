@@ -1,28 +1,37 @@
 export const defaultLight = {
 	background: {
-		default: '#222831',
+		window: '#ffffff',
+		default: '#e2e5ea',
 	},
 
 	scrollbarColor: {
 		primary: '#dacff9',
 	},
 	primary: {
-		main: '#2d4059',
-		// light: '#9170ed',
+		main: '#008EB6',
+		light: '#00A5E0',
 		// dark: '#7856d4',
-		// highlight: '#9d80ef',
+		highlight: '#58C3E0',
 	},
 	secondary: {
-		main: '#ff5722',
-		// light: '#33ad9f',
+		main: '#ef8039',
+		// light: '#ef8039',
 		// dark: '#009987',
 		// highlight: '#4db8ab',
+	},
+	wrapper: {
+		temperature: { light: '#FFFF69', dark: '#F7C265' },
+		humidity: { light: '#4facfe', dark: '#00f2fe' },
+		precipitation: { light: '#e0c3fc', dark: '#8ec5fc' },
+		wind: { light: '#abecd6', dark: '#fbed96' },
+		days: { light: '#c779d0', dark: '#4bc0c8' },
 	},
 };
 
 export const defaultDark = {
 	background: {
 		default: '#222831',
+		window: '#424750',
 	},
 
 	scrollbarColor: {
@@ -30,14 +39,21 @@ export const defaultDark = {
 	},
 	primary: {
 		main: '#2d4059',
-		light: '#123456',
+		light: '#41618B',
 		// dark: '#7856d4',
-		highlight: '#0077b6',
+		highlight: '#008EB6',
 	},
 	secondary: {
 		main: '#ff5722',
 		// light: '#33ad9f',
 		// dark: '#009987',
 		// highlight: '#4db8ab',
+	},
+	wrapper: {
+		temperature: { light: '#f7e199', dark: '#f7c2b2' },
+		humidity: { light: '#4facfe', dark: '#00f2fe' },
+		precipitation: { light: '#e0c3fc', dark: '#8ec5fc' },
+		wind: { light: '#abecd6', dark: '#fbed96' },
+		days: { light: '#c779d0', dark: '#4bc0c8' },
 	},
 };
