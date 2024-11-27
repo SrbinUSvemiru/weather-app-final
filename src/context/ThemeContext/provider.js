@@ -15,6 +15,9 @@ export const AppThemeProvider = (props) => {
 					mode: theme?.mode,
 					...getPaletteForTheme(theme),
 				},
+				typography: {
+					fontFamily: `"Raleway", "Arial", sans-serif`,
+				},
 				components: {
 					MuiFormLabel: {
 						styleOverrides: {
@@ -35,7 +38,8 @@ export const AppThemeProvider = (props) => {
 							}),
 
 							input: ({ theme }) => ({
-								backgroundColor: theme?.palette?.primary?.main, // Sets background color of the input
+								backgroundColor:
+									theme?.palette?.mode === 'dark' ? theme?.palette?.primary?.main : 'white', // Sets background color of the input
 								borderRadius: '16px', // Adds rounded corners
 								padding: '0.2rem 0.5rem', // Adjusts padding // Removes padding around the actual input
 								'&:focus': {

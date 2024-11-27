@@ -31,7 +31,7 @@ const DaysList = ({ data, activeDay, index, animation, setActiveDay }) => {
 			<Wrapper style={activeWrapper} />
 			<Day>
 				<img alt="weather-icon" src={`../icons/${data?.weather?.icon}.svg`} />
-				<Typography fontWeight={600} sx={{ color: 'text.secondary' }} variant="subtitle1">
+				<Typography fontWeight={500} sx={{ color: 'text.secondary' }} variant="subtitle1">
 					{data?.day?.slice(0, 3)}
 				</Typography>
 			</Day>

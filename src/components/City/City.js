@@ -106,7 +106,7 @@ const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 						</div>
 					</Grid> */}
 					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
-						<Typography sx={{ color: 'text.primary' }} variant="h3">
+						<Typography sx={{ color: 'text.primary', fontWeight: 500 }} variant="h3">
 							{Math.round(data?.main?.temp)}
 						</Typography>
 						<Typography sx={{ color: 'text.primary' }} variant="h5">

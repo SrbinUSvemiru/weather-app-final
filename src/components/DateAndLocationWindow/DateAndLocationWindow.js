@@ -31,7 +31,7 @@ const DateAndLocationWindow = ({ selectedCity, animation }) => {
 		<Window style={{ ...animation, transform: animation?.xys.to(trans) }}>
 			<Box sx={{ padding: 0, width: '100%', display: 'flex-column', alignItems: 'center' }}>
 				<Box sx={{ padding: 0, display: 'flex', width: '100%', justifyContent: 'center' }}>
-					<Typography sx={{ fontWeight: 500 }} variant="h6">
+					<Typography sx={{ fontWeight: 500, color: 'text.secondary' }} variant="h6">
 						{date[3]} {date[2]}/{date[1]}/{date[0]}
 					</Typography>
 				</Box>

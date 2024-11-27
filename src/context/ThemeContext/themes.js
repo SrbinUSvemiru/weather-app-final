@@ -1,7 +1,8 @@
 export const defaultLight = {
 	background: {
 		window: '#ffffff',
-		default: '#e2e5ea',
+		default: '#ddecf7',
+		header: '#ffffff',
 	},
 
 	scrollbarColor: {
@@ -31,7 +32,8 @@ export const defaultLight = {
 export const defaultDark = {
 	background: {
 		default: '#222831',
-		window: '#424750',
+		window: '#354253',
+		header: '#2d4059',
 	},
 
 	scrollbarColor: {
