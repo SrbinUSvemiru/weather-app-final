@@ -7,7 +7,7 @@ import { Window, Wrapper } from '../../styled-components';
 import { trans } from '../../utils/utils';
 
 const TemperatureWindow = ({ selectedCity, activeWrapper: wrapper, animation, setActiveWrapper }) => {
-	const { isLg, isXl } = useBreakpoint();
+	const { isLg, isXl, isMd } = useBreakpoint();
 
 	const theme = useTheme();
 
@@ -53,7 +53,11 @@ const TemperatureWindow = ({ selectedCity, activeWrapper: wrapper, animation, se
 					</Icon>
 				</Grid>
 				<Grid size={{ xs: 6 }} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
-					<Typography sx={{ fontWeight: 600, zIndex: 3 }} variant={isLg || isXl ? 'h1' : 'h2'}>
+					<Typography
+						fontSize={isXl || isLg || isMd ? '5.5rem' : '4rem'}
+						sx={{ fontWeight: 600, zIndex: 3 }}
+						variant="h1"
+					>
 						{Math.round((selectedCity?.current?.main?.temp * 2) / 2) || ''}
 					</Typography>
 					<Typography sx={{ fontWeight: 600 }} variant={isLg ? 'h2' : 'h3'}>

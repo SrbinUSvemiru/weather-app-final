@@ -84,8 +84,6 @@ const App = () => {
 
 	const muiTheme = useTheme();
 
-	console.log(muiTheme);
-
 	const [detailsStyle, detailsApi] = useSprings(
 		9,
 		(i) => ({
@@ -186,7 +184,7 @@ const App = () => {
 						sx={{
 							width: '100vw',
 							height: '100%',
-							backgroundColor: 'primary.main',
+							backgroundColor: muiTheme?.palette?.mode === 'dark' ? 'primary.main' : 'white',
 							padding: '0.5rem 2rem',
 						}}
 					>
@@ -200,6 +198,7 @@ const App = () => {
 										alignItems: 'center',
 										fontWeight: 800,
 										fontSize: '1rem',
+
 										'&:hover': {
 											color: 'secondary.main',
 										},
@@ -254,10 +253,10 @@ const App = () => {
 							width: '100%',
 							position: 'sticky',
 							top: 0,
-							backgroundColor: 'primary.main',
+							backgroundColor: isXs ? 'background.default' : 'background.header',
 							display: 'flex',
 							zIndex: 300,
-							borderBottom: `1px solid ${muiTheme?.palette?.primary?.highlight}`,
+							borderBottom: isXs ? '' : `1px solid ${muiTheme?.palette?.primary?.highlight}`,
 							justifyContent: isXs && !open ? 'space-between' : 'center',
 						}}
 					>
@@ -278,13 +277,14 @@ const App = () => {
 									fontSize: '1rem',
 									visibility: open ? 'hidden' : 'visible',
 									marginRight: '2rem',
+
 									'&:hover': {
 										color: 'secondary.main',
 									},
 								}}
 								variant="filled"
 							>
-								<ArrowBackSharpIcon sx={{ fontSize: '2.5rem' }} />
+								<ArrowBackSharpIcon sx={{ fontSize: '2.1rem' }} />
 							</Button>
 						</Box>
 
@@ -306,6 +306,7 @@ const App = () => {
 										alignItems: 'center',
 										padding: 0,
 										fontWeight: 800,
+
 										fontSize: '1rem',
 										'&:hover': {
 											color: 'secondary.main',

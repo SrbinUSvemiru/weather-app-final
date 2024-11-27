@@ -31,7 +31,7 @@ const DisplayActiveDay = ({ selectedCity, activeDay, animation }) => {
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
 					<Typography noWrap sx={{ color: 'text.secondary' }} variant="h6">
-						temp max
+						Temp max
 					</Typography>
 					<Typography noWrap variant="h6">
 						{Math.round(activeDay?.max_temp * 10) / 10}&#176;C
@@ -42,7 +42,7 @@ const DisplayActiveDay = ({ selectedCity, activeDay, animation }) => {
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
 					<Typography noWrap sx={{ color: 'text.secondary' }} variant="h6">
-						temp min
+						Temp min
 					</Typography>
 					<Typography noWrap variant="h6">
 						{Math.round(activeDay?.min_temp * 10) / 10}
@@ -54,29 +54,29 @@ const DisplayActiveDay = ({ selectedCity, activeDay, animation }) => {
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
 					<Typography sx={{ color: 'text.secondary' }} variant="h6">
-						wind
+						Wind
 					</Typography>
-					<Typography variant="h6">{Math.round(activeDay?.wind_speed * 3.5)} km/h</Typography>
+					<Typography variant="h6">{Math.round(activeDay?.wind_speed * 3.5)}km/h</Typography>
 				</Grid>
 				<Grid
 					size={{ xs: 12, sm: 6 }}
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
 					<Typography sx={{ color: 'text.secondary' }} variant="h6">
-						pressure
+						Pressure
 					</Typography>
-					<Typography variant="h6">{activeDay?.pressure} mb</Typography>
+					<Typography variant="h6">{activeDay?.pressure}mb</Typography>
 				</Grid>
 				<Grid
 					size={{ xs: 12, sm: 6 }}
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
 					<Typography noWrap sx={{ color: 'text.secondary' }} variant="h6">
-						sunrise
+						Sunrise
 					</Typography>
 					<Typography variant="h6">
 						{sunrise?.[0] <= 9 ? '0' + sunrise?.[0] : sunrise?.[0]}:
-						{sunrise?.[1] <= 9 ? '0' + sunrise?.[1] : sunrise?.[1]} h
+						{sunrise?.[1] <= 9 ? '0' + sunrise?.[1] : sunrise?.[1]}h
 					</Typography>
 				</Grid>
 				<Grid
@@ -84,11 +84,11 @@ const DisplayActiveDay = ({ selectedCity, activeDay, animation }) => {
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
 					<Typography noWrap sx={{ color: 'text.secondary' }} variant="h6">
-						sunset
+						Sunset
 					</Typography>
 					<Typography variant="h6">
 						{sunset?.[0] <= 9 ? '0' + sunset?.[0] : sunset?.[0]}:
-						{sunset?.[1] <= 9 ? '0' + sunset?.[1] : sunset?.[1]} h
+						{sunset?.[1] <= 9 ? '0' + sunset?.[1] : sunset?.[1]}h
 					</Typography>
 				</Grid>
 				<Grid
@@ -96,16 +96,16 @@ const DisplayActiveDay = ({ selectedCity, activeDay, animation }) => {
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
 					<Typography sx={{ color: 'text.secondary' }} variant="h6">
-						visibility
+						Visibility
 					</Typography>
-					<Typography variant="h6">{activeDay?.visibility} m</Typography>
+					<Typography variant="h6">{activeDay?.visibility}m</Typography>
 				</Grid>
 				<Grid
 					size={{ xs: 12, sm: 6 }}
 					sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
 				>
 					<Typography sx={{ color: 'text.secondary' }} variant="h6">
-						highest UV
+						Highest UV
 					</Typography>
 					<Typography variant="h6">
 						{activeDay?.uvi}

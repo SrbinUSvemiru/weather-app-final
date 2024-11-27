@@ -179,10 +179,10 @@ const GraphWindow = ({ daysForecast, selectedCity, activeWrapper, animation, col
 									{clicked === 'hourly'
 										? hoursList?.map((hour, index) => (
 												<Typography
-													fontWeight={600}
+													fontWeight={500}
 													key={index}
-													sx={{ color: 'text.primary' }}
-													variant="subtitle2"
+													sx={{ color: 'text.secondary' }}
+													variant="subtitle1"
 												>
 													{' '}
 													{hour}h
@@ -190,10 +190,10 @@ const GraphWindow = ({ daysForecast, selectedCity, activeWrapper, animation, col
 											))
 										: daysForecast?.days?.map((day, index) => (
 												<Typography
-													fontWeight={600}
+													fontWeight={500}
 													key={index}
-													sx={{ color: 'text.primary' }}
-													variant="subtitle2"
+													sx={{ color: 'text.secondary' }}
+													variant="subtitle1"
 												>
 													{day?.day}
 												</Typography>

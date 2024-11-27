@@ -46,7 +46,7 @@ export const UVWindow = ({ airPollution, animation, activeWrapper: wrapper }) =>
 			<Wrapper style={activeWrapper} />
 			<Grid container spacing={1} sx={{ height: '100%' }}>
 				<Grid size={3} sx={{ display: 'flex', flexDirection: 'column' }}>
-					<Typography noWrap variant="h6" zIndex={2}>
+					<Typography color="text.secondary" noWrap variant="h6" zIndex={2}>
 						{' '}
 						{uvIndexCalc?.description}
 					</Typography>
@@ -55,7 +55,7 @@ export const UVWindow = ({ airPollution, animation, activeWrapper: wrapper }) =>
 					</Typography>
 				</Grid>
 				<Grid size={9} sx={{ display: 'flex', alignItems: 'end' }}>
-					<Typography noWrap={isMd ? true : false} variant="subtitle1" zIndex={2}>
+					<Typography noWrap={isMd ? true : false} variant="h6" zIndex={2}>
 						{uvIndexCalc?.message}
 					</Typography>
 				</Grid>
