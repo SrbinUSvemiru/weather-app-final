@@ -50,7 +50,8 @@ export const Tile = styled(animated.div)`
 export const EmptyCell = styled(animated.div)`
 	width: 100%;
 	height: 100%;
-	background-color: ${({ theme }) => theme?.palette?.primary?.main};
+	background-color: ${({ theme }) =>
+		theme?.palette?.mode !== 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(121, 151, 162, 0.2)'};
 	border-radius: 10px;
 	min-height: 156px;
 	width: 260px;
@@ -58,7 +59,8 @@ export const EmptyCell = styled(animated.div)`
 	justify-content: center;
 	align-items: center;
 	opacity: 0.5;
-	border: 1px dashed ${({ theme }) => theme?.palette?.primary?.highlight};
+	border: 2px dashed
+		${({ theme }) => (theme?.palette?.mode === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(121, 151, 162, 0.9)')};
 	&:hover {
 		opacity: 1;
 	}
