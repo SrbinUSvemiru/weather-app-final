@@ -9,6 +9,12 @@ export function offsetDate(offset) {
 	return [hrs, mins, secs];
 }
 
+export const getUnits = () => ({
+	temp: { metric: 'C', imperial: 'F' },
+	speed: { metric: { small: 'm/s', large: 'km/h' }, imperial: { small: 'ft/s', large: 'mph' } },
+	distance: { metric: { small: 'm', large: 'km' }, imperial: { small: 'ft', large: 'mi' } },
+});
+
 const getNestedValue = (obj, path) => path.split('.').reduce((acc, key) => acc && acc[key], obj);
 
 export const getMinMax = (arr, field, minOrMax) =>

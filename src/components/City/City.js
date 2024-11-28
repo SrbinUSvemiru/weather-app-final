@@ -1,15 +1,19 @@
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { Grid2 as Grid, Icon, Typography } from '@mui/material';
+import { animated } from '@react-spring/web';
 import { findIndex } from 'lodash';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useSpring } from 'react-spring';
 import { v4 as uuid } from 'uuid';
 
 import { AppContext } from '../../context/AppContext/provider';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useCurrentWeatherQuery } from '../../queries/useCurrentWeatherQuery';
-import { offsetDate } from '../../utils/utils';
+import { getUnits, offsetDate } from '../../utils/utils';
 import { EmptyCell, Spinner, Tile } from './styled-components';
+
+const AnimatedGrid = animated(Grid);
 
 const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 	const [hovered, setHovered] = useState(false);
@@ -19,7 +23,18 @@ const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 
 	const { isXs } = useBreakpoint();
 
-	const { cities, setCities, setSelectedCity } = useContext(AppContext);
+	const { cities, settings, setCities, setSelectedCity } = useContext(AppContext);
+
+	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
+
+	const [props] = useSpring(
+		() => ({
+			from: { transform: 'scaleY(0)', opacity: 0 },
+			to: { transform: 'scaleY(1)', opacity: 1 },
+			reset: true,
+		}),
+		[units],
+	);
 
 	const { isLoading, data, isError, error } = useCurrentWeatherQuery({
 		city,
@@ -105,14 +120,18 @@ const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 							<img src={`../icons/${data?.weather?.[0].icon}.svg`} />
 						</div>
 					</Grid> */}
-					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
+					<AnimatedGrid
+						size={12}
+						style={props}
+						sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}
+					>
 						<Typography sx={{ color: 'text.primary', fontWeight: 500 }} variant="h3">
-							{Math.round(data?.main?.temp)}
+							{data?.temp?.[units]}
 						</Typography>
-						<Typography sx={{ color: 'text.primary' }} variant="h5">
-							&#176;C
+						<Typography sx={{ color: 'text.primary' }} variant="h4">
+							&#176;{getUnits()?.temp?.[units]}
 						</Typography>
-					</Grid>
+					</AnimatedGrid>
 					<Grid display={'flex'} justifyContent={'center'} size={12}>
 						<Typography sx={{ color: 'text.primary' }} variant="h6">
 							{hours <= 9 ? '0' + hours : hours}:{minutes <= 9 ? '0' + minutes : minutes}

@@ -2,7 +2,19 @@ import './App.css';
 
 import ArrowBackSharpIcon from '@mui/icons-material/ArrowBackSharp';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Box, Button, Container, Drawer, Grid2 as Grid, Switch, useTheme } from '@mui/material';
+import {
+	Box,
+	Button,
+	Container,
+	Drawer,
+	Grid2 as Grid,
+	Stack,
+	Switch,
+	ToggleButton,
+	ToggleButtonGroup,
+	Typography,
+	useTheme,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { animated } from '@react-spring/web';
 import React, { useContext, useState } from 'react';
@@ -79,7 +91,7 @@ const App = () => {
 	const { isXs, isSm } = useBreakpoint();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-	const { cities, theme, setTheme } = useContext(AppContext);
+	const { cities, theme, setSettings, settings, setTheme } = useContext(AppContext);
 	const [cityToReplace, setCityToReplace] = useState('');
 
 	const muiTheme = useTheme();
@@ -164,6 +176,12 @@ const App = () => {
 		}));
 	};
 
+	const handleToggleUnits = (event, newAlignment) => {
+		if (newAlignment !== null) {
+			setSettings((prev) => ({ ...prev, preferences: { ...prev?.preferences, units: newAlignment } }));
+		}
+	};
+
 	const toggleDrawer = (value) => setIsDrawerOpen(value);
 
 	return (
@@ -218,15 +236,33 @@ const App = () => {
 								/>
 							</Grid>
 							<Grid size={12}>
-								<MaterialUISwitch
-									checked={theme?.mode === 'dark'}
-									onClick={() =>
-										setTheme((prev) => ({
-											variant: prev?.variant,
-											mode: prev?.mode === 'dark' ? 'light' : 'dark',
-										}))
-									}
-								/>
+								<Stack direction="row" spacing={4}>
+									<ToggleButtonGroup
+										exclusive
+										onChange={handleToggleUnits}
+										value={settings?.preferences?.units}
+									>
+										<ToggleButton sx={{ padding: '0.2rem 0.7rem' }} value="metric">
+											<Typography variant="subtitle1"> &#176;C </Typography>
+										</ToggleButton>
+										<ToggleButton
+											sx={{ padding: '0.2rem 0.7rem' }}
+											value="imperial"
+											variant="subtitle1"
+										>
+											<Typography> &#176;F </Typography>
+										</ToggleButton>
+									</ToggleButtonGroup>
+									<MaterialUISwitch
+										checked={theme?.mode === 'dark'}
+										onClick={() =>
+											setTheme((prev) => ({
+												variant: prev?.variant,
+												mode: prev?.mode === 'dark' ? 'light' : 'dark',
+											}))
+										}
+									/>
+								</Stack>
 							</Grid>
 						</Grid>
 					</Box>
@@ -351,15 +387,35 @@ const App = () => {
 							}}
 						>
 							{!isXs ? (
-								<MaterialUISwitch
-									checked={theme?.mode === 'dark'}
-									onClick={() =>
-										setTheme((prev) => ({
-											variant: prev?.variant,
-											mode: prev?.mode === 'dark' ? 'light' : 'dark',
-										}))
-									}
-								/>
+								<>
+									<Stack direction="row" spacing={4}>
+										<ToggleButtonGroup
+											exclusive
+											onChange={handleToggleUnits}
+											value={settings?.preferences?.units}
+										>
+											<ToggleButton sx={{ padding: '0.2rem 0.7rem' }} value="metric">
+												<Typography variant="subtitle1"> &#176;C </Typography>
+											</ToggleButton>
+											<ToggleButton
+												sx={{ padding: '0.2rem 0.7rem' }}
+												value="imperial"
+												variant="subtitle1"
+											>
+												<Typography> &#176;F </Typography>
+											</ToggleButton>
+										</ToggleButtonGroup>
+										<MaterialUISwitch
+											checked={theme?.mode === 'dark'}
+											onClick={() =>
+												setTheme((prev) => ({
+													variant: prev?.variant,
+													mode: prev?.mode === 'dark' ? 'light' : 'dark',
+												}))
+											}
+										/>
+									</Stack>
+								</>
 							) : null}
 						</Box>
 					</Box>
