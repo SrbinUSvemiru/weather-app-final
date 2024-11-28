@@ -9,6 +9,8 @@ export const Tile = styled(animated.div)`
 	justify-content: center;
 	align-items: center;
 	width: 260px;
+	backdrop-filter: blur(7.6px);
+	-webkit-backdrop-filter: blur(7.6px);
 	cursor: pointer;
 	color: white;
 	padding: 1rem;

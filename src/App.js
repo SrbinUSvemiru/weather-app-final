@@ -20,6 +20,7 @@ import { animated } from '@react-spring/web';
 import React, { useContext, useState } from 'react';
 import { useSprings } from 'react-spring';
 
+import { Background } from './components/Background/Background';
 import City from './components/City/City';
 import Expanded from './components/Expanded/Expanded';
 import SearchBar from './components/SearchBar/SearchBar';
@@ -197,6 +198,7 @@ const App = () => {
 					overflow: 'hidden',
 				}}
 			>
+				<Background />
 				<Drawer anchor="left" onClose={() => toggleDrawer(false)} open={isDrawerOpen}>
 					<Box
 						sx={{

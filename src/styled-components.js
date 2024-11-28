@@ -67,7 +67,7 @@ export const Wrapper = styled(animated.div)`
 		width: 91%;
 		height: 90%;
 		border-radius: 10px;
-		background: ${({ theme }) => theme?.palette?.background?.window};
+		background: transparent;
 		position: absolute;
 		z-index: -1; /* Place behind the content of Wrapper */
 	}
@@ -88,6 +88,9 @@ export const Window = styled(animated.div)`
 	cursor: pointer;
 	width: 100%;
 	user-select: none;
+	border-radius: 16px;
+	backdrop-filter: blur(7.6px);
+	-webkit-backdrop-filter: blur(7.6px);
 `;
 
 export const NumbersContainer = styled.div`
