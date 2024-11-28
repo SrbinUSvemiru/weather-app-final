@@ -58,10 +58,10 @@ const GraphWindow = ({ daysForecast, selectedCity, activeWrapper, animation, col
 				set(data, 'precipitation.daily', [...data.precipitation.daily, daily[i].pop]);
 			}
 			for (let i = 0; i < hourly?.length; i++) {
-				set(data, 'temperature.hourly', [...data.temperature.hourly, hourly[i].main.temp]);
+				set(data, 'temperature.hourly', [...data.temperature.hourly, hourly[i].temp]);
 				set(data, 'wind.hourly', [
 					...data.wind.hourly,
-					{ value: hourly[i].wind.speed, deg: hourly[i].wind.deg },
+					{ value: hourly[i].wind_speed, deg: hourly[i].wind.deg },
 				]);
 				set(data, 'humidity.hourly', [...data.humidity.hourly, hourly[i].main.humidity]);
 				set(data, 'precipitation.hourly', [...data.precipitation.hourly, hourly[i].pop]);

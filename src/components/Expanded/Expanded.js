@@ -18,13 +18,6 @@ import UVWindow from '../UVWindow/UVWindow';
 
 const AnimatedGrid = animated(Grid);
 
-const colors = () => ({
-	temperature: ['#f7e199', '#f7c2b2'],
-	humidity: ['#4facfe', '#00f2fe'],
-	precipitation: ['#e0c3fc', '#8ec5fc'],
-	wind: ['#abecd6', '#fbed96'],
-});
-
 const Expanded = ({ open, animation }) => {
 	const [activeDay, setActiveDay] = useState(0);
 	const [activeWrapper, setActiveWrapper] = useState('temperature');
@@ -66,7 +59,6 @@ const Expanded = ({ open, animation }) => {
 					<TemperatureWindow
 						activeWrapper={activeWrapper}
 						animation={animation[3]}
-						colors={colors()[activeWrapper]}
 						selectedCity={selectedCity}
 						setActiveWrapper={setActiveWrapper}
 					/>
@@ -80,7 +72,6 @@ const Expanded = ({ open, animation }) => {
 					activeWrapper={activeWrapper}
 					airPollution={airPollution?.list?.[0]}
 					animation={animation[2]}
-					colors={colors()[activeWrapper]}
 					setActiveWrapper={setActiveWrapper}
 				/>
 			</Grid>
@@ -89,7 +80,6 @@ const Expanded = ({ open, animation }) => {
 					<TemperatureWindow
 						activeWrapper={activeWrapper}
 						animation={animation[3]}
-						colors={colors()[activeWrapper]}
 						selectedCity={selectedCity}
 						setActiveWrapper={setActiveWrapper}
 					/>
@@ -100,7 +90,6 @@ const Expanded = ({ open, animation }) => {
 				<CurrentInfoWindow
 					activeWrapper={activeWrapper}
 					animation={animation[4]}
-					colors={colors()[activeWrapper]}
 					pop={daysForecast?.days?.[0]?.pop}
 					selectedCity={selectedCity}
 					setActiveWrapper={setActiveWrapper}
@@ -110,8 +99,8 @@ const Expanded = ({ open, animation }) => {
 			<Grid container size={{ xs: 12, sm: 10, md: 6 }} spacing={{ xs: 1, sm: 2 }}>
 				<Grid size={12}>
 					<DisplayActiveDay
-						activeDay={daysForecast?.days?.[activeDay]}
 						animation={animation[5]}
+						data={daysForecast?.days?.[activeDay]}
 						selectedCity={selectedCity}
 					/>
 				</Grid>
@@ -140,7 +129,6 @@ const Expanded = ({ open, animation }) => {
 				<GraphWindow
 					activeWrapper={activeWrapper}
 					animation={animation[7]}
-					colors={colors()[activeWrapper]}
 					daysForecast={daysForecast}
 					selectedCity={selectedCity}
 				/>

@@ -1,13 +1,19 @@
 import { Typography, useTheme } from '@mui/material';
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import { NaturalCurve } from 'react-svg-curve';
 
+import { AppContext } from '../../context/AppContext';
 import { Container, NumbersContainer } from '../../styled-components';
 import { ValueContainer } from './styled-components';
 
 const TemperatureSvg = ({ clicked, graphData, animation, width }) => {
 	const theme = useTheme();
 	const temperature = graphData?.temperature?.[clicked];
+
+	const { settings } = useContext(AppContext);
+
+	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
+
 	return (
 		<Container style={animation}>
 			<svg height="180" width={width} xmlns="http://www.w3.org/2000/svg">
@@ -21,9 +27,12 @@ const TemperatureSvg = ({ clicked, graphData, animation, width }) => {
 				<NaturalCurve
 					data={temperature?.map((temp, index) => [
 						index * (width / (temperature?.length - 1)),
-						-temp * 2 +
+						-temp?.metric * 2 +
 							90 +
-							(temperature?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
+							(temperature?.reduce(
+								(previousValue, currentValue) => previousValue + (currentValue?.metric || 0),
+								0,
+							) /
 								(temperature?.length - 1)) *
 								2 +
 							3,
@@ -39,16 +48,19 @@ const TemperatureSvg = ({ clicked, graphData, animation, width }) => {
 					<NumbersContainer key={index}>
 						<ValueContainer
 							sumOfTemp={
-								-element * 2 +
+								-element?.metric * 2 +
 								90 +
-								(temperature?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
+								(temperature?.reduce(
+									(previousValue, currentValue) => previousValue + (currentValue?.metric || 0),
+									0,
+								) /
 									(temperature?.length - 1)) *
 									2 +
 								3
 							}
 						>
 							<Typography fontWeight={600} variant="subtitle2">
-								{Math.round(element)}&#176;
+								{element?.[units]}&#176;
 							</Typography>
 						</ValueContainer>
 					</NumbersContainer>

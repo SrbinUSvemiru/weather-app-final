@@ -1,10 +1,11 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Icon, Typography, useTheme } from '@mui/material';
 import { map } from 'lodash';
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useSpring } from 'react-spring';
 import { NaturalCurve } from 'react-svg-curve';
 
+import { AppContext } from '../../context/AppContext';
 import { Container, NumbersContainer } from '../../styled-components';
 import { ValueContainer } from './styled-components';
 
@@ -19,6 +20,10 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
 		},
 	});
 
+	const { settings } = useContext(AppContext);
+
+	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
+
 	return (
 		<Container style={animation}>
 			<svg height="180" width={width} xmlns="http://www.w3.org/2000/svg">
@@ -32,9 +37,12 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
 				<NaturalCurve
 					data={wind?.map((value, index) => [
 						index * (width / (wind?.length - 1)),
-						-value * 2 +
-							80 +
-							(wind?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
+						-value?.metric?.large * 2 +
+							90 +
+							(wind?.reduce(
+								(previousValue, currentValue) => previousValue + (currentValue?.metric?.large || 0),
+								0,
+							) /
 								(wind?.length - 1)) *
 								2 +
 							3,
@@ -51,15 +59,18 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
 						<ValueContainer
 							degrees={windDeg}
 							sumOfTemp={
-								-element * 2 +
-								80 +
-								(wind?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
+								-element?.metric?.large * 2 +
+								90 +
+								(wind?.reduce(
+									(previousValue, currentValue) => previousValue + (currentValue?.metric?.large || 0),
+									0,
+								) /
 									(wind?.length - 1)) *
 									2 +
 								3
 							}
 						>
-							<Typography variant="subtitle1">{Math.round(element * 3.6)}</Typography>
+							<Typography variant="subtitle1">{element?.[units]?.large}</Typography>
 							<Icon
 								component={ArrowForwardIcon}
 								sx={{
@@ -68,16 +79,17 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
 									margin: 'auto',
 									transform: `rotate(${windDeg[index] - 90}deg)`,
 									top: `${
-										-element * 2 +
-										80 +
+										-element?.metric?.large * 2 +
+										90 +
 										(wind?.reduce(
-											(previousValue, currentValue) => previousValue + currentValue,
+											(previousValue, currentValue) =>
+												previousValue + (currentValue?.metric?.large || 0),
 											0,
 										) /
 											(wind?.length - 1)) *
 											2 +
 										3 -
-										15
+										20
 									}px`,
 								}}
 							/>

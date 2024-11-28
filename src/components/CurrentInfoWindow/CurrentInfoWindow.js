@@ -2,14 +2,19 @@ import AirIcon from '@mui/icons-material/Air';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import OpacityIcon from '@mui/icons-material/Opacity';
 import { Grid2 as Grid, Icon, Typography, useTheme } from '@mui/material';
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useSpring } from 'react-spring';
 
+import { AppContext } from '../../context/AppContext';
 import { Window, Wrapper } from '../../styled-components';
-import { trans } from '../../utils/utils';
+import { getUnits, trans } from '../../utils/utils';
 
 const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper, animation }) => {
 	const theme = useTheme();
+	console.log(selectedCity);
+	const { settings } = useContext(AppContext);
+
+	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
 
 	const activeWrapperPop = useSpring({
 		config: { mass: 1, tension: 500, friction: 50 },
@@ -74,8 +79,8 @@ const CurrentInfoWindow = ({ selectedCity, pop, activeWrapper, setActiveWrapper,
 						<AirIcon />
 					</Icon>
 					<Typography fontWeight={600} variant="subtitle1" zIndex={2}>
-						{Math.round(selectedCity?.current?.wind?.speed * 3.5)}
-						km/h
+						{selectedCity?.current?.wind_speed?.[units]?.large}
+						{getUnits()?.speed?.[units]?.large}
 					</Typography>
 				</Window>
 			</Grid>
