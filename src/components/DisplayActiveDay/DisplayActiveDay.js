@@ -50,9 +50,9 @@ const DisplayActiveDay = ({ selectedCity, data, animation }) => {
 
 	// Create springs for each item with individual delays
 	const transitions = useTransition(animatedData, {
-		from: { opacity: 0, height: '0%', transform: 'translateY(-10px)' },
+		from: { opacity: 0, height: '0%', transform: 'translateY(-5px)' },
 		enter: { opacity: 1, height: '100%', transform: 'translateY(0)' },
-		leave: { opacity: 0, height: '0%', transform: 'translateY(-10px)' },
+		leave: { opacity: 0, height: '0%', transform: 'translateY(-5px)' },
 		exitBeforeEnter: true, // Ensures leave happens before enter
 		delay: (item, index) => index * 300,
 	});

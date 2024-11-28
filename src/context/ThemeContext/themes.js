@@ -1,6 +1,6 @@
 export const defaultLight = {
 	background: {
-		window: '#ffffff',
+		window: 'rgba(255, 255, 255, 0.7)',
 		default: '#ddecf7',
 		header: '#ffffff',
 	},
@@ -32,7 +32,7 @@ export const defaultLight = {
 export const defaultDark = {
 	background: {
 		default: '#222831',
-		window: '#354253',
+		window: 'rgba(26, 26, 37, 0.6)',
 		header: '#2d4059',
 	},
 

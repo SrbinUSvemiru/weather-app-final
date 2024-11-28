@@ -100,13 +100,15 @@ export const DegreesContainer = styled.div`
 `;
 
 export const Window = styled(animated.div)`
-	/* From https://css.glass */
 	background: ${({ theme }) => theme?.palette?.background?.window};
 	border-radius: 16px;
 	border: ${(props) =>
 		props?.bordercolor ? `1px solid ${props?.bordercolor}` : '1px solid rgba(251, 247, 255, 0.22)'};
 	border-radius: 10px;
 	overflow: hidden;
+	border-radius: 16px;
+	backdrop-filter: blur(7.6px);
+	-webkit-backdrop-filter: blur(7.6px);
 	padding: 1rem;
 	margin: 0;
 	position: relative;
