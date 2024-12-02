@@ -1,4 +1,5 @@
-import { Box, List, ListItemButton, TextField, Typography, useTheme } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, IconButton, List, ListItemButton, TextField, Typography } from '@mui/material';
 import citiesList from 'cities.json';
 import { findIndex, map, set, slice, sortBy } from 'lodash';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -10,8 +11,6 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 	const [inputCityName, setInputCityName] = useState('');
 	const [searchCities, setSearchCities] = useState([]);
 	const [isListOpen, setIsListOpen] = useState(false);
-
-	const theme = useTheme();
 
 	const textFieldRef = useRef(null);
 
@@ -27,7 +26,7 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 		const sorted = list.sort(function (a, b) {
 			return a?.name?.length - b?.name?.length;
 		});
-		const sliced = sorted?.slice(0, 20);
+		const sliced = sorted?.slice(0, 7);
 
 		setSearchCities(sliced?.length ? sliced : [{ name: 'No results...' }]);
 	}, [inputCityName, cities, cityToReplace]);
@@ -109,7 +108,7 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 		<Box
 			ref={containerRef}
 			sx={{
-				width: isDrawerOpen ? '100%' : '300px',
+				width: '100%',
 				position: 'relative',
 				borderRadius: '16px',
 				padding: 0,
@@ -117,40 +116,50 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 				alignItems: 'center',
 			}}
 		>
+			<IconButton aria-label="search" sx={{ color: 'text.secondary' }} type="submit">
+				<SearchIcon sx={{ fontSize: '2rem' }} />
+			</IconButton>
 			<TextField
 				className="text"
+				fontSize={'2rem'}
 				inputRef={textFieldRef}
-				label="Enter city name"
 				onFocus={() => setIsListOpen(true)}
 				onInput={(e) => {
 					setInputCityName(e.target.value);
 				}}
 				placeholder="Search..."
-				size="small"
+				size="medium"
 				sx={{
 					padding: 0,
+					fontSize: '2rem',
 					borderRadius: '16px',
 					width: '100%',
+					height: '100%',
+					'& .MuiInput-underline:before': {
+						borderBottom: 'none', // Remove the bottom line before interaction
+					},
+					'& .MuiInput-underline:after': {
+						borderBottom: 'none', // Remove the bottom line after interaction
+					},
+					'& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+						borderBottom: 'none', // Remove the bottom line on hover
+					},
 				}}
 				value={inputCityName}
-				variant="outlined"
+				variant="standard"
 			/>
-			{/* <IconButton type="submit" aria-label="search">
-					<Search style={{ fill: 'blue' }} />
-				</IconButton> */}
+
 			{isListOpen ? (
 				<List
 					sx={{
 						position: 'absolute',
 						top: 35,
-						zIndex: 100,
-						backgroundColor: 'background.window',
-						border: `1px solid ${theme?.palette?.primary?.dark}`,
+						paddingLeft: '2rem',
 						width: '100%',
+						zIndex: 100,
+						backgroundColor: 'background.header',
 						display: inputCityName ? 'block' : 'none',
-						overflowY: 'scroll',
-						maxHeight: '500px',
-						borderRadius: '0px 0px 16px 16px',
+						overflowY: 'hidden',
 					}}
 				>
 					{map(searchCities, (city, index) => (
@@ -158,11 +167,9 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 							disabled={!city?.lat || !city?.lng}
 							key={index}
 							onClick={() => handleAddCity(city)}
-							sx={{ padding: '0.3rem 1rem', background: 'primary.light' }}
+							sx={{ padding: '0.1rem 1rem', background: 'primary.light' }}
 						>
-							<Typography fontWeight={700} variant="subtitle1">
-								{city?.name}
-							</Typography>
+							<Typography variant="subtitle1">{city?.name}</Typography>
 							<Typography
 								fontWeight={700}
 								sx={{ color: 'text.secondary', marginLeft: '0.5rem' }}

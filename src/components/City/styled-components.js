@@ -7,6 +7,7 @@ export const Tile = styled(animated.div)`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	box-shadow: 0px 10px 15px -4px rgba(0, 0, 0, 0.2);
 	align-items: center;
 	width: 260px;
 	backdrop-filter: blur(7.6px);
@@ -56,13 +57,11 @@ export const EmptyCell = styled(animated.div)`
 		theme?.palette?.mode !== 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(121, 151, 162, 0.2)'};
 	border-radius: 10px;
 	min-height: 156px;
-	width: 260px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	opacity: 0.5;
-	border: 2px dashed
-		${({ theme }) => (theme?.palette?.mode === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(121, 151, 162, 0.9)')};
+
 	&:hover {
 		opacity: 1;
 	}

@@ -58,6 +58,20 @@ export const MainWeather = styled.div`
 	}
 `;
 
+export const Day = styled(animated.div)`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	border-radius: 5px;
+	width: 100%;
+	& > img {
+		width: 100%;
+		width: 40px;
+	}
+`;
+
 export const Window = styled(animated.div)`
 	/* From https://css.glass */
 	background: rgba(251, 247, 255, 0.15);

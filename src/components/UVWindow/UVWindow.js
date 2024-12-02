@@ -7,11 +7,11 @@ import { Window, Wrapper } from '../../styled-components';
 import { trans, uvIndex } from '../../utils/utils';
 import { Uvi } from './styled-components';
 
-export const UVWindow = ({ airPollution, animation, activeWrapper: wrapper }) => {
+export const UVWindow = ({ airPollution, style, activeWrapper: wrapper }) => {
 	const [width, setWidth] = useState(0);
 	const airPollutionRef = useRef();
 
-	const { isMd } = useBreakpoint();
+	const { isSm } = useBreakpoint();
 
 	const activeWrapper = useSpring({
 		config: { mass: 2, tension: 3000, friction: 150 },
@@ -42,7 +42,7 @@ export const UVWindow = ({ airPollution, animation, activeWrapper: wrapper }) =>
 		}
 	}, [airPollution]);
 	return (
-		<Window onClick={() => {}} style={{ ...animation, transform: animation?.xys.to(trans) }}>
+		<Window style={{ ...style, transform: style?.xys.to(trans) }}>
 			<Wrapper style={activeWrapper} />
 			<Grid container spacing={1} sx={{ height: '100%' }}>
 				<Grid size={3} sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -54,8 +54,8 @@ export const UVWindow = ({ airPollution, animation, activeWrapper: wrapper }) =>
 						AQI {airPollution?.main?.aqi}
 					</Typography>
 				</Grid>
-				<Grid size={9} sx={{ display: 'flex', alignItems: 'end' }}>
-					<Typography noWrap={isMd ? true : false} variant="h6" zIndex={2}>
+				<Grid size={9} sx={{ display: 'flex', alignItems: 'center' }}>
+					<Typography noWrap={isSm ? true : false} variant="h6" zIndex={2}>
 						{uvIndexCalc?.message}
 					</Typography>
 				</Grid>

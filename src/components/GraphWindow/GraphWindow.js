@@ -1,7 +1,8 @@
 import { Button, Grid2 as Grid, Typography, useTheme } from '@mui/material';
 import { set, slice } from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
+import { AppContext } from '../../context/AppContext';
 import { nextFourtyEightHours, trans } from '../../utils/utils';
 import PrecipitationSvg from '../PrecipitationSvg/PrecipitationSvg';
 import TemperatureSvg from '../TemperatureSvg/TemperatureSvg';
@@ -9,9 +10,11 @@ import VisibilitySvg from '../VisibilitySvg/VisibilitySvg';
 import WindSvg from '../WindSvg/WindSvg';
 import { Container, SvgContainer, TimeList, Window } from './styled-components';
 
-const GraphWindow = ({ daysForecast, selectedCity, activeWrapper, animation, colors }) => {
+const GraphWindow = ({ daysForecast, style, colors }) => {
 	const [clicked, setClicked] = useState('hourly');
 	const [hoursList, setHoursList] = useState();
+
+	const { selectedCity, activeWrapper } = useContext(AppContext);
 
 	const theme = useTheme();
 
@@ -82,7 +85,7 @@ const GraphWindow = ({ daysForecast, selectedCity, activeWrapper, animation, col
 	return (
 		<Window
 			bordercolor={theme?.palette?.wrapper?.[activeWrapper]?.light}
-			style={{ ...animation, transform: animation?.xys.to(trans) }}
+			style={{ ...style, transform: style?.xys.to(trans) }}
 		>
 			<Container ref={graphRef}>
 				<Grid container spacing={3}>

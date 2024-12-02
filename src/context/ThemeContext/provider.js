@@ -22,6 +22,7 @@ export const AppThemeProvider = (props) => {
 					MuiFormLabel: {
 						styleOverrides: {
 							root: ({ theme }) => ({
+								border: 'none',
 								'&.Mui-focused': {
 									color: theme?.palette?.primary?.highlight, // Change label color when focused
 								},
@@ -30,16 +31,17 @@ export const AppThemeProvider = (props) => {
 					},
 					MuiOutlinedInput: {
 						styleOverrides: {
-							root: ({ theme }) => ({
+							root: () => ({
+								border: 'none',
 								borderRadius: '16px', // Adds rounded corners for the entire input field
 								'&.Mui-focused': {
-									border: `1px solid ${theme?.palette?.primary?.highlight}`,
+									border: 'none',
 								},
 							}),
 
 							input: ({ theme }) => ({
-								backgroundColor:
-									theme?.palette?.mode === 'dark' ? theme?.palette?.primary?.main : 'white', // Sets background color of the input
+								border: 'none',
+								backgroundColor: 'transparent', // Sets background color of the input
 								borderRadius: '16px', // Adds rounded corners
 								padding: '0.2rem 0.5rem', // Adjusts padding // Removes padding around the actual input
 								'&:focus': {
