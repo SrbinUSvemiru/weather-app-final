@@ -1,13 +1,16 @@
 import { Box, Typography } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
+import { AppContext } from '../../context/AppContext';
 import { Window } from '../../styled-components';
 import { offsetDate, returnDate, trans } from '../../utils/utils';
 
-const DateAndLocationWindow = ({ selectedCity, animation }) => {
+const DateAndLocationWindow = ({ style }) => {
 	const [hours, setHours] = useState();
 	const [minutes, setMinutes] = useState();
 	const [seconds, setSeconds] = useState();
+
+	const { selectedCity } = useContext(AppContext);
 
 	useEffect(() => {
 		if (selectedCity) {
@@ -28,11 +31,11 @@ const DateAndLocationWindow = ({ selectedCity, animation }) => {
 	}, [selectedCity]);
 
 	return (
-		<Window style={{ ...animation, transform: animation?.xys.to(trans) }}>
+		<Window style={{ ...style, transform: style?.xys.to(trans) }}>
 			<Box sx={{ padding: 0, width: '100%', display: 'flex-column', alignItems: 'center' }}>
 				<Box sx={{ padding: 0, display: 'flex', width: '100%', justifyContent: 'center' }}>
 					<Typography sx={{ fontWeight: 500, color: 'text.secondary' }} variant="h6">
-						{date[3]} {date[2]}/{date[1]}/{date[0]}
+						{date?.[3]} {date?.[2]}/{date?.[1]}/{date?.[0]}
 					</Typography>
 				</Box>
 				<Box sx={{ padding: 0, display: 'flex', justifyContent: 'center', width: '100%' }}>

@@ -12,6 +12,7 @@ export const AppContext = createContext({
 });
 
 export const AppContextProvider = (props) => {
+	const [activeWrapper, setActiveWrapper] = useState('temperature');
 	const [settings, setSettings] = useState(getStorageItem('weather-app-settings', DEFAULT_SETTINGS));
 	const [theme, setTheme] = useState(settings?.theme || { mode: 'dark', variant: 'default' });
 	const [cities, setCities] = useState(getStorageItem('weather-app-settings')?.cities || defaultCities());
@@ -23,7 +24,18 @@ export const AppContextProvider = (props) => {
 
 	return (
 		<AppContext.Provider
-			value={{ settings, setSettings, cities, setCities, theme, setTheme, setSelectedCity, selectedCity }}
+			value={{
+				settings,
+				setSettings,
+				activeWrapper,
+				setActiveWrapper,
+				cities,
+				setCities,
+				theme,
+				setTheme,
+				setSelectedCity,
+				selectedCity,
+			}}
 		>
 			{props.children}
 		</AppContext.Provider>

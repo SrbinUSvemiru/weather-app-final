@@ -81,6 +81,7 @@ export const Window = styled(animated.div)`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	box-shadow: 0px 10px 15px -4px rgba(0, 0, 0, 0.2);
 	overflow: hidden;
 	padding: 1rem;
 	height: 100%;

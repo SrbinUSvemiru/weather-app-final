@@ -36,7 +36,7 @@ export const useMultipleDaysForecastQuery = ({ city, options }) =>
 					},
 					day: returnDay(el?.dt, city?.current?.timezone),
 				}));
-				console.log(res);
+
 				const groupedData = res.reduce((acc, item) => {
 					const key = item.day;
 

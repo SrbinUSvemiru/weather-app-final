@@ -107,6 +107,7 @@ export const Window = styled(animated.div)`
 	border-radius: 10px;
 	overflow: hidden;
 	border-radius: 16px;
+	box-shadow: 0px 10px 15px -4px rgba(0, 0, 0, 0.2);
 	backdrop-filter: blur(7.6px);
 	-webkit-backdrop-filter: blur(7.6px);
 	padding: 1rem;

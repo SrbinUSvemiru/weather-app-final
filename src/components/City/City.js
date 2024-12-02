@@ -8,20 +8,19 @@ import { useSpring } from 'react-spring';
 import { v4 as uuid } from 'uuid';
 
 import { AppContext } from '../../context/AppContext/provider';
-import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useCurrentWeatherQuery } from '../../queries/useCurrentWeatherQuery';
-import { getUnits, offsetDate } from '../../utils/utils';
+import { getUnits, offsetDate, trans } from '../../utils/utils';
 import { EmptyCell, Spinner, Tile } from './styled-components';
 
 const AnimatedGrid = animated(Grid);
 
-const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
+const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, handleOpenCurrentWeather }) => {
 	const [hovered, setHovered] = useState(false);
 	const [hours, setHours] = useState('');
 	const [minutes, setMinutes] = useState('');
 	const [, setSeconds] = useState('');
 
-	const { isXs } = useBreakpoint();
+	const isEmpty = useMemo(() => !city?.lon || !city?.lat, [city]);
 
 	const { cities, settings, setCities, setSelectedCity } = useContext(AppContext);
 
@@ -55,7 +54,7 @@ const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isLoading]);
 
-	const removeCity = (e) => {
+	const handleRemoveCity = (e) => {
 		e.stopPropagation();
 		const updatedCities = cities?.length ? [...cities] : [];
 		const idx = findIndex(updatedCities, (el) => el?.id === city?.id);
@@ -69,94 +68,108 @@ const City = ({ city, setCityToReplace, setIsDrawerOpen }) => {
 
 	const handleAddCity = (e) => {
 		e.stopPropagation();
-		if (isXs) {
-			setIsDrawerOpen(true);
-		}
+
+		setIsDrawerOpen(true);
+
 		setCityToReplace(city?.id);
 	};
 
+	const handleTileClick = (e) => {
+		e.stopPropagation();
+		handleOpenCurrentWeather(e, index);
+		setSelectedCity({ ...city, current: data });
+	};
+
 	if (isError) {
-		return <div>{error.message}</div>;
+		return <div>{error?.message}</div>;
 	}
 
-	return city?.lon && city?.lat ? (
+	return (
 		<Tile
-			hovered={hovered ? 'hovered' : 'not-hovered'}
-			onClick={() => setSelectedCity({ ...city, current: data })}
+			hovered={hovered && !isEmpty ? 'hovered' : 'not-hovered'}
+			onClick={(e) => handleTileClick(e)}
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
+			style={{ ...style, transform: style?.xys.to(trans), padding: isEmpty ? '0rem' : '1rem' }}
 		>
-			{isLoading ? (
-				<Spinner>
-					<img alt="loading" src="../loading-spinners.svg" />
-				</Spinner>
+			{isEmpty ? (
+				<EmptyCell>
+					<Icon
+						onClick={(e) => handleAddCity(e)}
+						sx={{
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+							width: '100%',
+							height: '100%',
+							cursor: 'pointer',
+							color: 'text.secondary',
+						}}
+					>
+						<AddCircleOutlineOutlinedIcon sx={{ fontSize: '2rem', width: '100%' }} />
+					</Icon>
+				</EmptyCell>
 			) : (
 				<Grid container sx={{ width: '100%' }}>
-					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-						<Typography
-							fontWeight={700}
-							noWrap
-							sx={{ color: hovered ? 'secondary.main' : 'text.primary' }}
-							variant="h6"
-						>
-							{city?.name}
-						</Typography>
+					{isLoading ? (
+						<Spinner>
+							<img alt="loading" src="../loading-spinners.svg" />
+						</Spinner>
+					) : (
+						<>
+							<Grid
+								size={12}
+								sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+							>
+								<Typography
+									fontWeight={700}
+									noWrap
+									sx={{ color: hovered ? 'secondary.main' : 'text.primary' }}
+									variant="h6"
+								>
+									{city?.name}
+								</Typography>
 
-						<Icon
-							onClick={(e) => removeCity(e)}
-							sx={{
-								color: 'text.primary',
-								'&:hover': {
-									color: 'secondary.main',
-									scale: 1.2,
-								},
-							}}
-						>
-							<CloseOutlinedIcon />
-						</Icon>
-					</Grid>
-					{/* <Grid size={6}>
+								<Icon
+									onClick={(e) => handleRemoveCity(e)}
+									sx={{
+										color: 'text.primary',
+										'&:hover': {
+											color: 'secondary.main',
+											scale: 1.2,
+										},
+									}}
+								>
+									<CloseOutlinedIcon />
+								</Icon>
+							</Grid>
+							{/* <Grid size={6}>
 						<div className="temperature">
 							<img src={`../icons/${data?.weather?.[0].icon}.svg`} />
 						</div>
 					</Grid> */}
-					<AnimatedGrid
-						size={12}
-						style={props}
-						sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}
-					>
-						<Typography sx={{ color: 'text.primary', fontWeight: 500 }} variant="h3">
-							{data?.temp?.[units]}
-						</Typography>
-						<Typography sx={{ color: 'text.primary' }} variant="h4">
-							&#176;{getUnits()?.temp?.[units]}
-						</Typography>
-					</AnimatedGrid>
-					<Grid display={'flex'} justifyContent={'center'} size={12}>
-						<Typography sx={{ color: 'text.primary' }} variant="h6">
-							{hours <= 9 ? '0' + hours : hours}:{minutes <= 9 ? '0' + minutes : minutes}
-						</Typography>
-					</Grid>
+							<AnimatedGrid
+								size={12}
+								style={props}
+								sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}
+							>
+								<Typography sx={{ color: 'text.primary', fontWeight: 500 }} variant="h3">
+									{data?.temp?.[units]}
+								</Typography>
+								<Typography sx={{ color: 'text.primary' }} variant="h4">
+									&#176;{getUnits()?.temp?.[units]}
+								</Typography>
+							</AnimatedGrid>
+							<Grid display={'flex'} justifyContent={'center'} size={12}>
+								<Typography sx={{ color: 'text.primary' }} variant="h6">
+									{hours <= 9 ? '0' + hours : hours}:{minutes <= 9 ? '0' + minutes : minutes}
+								</Typography>
+							</Grid>
+						</>
+					)}
 				</Grid>
 			)}
 		</Tile>
-	) : (
-		<EmptyCell>
-			<Icon
-				onClick={(e) => handleAddCity(e)}
-				sx={{
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'center',
-					width: '100%',
-					height: '100%',
-					cursor: 'pointer',
-					color: 'text.secondary',
-				}}
-			>
-				<AddCircleOutlineOutlinedIcon sx={{ fontSize: '2rem', width: '100%' }} />
-			</Icon>
-		</EmptyCell>
 	);
 };
 

@@ -44,7 +44,7 @@ const AlertMessageWindow = (props) => {
 	});
 
 	return (
-		<Window style={{ ...props?.animation, transform: props?.animation?.xys.to(trans) }}>
+		<Window style={{ ...props?.style, transform: props?.style?.xys.to(trans) }}>
 			<Box sx={{ width: '100%', height: '100%', minWidth: '200px', position: 'relative', overflow: 'hidden' }}>
 				{message !== null ? (
 					<>
