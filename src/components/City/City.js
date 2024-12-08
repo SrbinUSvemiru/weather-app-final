@@ -68,9 +68,7 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, handleOpe
 
 	const handleAddCity = (e) => {
 		e.stopPropagation();
-
 		setIsDrawerOpen(true);
-
 		setCityToReplace(city?.id);
 	};
 

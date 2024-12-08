@@ -5,17 +5,15 @@ import { useSpring } from 'react-spring';
 
 import { AppContext } from '../../context/AppContext';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { Window } from '../../styled-components';
 import { getUnits, trans } from '../../utils/utils';
+import { Window } from '../Window/Window';
 
 const AnimatedTypography = animated(Typography);
 
-const TemperatureWindow = ({ style }) => {
+const TemperatureWindow = ({ style, handleCloseCurrentWeather, api, index }) => {
 	const { isLg, isXl, isMd, isXs } = useBreakpoint();
-
 	const theme = useTheme();
-
-	const { settings, selectedCity, activeWrapper: wrapper, setActiveWrapper } = useContext(AppContext);
+	const { settings, selectedCity } = useContext(AppContext);
 
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
 
@@ -30,9 +28,12 @@ const TemperatureWindow = ({ style }) => {
 
 	return (
 		<Window
-			bordercolor={wrapper === 'temperature' ? theme?.palette?.wrapper?.temperature?.light : ''}
-			key={1}
-			onClick={() => setActiveWrapper('temperature')}
+			api={api}
+			id={'temperature'}
+			index={index}
+			onButtonClick={handleCloseCurrentWeather}
+			shadowcolor={theme?.palette?.wrapper?.temperature?.light}
+			shouldSkip={!isXs && !isMd && !isLg && !isXl}
 			style={{ ...style, transform: style?.xys.to(trans) }}
 		>
 			<Grid container spacing={1}>

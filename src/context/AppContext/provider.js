@@ -17,6 +17,7 @@ export const AppContextProvider = (props) => {
 	const [theme, setTheme] = useState(settings?.theme || { mode: 'dark', variant: 'default' });
 	const [cities, setCities] = useState(getStorageItem('weather-app-settings')?.cities || defaultCities());
 	const [selectedCity, setSelectedCity] = useState({});
+	const [firstWindow, setFirstWindow] = useState(0);
 
 	useEffect(() => {
 		setStorageItem('weather-app-settings', { theme, cities, preferences: { units: settings?.preferences?.units } });
@@ -29,6 +30,8 @@ export const AppContextProvider = (props) => {
 				setSettings,
 				activeWrapper,
 				setActiveWrapper,
+				firstWindow,
+				setFirstWindow,
 				cities,
 				setCities,
 				theme,

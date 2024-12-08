@@ -1,6 +1,6 @@
 export const defaultLight = {
 	background: {
-		window: 'rgba(255, 255, 255, 0.7)',
+		window: 'rgba(255, 255, 255, 0.8)',
 		default: '#ddecf7',
 		header: '#ffffff',
 	},
@@ -21,7 +21,7 @@ export const defaultLight = {
 		// highlight: '#4db8ab',
 	},
 	wrapper: {
-		temperature: { light: '#FFFF69', dark: '#F7C265' },
+		temperature: { light: '#007bff', dark: '#F7C265' },
 		humidity: { light: '#4facfe', dark: '#00f2fe' },
 		precipitation: { light: '#e0c3fc', dark: '#8ec5fc' },
 		wind: { light: '#abecd6', dark: '#fbed96' },
@@ -32,7 +32,7 @@ export const defaultLight = {
 export const defaultDark = {
 	background: {
 		default: '#222831',
-		window: 'rgb(26, 48, 79, 0.5)',
+		window: 'rgb(26, 48, 79, 0.8)',
 		header: '#2d4059',
 	},
 

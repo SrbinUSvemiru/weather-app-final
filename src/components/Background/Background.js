@@ -8,9 +8,11 @@ import { getBackgroundUrls } from '../../utils/utils';
 
 const AnimatedBox = animated(Box);
 
-export const Background = () => {
+export const Background = ({ open }) => {
 	const [activeIndex, setActiveIndex] = useState(0);
+
 	const { theme } = useContext(AppContext);
+
 	const backgrounds = useMemo(() => getBackgroundUrls()[theme?.mode], [theme?.mode]);
 
 	const springApi = useSpringRef();
@@ -19,19 +21,16 @@ export const Background = () => {
 		ref: springApi,
 		from: {
 			opacity: 0,
-			transform: 'scale(1)',
 		},
 		enter: {
 			opacity: 1,
-			transform: !open ? 'scale(1.2)' : 'scale(1)',
-		},
-		leave: {
-			opacity: 0,
-			transform: 'scale(1)',
 		},
 
+		leave: {
+			opacity: 0,
+		},
 		config: {
-			duration: 1000,
+			duration: 1000, // Adjust this to control zoom speed
 		},
 
 		onRest: (_springs, _ctrl, item) => {
@@ -44,10 +43,12 @@ export const Background = () => {
 		springApi.start();
 
 		const interval = setInterval(() => {
-			springApi.start();
-		}, 10000); // Change every 20 seconds
+			if (open) {
+				springApi.start();
+			}
+		}, 30000);
 
-		return () => clearInterval(interval); // Cleanup interval on component unmount
+		return () => clearInterval(interval);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [backgrounds]);
 

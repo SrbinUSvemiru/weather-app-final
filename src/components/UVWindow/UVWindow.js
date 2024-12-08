@@ -3,15 +3,16 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSpring } from 'react-spring';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { Window, Wrapper } from '../../styled-components';
+import { Wrapper } from '../../styled-components';
 import { trans, uvIndex } from '../../utils/utils';
+import { Window } from '../Window/Window';
 import { Uvi } from './styled-components';
 
-export const UVWindow = ({ airPollution, style, activeWrapper: wrapper }) => {
+export const UVWindow = ({ airPollution, style, activeWrapper: wrapper, handleCloseCurrentWeather }) => {
 	const [width, setWidth] = useState(0);
 	const airPollutionRef = useRef();
 
-	const { isSm } = useBreakpoint();
+	const { isSm, isXs } = useBreakpoint();
 
 	const activeWrapper = useSpring({
 		config: { mass: 2, tension: 3000, friction: 150 },
@@ -41,11 +42,18 @@ export const UVWindow = ({ airPollution, style, activeWrapper: wrapper }) => {
 			return uvIndex(airPollution?.main?.aqi);
 		}
 	}, [airPollution]);
+
 	return (
-		<Window style={{ ...style, transform: style?.xys.to(trans) }}>
+		<Window
+			id={'air-polution'}
+			isDisabled={true}
+			onButtonClick={handleCloseCurrentWeather}
+			shouldSkip={!isXs && !isSm}
+			style={{ ...style, transform: style?.xys.to(trans) }}
+		>
 			<Wrapper style={activeWrapper} />
 			<Grid container spacing={1} sx={{ height: '100%' }}>
-				<Grid size={3} sx={{ display: 'flex', flexDirection: 'column' }}>
+				<Grid size={{ xs: 4 }} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
 					<Typography color="text.secondary" noWrap variant="h6" zIndex={2}>
 						{' '}
 						{uvIndexCalc?.description}
@@ -54,8 +62,20 @@ export const UVWindow = ({ airPollution, style, activeWrapper: wrapper }) => {
 						AQI {airPollution?.main?.aqi}
 					</Typography>
 				</Grid>
-				<Grid size={9} sx={{ display: 'flex', alignItems: 'center' }}>
-					<Typography noWrap={isSm ? true : false} variant="h6" zIndex={2}>
+				<Grid size={{ xs: 8 }} sx={{ display: 'flex', alignItems: 'center' }}>
+					<Typography
+						noWrap={true}
+						sx={{
+							overflow: 'hidden',
+							display: '-webkit-box',
+							WebkitBoxOrient: 'vertical',
+							textOverflow: 'ellipsis',
+							whiteSpace: 'normal',
+							WebkitLineClamp: 3,
+						}}
+						variant="subtitle1"
+						zIndex={2}
+					>
 						{uvIndexCalc?.message}
 					</Typography>
 				</Grid>
