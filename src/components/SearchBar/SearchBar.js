@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 
 import { AppContext } from '../../context/AppContext/provider';
 
-const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToReplace, handleCloseCurrentWeather }) => {
+const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, handleCloseCurrentWeather }) => {
 	const [inputCityName, setInputCityName] = useState('');
 	const [searchCities, setSearchCities] = useState([]);
 	const [isListOpen, setIsListOpen] = useState(false);
@@ -55,9 +55,7 @@ const SearchBar = ({ setIsDrawerOpen, isDrawerOpen, cityToReplace, setCityToRepl
 		setInputCityName('');
 		setCityToReplace('');
 		setIsDrawerOpen(false);
-		if (isDrawerOpen) {
-			handleCloseCurrentWeather();
-		}
+		handleCloseCurrentWeather();
 	};
 
 	// const handleLocationClick = () => {

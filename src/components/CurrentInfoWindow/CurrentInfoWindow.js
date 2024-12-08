@@ -5,22 +5,27 @@ import { Grid2 as Grid, Icon, Typography, useTheme } from '@mui/material';
 import React, { useContext, useMemo } from 'react';
 
 import { AppContext } from '../../context/AppContext';
-import { Window } from '../../styled-components';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { getUnits, trans } from '../../utils/utils';
+import { Window } from '../Window/Window';
 
-const CurrentInfoWindow = ({ pop, style }) => {
+const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }) => {
 	const theme = useTheme();
+	const { isLg, isMd, isXl } = useBreakpoint();
 
-	const { settings, selectedCity, activeWrapper, setActiveWrapper } = useContext(AppContext);
+	const { settings, selectedCity, activeWrapper } = useContext(AppContext);
 
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
 
 	return (
-		<Grid container spacing={{ xs: 1, sm: 2 }} sx={{ height: '100%', width: '100%' }}>
+		<Grid container spacing={{ xs: 1 }} sx={{ height: '100%', width: '100%' }}>
 			<Grid size={{ xs: 4, sm: 12 }}>
 				<Window
-					bordercolor={activeWrapper === 'wind' ? theme?.palette?.wrapper?.wind?.light : ''}
-					onClick={() => setActiveWrapper('wind')}
+					api={api}
+					id={'wind'}
+					index={index}
+					onButtonClick={handleCloseCurrentWeather}
+					shouldSkip={isLg || isMd || isXl}
 					style={{
 						...style,
 						transform: style?.xys.to(trans),
@@ -47,8 +52,11 @@ const CurrentInfoWindow = ({ pop, style }) => {
 			</Grid>
 			<Grid size={{ xs: 4, sm: 12 }}>
 				<Window
-					bordercolor={activeWrapper === 'precipitation' ? theme?.palette?.wrapper?.precipitation?.light : ''}
-					onClick={() => setActiveWrapper('precipitation')}
+					api={api}
+					id={'precipitation'}
+					index={index}
+					shadowcolor={activeWrapper === 'precipitation' ? theme?.palette?.wrapper?.precipitation?.light : ''}
+					shouldSkip={true}
 					style={{ ...style, transform: style?.xys.to(trans), flexDirection: 'column', padding: '0.6rem' }}
 					value="precipitation"
 				>
@@ -72,8 +80,11 @@ const CurrentInfoWindow = ({ pop, style }) => {
 			</Grid>
 			<Grid size={{ xs: 4, sm: 12 }}>
 				<Window
-					bordercolor={activeWrapper === 'humidity' ? theme?.palette?.wrapper?.humidity?.light : ''}
-					onClick={() => setActiveWrapper('humidity')}
+					api={api}
+					id={'humidity'}
+					index={index}
+					shadowcolor={activeWrapper === 'humidity' ? theme?.palette?.wrapper?.humidity?.light : ''}
+					shouldSkip={true}
 					style={{
 						...style,
 						transform: style?.xys.to(trans),

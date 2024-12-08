@@ -5,16 +5,17 @@ import React, { useContext, useMemo, useState } from 'react';
 import { useTransition } from 'react-spring';
 
 import { AppContext } from '../../context/AppContext';
-import { Window } from '../../styled-components';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { getUnits, trans } from '../../utils/utils';
+import { Window } from '../Window/Window';
 import { Day } from './styled-components';
 
 const AnimatedTypography = animated(Typography);
 
-const DisplayActiveDay = ({ daysForecast, style }) => {
+const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, index, api }) => {
 	const theme = useTheme();
 	const [activeDay, setActiveDay] = useState(0);
-
+	const { isXs } = useBreakpoint();
 	const { settings, selectedCity } = useContext(AppContext);
 
 	const dayData = useMemo(() => daysForecast?.days?.[activeDay], [daysForecast, activeDay]);
@@ -25,13 +26,13 @@ const DisplayActiveDay = ({ daysForecast, style }) => {
 		const d = new Date(selectedCity?.current?.sys?.sunrise * 1000 + selectedCity?.current?.timezone * 1000);
 		let hrs = d.getUTCHours();
 		let mins = d.getUTCMinutes();
-		return [hrs, mins];
+		return `${hrs}:${mins}h`;
 	}, [selectedCity]);
 	const sunset = useMemo(() => {
 		const d = new Date(selectedCity?.current?.sys?.sunset * 1000 + selectedCity?.current?.timezone * 1000);
 		let hrs = d.getUTCHours();
 		let mins = d.getUTCMinutes();
-		return [hrs, mins];
+		return `${hrs}:${mins}h`;
 	}, [selectedCity]);
 	const animatedData = useMemo(
 		() => [
@@ -66,9 +67,13 @@ const DisplayActiveDay = ({ daysForecast, style }) => {
 
 	return (
 		<>
-			<Grid size={12}>
+			<Grid size={12} spacing={1}>
 				<Window
-					bordercolor={theme?.palette?.wrapper?.days?.light}
+					id={'day-details'}
+					isDisabled={true}
+					onButtonClick={handleCloseCurrentWeather}
+					shadowcolor={theme?.palette?.wrapper?.days?.light}
+					shouldSkip={!isXs}
 					style={{ ...style, transform: style?.xys.to(trans) }}
 				>
 					<Grid columnSpacing={4} container rowSpacing={1}>
@@ -84,7 +89,7 @@ const DisplayActiveDay = ({ daysForecast, style }) => {
 									position: 'relative',
 								}}
 							>
-								<AnimatedTypography noWrap sx={{ color: 'text.secondary' }} variant="h6">
+								<AnimatedTypography noWrap sx={{ color: 'text.secondary' }} variant="subtitle1">
 									{item.label}
 								</AnimatedTypography>
 								<AnimatedTypography
@@ -99,12 +104,14 @@ const DisplayActiveDay = ({ daysForecast, style }) => {
 					</Grid>
 				</Window>
 			</Grid>
-			<Grid container size={12} spacing={{ xs: 0.5, sm: 2 }}>
-				{map(daysForecast?.days, (day, index) => (
-					<Grid key={index} size={2}>
+			<Grid container size={12} spacing={{ xs: 0.5, sm: 1 }}>
+				{map(daysForecast?.days, (day, idx) => (
+					<Grid key={idx} size={2}>
 						<Window
-							bordercolor={activeDay === index ? theme?.palette?.wrapper?.days?.light : ''}
-							onClick={() => setActiveDay(index)}
+							api={api}
+							id={`${idx}-day`}
+							index={index + idx + 1}
+							onClick={() => setActiveDay(idx)}
 							style={{ ...style, transform: style?.xys.to(trans), padding: '0.4rem 1rem' }}
 						>
 							<Day>

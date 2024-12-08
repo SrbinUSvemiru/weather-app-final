@@ -76,16 +76,16 @@ export const Wrapper = styled(animated.div)`
 export const Window = styled(animated.div)`
 	background: ${({ theme }) => theme?.palette?.background?.window};
 	border-radius: 16px;
-	border: ${(props) =>
-		props?.bordercolor ? `1px solid ${props?.bordercolor}` : `1px solid rgba(251, 247, 255, 0.22)`};
+	border: 1px solid rgba(251, 247, 255, 0.22);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	box-shadow: 0px 10px 15px -4px rgba(0, 0, 0, 0.2);
-	overflow: hidden;
+	box-shadow: ${(props) =>
+		props?.shadowcolor ? `0px 0px 10px 0px ${props?.shadowcolor}` : `0px 10px 15px -4px rgba(0, 0, 0, 0.3)`};
 	padding: 1rem;
 	height: 100%;
 	position: relative;
+	z-index: 100;
 	cursor: pointer;
 	width: 100%;
 	user-select: none;

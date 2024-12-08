@@ -2,15 +2,16 @@ import { Box } from '@mui/material';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animated, easings, useSpring } from 'react-spring';
 
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useGetFetchedQuery } from '../../queries/useCitiesQuery';
-import { Window } from '../../styled-components';
 import { returnAlertTime, trans } from '../../utils/utils';
+import { Window } from '../Window/Window';
 import { MessageContainer, StartAndFinishContainer } from './styled-components';
 
 const AlertMessageWindow = (props) => {
 	const [message, setMessage] = useState();
 	const [width, setWidth] = useState();
-
+	const { isXs } = useBreakpoint();
 	const ref = useRef(null);
 
 	const data = useGetFetchedQuery(props.currentCity);
@@ -44,7 +45,13 @@ const AlertMessageWindow = (props) => {
 	});
 
 	return (
-		<Window style={{ ...props?.style, transform: props?.style?.xys.to(trans) }}>
+		<Window
+			id={'alert-message'}
+			isDisabled={true}
+			onButtonClick={props?.handleCloseCurrentWeather}
+			shouldSkip={!isXs}
+			style={{ ...props?.style, transform: props?.style?.xys.to(trans) }}
+		>
 			<Box sx={{ width: '100%', height: '100%', minWidth: '200px', position: 'relative', overflow: 'hidden' }}>
 				{message !== null ? (
 					<>

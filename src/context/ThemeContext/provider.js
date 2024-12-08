@@ -16,7 +16,7 @@ export const AppThemeProvider = (props) => {
 					...getPaletteForTheme(theme),
 				},
 				typography: {
-					fontFamily: `"Raleway", "Arial", sans-serif`,
+					fontFamily: `"Helvetica Neue", "Arial", sans-serif`,
 				},
 				components: {
 					MuiFormLabel: {

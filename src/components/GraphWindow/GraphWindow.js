@@ -7,10 +7,11 @@ import { nextFourtyEightHours, trans } from '../../utils/utils';
 import PrecipitationSvg from '../PrecipitationSvg/PrecipitationSvg';
 import TemperatureSvg from '../TemperatureSvg/TemperatureSvg';
 import VisibilitySvg from '../VisibilitySvg/VisibilitySvg';
+import { Window } from '../Window/Window';
 import WindSvg from '../WindSvg/WindSvg';
-import { Container, SvgContainer, TimeList, Window } from './styled-components';
+import { Container, SvgContainer, TimeList } from './styled-components';
 
-const GraphWindow = ({ daysForecast, style, colors }) => {
+const GraphWindow = ({ daysForecast, style, colors, id, handleCloseCurrentWeather }) => {
 	const [clicked, setClicked] = useState('hourly');
 	const [hoursList, setHoursList] = useState();
 
@@ -84,8 +85,11 @@ const GraphWindow = ({ daysForecast, style, colors }) => {
 
 	return (
 		<Window
-			bordercolor={theme?.palette?.wrapper?.[activeWrapper]?.light}
-			style={{ ...style, transform: style?.xys.to(trans) }}
+			id={id}
+			isDisabled={true}
+			onButtonClick={handleCloseCurrentWeather}
+			shouldSkip={false}
+			style={{ ...style, transform: style?.xys.to(trans), display: 'block' }}
 		>
 			<Container ref={graphRef}>
 				<Grid container spacing={3}>

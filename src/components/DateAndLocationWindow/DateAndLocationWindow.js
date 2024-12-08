@@ -1,11 +1,11 @@
-import { Box, Typography } from '@mui/material';
+import { Grid2 as Grid, Typography } from '@mui/material';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 import { AppContext } from '../../context/AppContext';
-import { Window } from '../../styled-components';
 import { offsetDate, returnDate, trans } from '../../utils/utils';
+import { Window } from '../Window/Window';
 
-const DateAndLocationWindow = ({ style }) => {
+const DateAndLocationWindow = ({ style, handleCloseCurrentWeather }) => {
 	const [hours, setHours] = useState();
 	const [minutes, setMinutes] = useState();
 	const [seconds, setSeconds] = useState();
@@ -31,30 +31,48 @@ const DateAndLocationWindow = ({ style }) => {
 	}, [selectedCity]);
 
 	return (
-		<Window style={{ ...style, transform: style?.xys.to(trans) }}>
-			<Box sx={{ padding: 0, width: '100%', display: 'flex-column', alignItems: 'center' }}>
-				<Box sx={{ padding: 0, display: 'flex', width: '100%', justifyContent: 'center' }}>
-					<Typography sx={{ fontWeight: 500, color: 'text.secondary' }} variant="h6">
+		<Window
+			id={'date-and-location'}
+			isDisabled={true}
+			onButtonClick={handleCloseCurrentWeather}
+			style={{ ...style, transform: style?.xys.to(trans) }}
+		>
+			<Grid container spacing={0.5} sx={{ padding: 0, width: '100%' }}>
+				<Grid size={{ xs: 12 }} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+					<Typography
+						sx={{
+							fontWeight: 500,
+							color: 'text.secondary',
+						}}
+						variant="h6"
+					>
 						{date?.[3]} {date?.[2]}/{date?.[1]}/{date?.[0]}
 					</Typography>
-				</Box>
-				<Box sx={{ padding: 0, display: 'flex', justifyContent: 'center', width: '100%' }}>
-					<Typography sx={{ fontWeight: 700 }} variant="h5">
+				</Grid>
+
+				<Grid size={{ xs: 12 }} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+					<Typography sx={{ fontWeight: 500 }} variant="h5">
 						{selectedCity?.name}&nbsp;
 					</Typography>
-					<Typography sx={{ fontWeight: 700, color: 'text.secondary' }} variant="h5">
+					<Typography sx={{ fontWeight: 600, color: 'text.secondary' }} variant="h5">
 						{selectedCity?.country}
 					</Typography>
-				</Box>
-
-				<Typography
-					sx={{ fontWeight: 700, color: 'text.secondary', display: 'flex', justifyContent: 'center' }}
-					variant="h6"
-				>
-					{hours <= 9 ? '0' + hours : hours}:{minutes <= 9 ? '0' + minutes : minutes}:
-					{seconds <= 9 ? '0' + seconds : seconds}
-				</Typography>
-			</Box>
+				</Grid>
+				<Grid size={{ xs: 12 }}>
+					<Typography
+						sx={{
+							fontWeight: 500,
+							color: 'text.secondary',
+							display: 'flex',
+							justifyContent: 'center',
+						}}
+						variant="h6"
+					>
+						{hours <= 9 ? '0' + hours : hours}:{minutes <= 9 ? '0' + minutes : minutes}:
+						{seconds <= 9 ? '0' + seconds : seconds}
+					</Typography>
+				</Grid>
+			</Grid>
 		</Window>
 	);
 };

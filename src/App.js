@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { animated } from '@react-spring/web';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { useSpring } from 'react-spring';
 
 import { Background } from './components/Background/Background';
@@ -87,7 +87,8 @@ const AnimatedBox = animated(Box);
 
 const App = () => {
 	const [open, setOpen] = useState(true);
-
+	const containerRef = useRef(null);
+	const [headerClickedIcon, setHeaderClickedIcon] = useState('search');
 	const { isXs } = useBreakpoint();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -118,7 +119,6 @@ const App = () => {
 			<Container
 				sx={{
 					padding: '0 !important',
-					margin: 0,
 					height: '100vh',
 					minWidth: '100vw',
 					backgroundColor: 'background.default',
@@ -126,48 +126,49 @@ const App = () => {
 					overflow: 'hidden',
 				}}
 			>
-				<Background open={open} />
+				<Background />
 
 				<AnimatedBox
-					onMouseLeave={() => (isDrawerOpen ? setIsDrawerOpen(false) : {})}
+					onMouseLeave={() => setIsDrawerOpen(false)}
 					style={appBar}
 					sx={{
 						position: 'fixed',
 						zIndex: muiTheme?.zIndex?.appBar,
-
 						width: '100%',
 						backgroundColor: muiTheme?.palette?.background?.header,
 						overflow: 'hidden',
-						backdropFilter: 'blur(7.6px)',
+						boxShadow: '0px 5px 10px -4px rgba(0, 0, 0, 0.2)',
 						display: 'flex',
-
 						alignItems: 'start',
 						padding: isXs ? '0 2rem' : '0 4rem',
 					}}
 				>
 					<Grid container spacing={{ xs: 1, sm: 3 }} sx={{ width: '100%' }}>
 						<Grid size={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Grid>
+						<Grid size={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Grid>
+
 						<Grid size={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+							<IconButton
+								aria-label="search"
+								onClick={() => {
+									setHeaderClickedIcon('search');
+									toggleDrawer(true);
+								}}
+								sx={{ color: 'text.secondary', marginRight: '1rem' }}
+							>
+								<SearchIcon />
+							</IconButton>
 							{isXs ? (
 								<IconButton>
 									<MenuIcon
-										onClick={() => toggleDrawer((prev) => !prev)}
+										onClick={() => {
+											setHeaderClickedIcon('menu');
+											toggleDrawer((prev) => !prev);
+										}}
 										sx={{ color: 'text.secondary' }}
 									/>
 								</IconButton>
 							) : (
-								<IconButton
-									aria-label="search"
-									onClick={() => toggleDrawer(true)}
-									sx={{ color: 'text.secondary' }}
-								>
-									<SearchIcon />
-								</IconButton>
-							)}
-						</Grid>
-
-						<Grid size={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-							{isXs ? null : (
 								<Stack direction="row" spacing={4}>
 									<ToggleButtonGroup
 										exclusive
@@ -209,7 +210,7 @@ const App = () => {
 						</Grid>
 
 						<Grid size={12}>
-							{isDrawerOpen ? (
+							{isDrawerOpen && headerClickedIcon === 'search' ? (
 								<SearchBar
 									cityToReplace={cityToReplace}
 									handleCloseCurrentWeather={handleCloseCurrentWeather}
@@ -219,8 +220,8 @@ const App = () => {
 								/>
 							) : null}
 						</Grid>
-						{isXs && isDrawerOpen ? (
-							<Grid container size={3} spacing={1} sx={{ paddingTop: '1rem' }}>
+						{isDrawerOpen && headerClickedIcon === 'menu' ? (
+							<Grid container size={3} spacing={2}>
 								<Grid size={12}>
 									<ToggleButtonGroup
 										exclusive
@@ -266,9 +267,10 @@ const App = () => {
 				</AnimatedBox>
 
 				<Box
+					id="scrollable-container"
 					sx={{
-						margin: 0,
 						marginTop: '40px',
+						padding: isXs ? '1rem 1rem 4rem 1rem' : '2rem 2rem 4rem 2rem',
 						display: 'flex',
 						flexDirection: 'column',
 						justifyContent: 'start',
@@ -281,22 +283,14 @@ const App = () => {
 						position: 'relative',
 					}}
 				>
-					<Box
-						sx={{
-							padding: isXs ? '1rem' : '3rem',
-							width: '100%',
-							display: 'fex',
-							justifyContent: 'center',
-						}}
-					>
-						<Expanded
-							handleCloseCurrentWeather={handleCloseCurrentWeather}
-							open={open}
-							setCityToReplace={setCityToReplace}
-							setIsDrawerOpen={setIsDrawerOpen}
-							setOpen={setOpen}
-						/>
-					</Box>
+					<Expanded
+						containerRef={containerRef}
+						handleCloseCurrentWeather={handleCloseCurrentWeather}
+						open={open}
+						setCityToReplace={setCityToReplace}
+						setIsDrawerOpen={setIsDrawerOpen}
+						setOpen={setOpen}
+					/>
 				</Box>
 			</Container>
 		</>
