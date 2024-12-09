@@ -1,12 +1,12 @@
 import { Grid2 as Grid, Typography, useTheme } from '@mui/material';
 import { animated } from '@react-spring/web';
 import { map } from 'lodash';
-import React, { useContext, useMemo, useState } from 'react';
-import { useTransition } from 'react-spring';
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useSprings } from 'react-spring';
 
 import { AppContext } from '../../context/AppContext';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { getUnits, trans } from '../../utils/utils';
+import { getTime, getUnits, trans } from '../../utils/utils';
 import { Window } from '../Window/Window';
 import { Day } from './styled-components';
 
@@ -15,55 +15,89 @@ const AnimatedTypography = animated(Typography);
 const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, index, api }) => {
 	const theme = useTheme();
 	const [activeDay, setActiveDay] = useState(0);
+	const [dayData, setDayData] = useState([]);
 	const { isXs } = useBreakpoint();
 	const { settings, selectedCity } = useContext(AppContext);
 
-	const dayData = useMemo(() => daysForecast?.days?.[activeDay], [daysForecast, activeDay]);
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
 
-	// Data keys for animation mapping
-	const sunrise = useMemo(() => {
-		const d = new Date(selectedCity?.current?.sys?.sunrise * 1000 + selectedCity?.current?.timezone * 1000);
-		let hrs = d.getUTCHours();
-		let mins = d.getUTCMinutes();
-		return `${hrs}:${mins}h`;
-	}, [selectedCity]);
-	const sunset = useMemo(() => {
-		const d = new Date(selectedCity?.current?.sys?.sunset * 1000 + selectedCity?.current?.timezone * 1000);
-		let hrs = d.getUTCHours();
-		let mins = d.getUTCMinutes();
-		return `${hrs}:${mins}h`;
-	}, [selectedCity]);
-	const animatedData = useMemo(
-		() => [
-			{ id: 1, label: 'Temp max', value: `${dayData?.max_temp?.[units]}°${getUnits()?.temp?.[units]}` },
-			{ id: 2, label: 'Temp min', value: `${dayData?.min_temp?.[units]}°${getUnits()?.temp?.[units]}` },
-			{ id: 3, label: 'Sunrise', value: sunrise },
-			{ id: 4, label: 'Sunset', value: sunset },
-			{
-				id: 5,
-				label: 'Wind',
-				value: `${dayData?.wind_speed?.[units]?.large}${getUnits()?.speed?.[units]?.large}`,
-			},
-			{ id: 6, label: 'Pressure', value: `${dayData?.pressure}mb` },
-			{
-				id: 7,
-				label: 'Visibility',
-				value: `${dayData?.visibility?.[units]?.large}${getUnits()?.distance?.[units]?.large}`,
-			},
-			// Add more items as needed
-		],
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[dayData, units],
+	const formattData = useCallback(
+		(data, units) => {
+			setDayData([
+				{ id: 0, label: '', value: data?.day },
+				{ id: 1, label: 'Temp max', value: `${data?.max_temp?.[units]}°${getUnits()?.temp?.[units]}` },
+				{ id: 2, label: 'Temp min', value: `${data?.min_temp?.[units]}°${getUnits()?.temp?.[units]}` },
+				{
+					id: 3,
+					label: 'Sunrise',
+					value: getTime({
+						dt: selectedCity?.current?.sys?.sunrise,
+						timezone: selectedCity?.current?.timezone,
+						formatt: 'HH:mm',
+					}),
+				},
+				{
+					id: 4,
+					label: 'Sunset',
+					value: getTime({
+						dt: selectedCity?.current?.sys?.sunset,
+						timezone: selectedCity?.current?.timezone,
+						formatt: 'HH:mm',
+					}),
+				},
+				{
+					id: 5,
+					label: 'Wind',
+					value: `${data?.wind_speed?.[units]?.large}${getUnits()?.speed?.[units]?.large}`,
+				},
+				{ id: 6, label: 'Pressure', value: `${data?.pressure}mb` },
+				{
+					id: 7,
+					label: 'Visibility',
+					value: `${data?.visibility?.[units]?.large}${getUnits()?.distance?.[units]?.large}`,
+				},
+				// Add more items as needed
+			]);
+		},
+		[selectedCity],
 	);
 
+	useEffect(() => {
+		formattData(daysForecast?.days?.[activeDay], units);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const [springs, springsApi] = useSprings(dayData?.length, (i) => ({
+		from: { opacity: 0, height: '0%', transform: 'translateY(-50px)' },
+		immediate: true,
+		to: { opacity: 1, height: '100%', transform: 'translateY(0)' },
+		delay: (i + 1) * 50,
+		config: {
+			tension: 10,
+			friction: 10,
+			mass: 1,
+		},
+	}));
 	// Create springs for each item with individual delays
-	const transitions = useTransition(animatedData, {
-		from: { opacity: 0, height: '0%', transform: 'translateY(-5px)' },
-		enter: { opacity: 1, height: '100%', transform: 'translateY(0)' },
-		leave: { opacity: 0, height: '0%', transform: 'translateY(-5px)' },
-		exitBeforeEnter: true, // Ensures leave happens before enter
-	});
+	useLayoutEffect(() => {
+		springsApi?.start((i) => ({
+			immediate: false,
+			clamp: true,
+			delay: (i + 1) * 25,
+			to: { opacity: 0, height: '0%', transform: 'translateY(-50%)' },
+			onRest: () => formattData(daysForecast?.days?.[activeDay], units),
+		}));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [springsApi, activeDay, units, daysForecast]);
+
+	useLayoutEffect(() => {
+		springsApi?.start((i) => ({
+			immediate: false,
+			clamp: true,
+			delay: (i + 1) * 25,
+			to: { opacity: 1, height: '100%', transform: 'translateY(0)' },
+		}));
+	}, [springsApi, dayData]);
 
 	return (
 		<>
@@ -77,30 +111,49 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 					style={{ ...style, transform: style?.xys.to(trans) }}
 				>
 					<Grid columnSpacing={4} container rowSpacing={1}>
-						{transitions((style, item) => (
-							<Grid
-								key={item.id}
-								size={{ xs: 12, sm: 6 }}
-								sx={{
-									display: 'flex',
-									alignItems: 'center',
-									justifyContent: 'space-between',
-									overflow: 'hidden',
-									position: 'relative',
-								}}
-							>
-								<AnimatedTypography noWrap sx={{ color: 'text.secondary' }} variant="subtitle1">
-									{item.label}
-								</AnimatedTypography>
-								<AnimatedTypography
-									noWrap
-									style={{ ...style }} // Animated style from useTransition
-									variant="h6"
-								>
-									{item.value}
-								</AnimatedTypography>
-							</Grid>
-						))}
+						{map(springs, (style, i) => {
+							if (i === 0) {
+								return (
+									<Grid
+										key={dayData?.[i]?.id}
+										size={12}
+										sx={{
+											display: 'flex',
+											justifyContent: 'center',
+											paddingBottom: '0.5rem',
+											marginBottom: '0.5rem',
+											borderBottom: '2px solid',
+											borderColor: 'border',
+										}}
+									>
+										<AnimatedTypography style={{ ...style }} variant="h6">
+											{dayData?.[i]?.value}
+										</AnimatedTypography>
+									</Grid>
+								);
+							} else {
+								return (
+									<Grid
+										key={dayData?.[i]?.id}
+										size={{ xs: 12, sm: 6 }}
+										sx={{
+											display: 'flex',
+											alignItems: 'center',
+											justifyContent: 'space-between',
+											overflow: 'hidden',
+											position: 'relative',
+										}}
+									>
+										<AnimatedTypography noWrap sx={{ color: 'text.secondary' }} variant="subtitle1">
+											{dayData?.[i]?.label}
+										</AnimatedTypography>
+										<AnimatedTypography noWrap style={{ ...style }} variant="h6">
+											{dayData?.[i]?.value}
+										</AnimatedTypography>
+									</Grid>
+								);
+							}
+						})}
 					</Grid>
 				</Window>
 			</Grid>

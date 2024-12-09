@@ -19,8 +19,14 @@ const TemperatureWindow = ({ style, handleCloseCurrentWeather, api, index }) => 
 
 	const [props] = useSpring(
 		() => ({
-			from: { transform: 'scaleY(0)', opacity: 0 },
-			to: { transform: 'scaleY(1)', opacity: 1 },
+			from: {
+				opacity: 0,
+				transform: 'perspective(600px) rotateX(180deg)',
+			},
+			to: {
+				transform: 'perspective(600px) rotateX(0deg)',
+				opacity: 1,
+			},
 			reset: true,
 		}),
 		[units],
@@ -64,9 +70,13 @@ const TemperatureWindow = ({ style, handleCloseCurrentWeather, api, index }) => 
 					>
 						{selectedCity?.current?.temp?.[units] || ''}
 					</AnimatedTypography>
-					<Typography sx={{ fontWeight: 600 }} variant={isLg || isMd || isXs ? 'h2' : 'h3'}>
+					<AnimatedTypography
+						style={props}
+						sx={{ fontWeight: 600 }}
+						variant={isLg || isMd || isXs ? 'h2' : 'h3'}
+					>
 						&#176;{getUnits()?.temp?.[units]}
-					</Typography>
+					</AnimatedTypography>
 				</Grid>
 				<Grid size={{ xs: 6 }} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
 					<Typography sx={{ fontWeight: 600, zIndex: 3 }} variant="h6">

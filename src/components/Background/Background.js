@@ -8,7 +8,7 @@ import { getBackgroundUrls } from '../../utils/utils';
 
 const AnimatedBox = animated(Box);
 
-export const Background = ({ open }) => {
+export const Background = () => {
 	const [activeIndex, setActiveIndex] = useState(0);
 
 	const { theme } = useContext(AppContext);
@@ -43,9 +43,7 @@ export const Background = ({ open }) => {
 		springApi.start();
 
 		const interval = setInterval(() => {
-			if (open) {
-				springApi.start();
-			}
+			springApi.start();
 		}, 30000);
 
 		return () => clearInterval(interval);

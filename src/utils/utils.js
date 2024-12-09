@@ -1,4 +1,5 @@
 import { concat, join } from 'lodash';
+import { DateTime } from 'luxon';
 
 export function offsetDate(offset) {
 	var d = new Date(new Date().getTime() + offset * 1000);
@@ -73,25 +74,32 @@ export function returnAlertTime(dt, offset) {
 	return { date: date, time: time };
 }
 
-export function returnDate(offset) {
-	var d = new Date(new Date().getTime() + offset * 1000);
-	const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-	var day = d.getUTCDay();
-	var dayOfMonth = d.getUTCDate();
-	var year = d.getUTCFullYear();
-	var month = d.getUTCMonth() + 1;
+export function getDate({ timezone = 0 }) {
+	const utcNow = DateTime.utc();
 
-	return [year, month, dayOfMonth, days[day]];
+	const cityTime = utcNow.plus({ seconds: timezone });
+	const formattedDate = cityTime.toFormat('cccc, LLLL d, yyyy');
+
+	return formattedDate;
+}
+
+export function getTime({ timezone = 0, formatt = 'HH:mm:ss', dt = 0 }) {
+	const utcNow = dt !== 0 ? DateTime.fromMillis(dt * 1000).toUTC() : DateTime.utc();
+	console.log(dt);
+	const cityTime = utcNow.plus({ seconds: timezone });
+	const formattedTime = cityTime.toFormat(formatt);
+
+	return formattedTime;
 }
 
 export const getBackgroundUrls = () => ({
-	dark: [
+	light: [
 		'https://images.unsplash.com/photo-1645421025282-8d27db73dab8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 		'https://images.unsplash.com/photo-1561486576-189f808ca324?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 		'https://images.unsplash.com/photo-1446729444801-31245ddba81a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 		'https://images.unsplash.com/photo-1441039995991-e5c1178e605a?q=80&w=2053&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 	],
-	light: [
+	dark: [
 		'https://images.unsplash.com/photo-1590290320564-4575418a7061?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 		'https://images.unsplash.com/photo-1428765048792-aa4bdde46fea?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 		'https://images.unsplash.com/photo-1611580271540-3d52b90addf6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',

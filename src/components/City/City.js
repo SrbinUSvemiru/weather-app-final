@@ -1,39 +1,29 @@
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { Grid2 as Grid, Icon, Typography } from '@mui/material';
+import { Grid2 as Grid, Icon, Skeleton, Typography } from '@mui/material';
 import { animated } from '@react-spring/web';
 import { findIndex } from 'lodash';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useSpring } from 'react-spring';
 import { v4 as uuid } from 'uuid';
 
 import { AppContext } from '../../context/AppContext/provider';
 import { useCurrentWeatherQuery } from '../../queries/useCurrentWeatherQuery';
-import { getUnits, offsetDate, trans } from '../../utils/utils';
-import { EmptyCell, Spinner, Tile } from './styled-components';
+import { getTime, getUnits, trans } from '../../utils/utils';
+import { EmptyCell, Tile } from './styled-components';
 
-const AnimatedGrid = animated(Grid);
+const AnimatedTypography = animated(Typography);
 
 const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, handleOpenCurrentWeather }) => {
 	const [hovered, setHovered] = useState(false);
-	const [hours, setHours] = useState('');
-	const [minutes, setMinutes] = useState('');
-	const [, setSeconds] = useState('');
+
+	const [time, setTime] = useState('');
 
 	const isEmpty = useMemo(() => !city?.lon || !city?.lat, [city]);
 
 	const { cities, settings, setCities, setSelectedCity } = useContext(AppContext);
 
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
-
-	const [props] = useSpring(
-		() => ({
-			from: { transform: 'scaleY(0)', opacity: 0 },
-			to: { transform: 'scaleY(1)', opacity: 1 },
-			reset: true,
-		}),
-		[units],
-	);
 
 	const { isLoading, data, isError, error } = useCurrentWeatherQuery({
 		city,
@@ -43,16 +33,46 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, handleOpe
 	useEffect(() => {
 		if (data) {
 			const interval = setInterval(() => {
-				const time = offsetDate(data.timezone);
-				setHours(time[0]);
-				setMinutes(time[1]);
-				setSeconds(time[2]);
+				const dateTime = getTime({
+					timezone: data?.timezone,
+					formatt: 'HH:mm',
+				});
+				setTime(dateTime);
 			}, 1000);
 
 			return () => clearInterval(interval);
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoading]);
+	}, [data]);
+
+	const [props, api] = useSpring(() => ({
+		x: 0,
+		opacity: 0,
+		immediate: true,
+	}));
+
+	useLayoutEffect(() => {
+		if (!isLoading && time) {
+			api?.start({
+				from: { x: -20, opacity: 0 },
+				to: { x: 0, opacity: 1 },
+				immediate: false,
+			});
+		}
+	}, [isLoading, time, api]);
+
+	useLayoutEffect(() => {
+		api?.start({
+			from: {
+				opacity: 0,
+				transform: 'perspective(600px) rotateX(180deg)',
+			},
+			to: {
+				transform: 'perspective(600px) rotateX(0deg)',
+				opacity: 1,
+			},
+			immediate: false,
+		});
+	}, [units, api]);
 
 	const handleRemoveCity = (e) => {
 		e.stopPropagation();
@@ -109,62 +129,62 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, handleOpe
 				</EmptyCell>
 			) : (
 				<Grid container sx={{ width: '100%' }}>
-					{isLoading ? (
-						<Spinner>
-							<img alt="loading" src="../loading-spinners.svg" />
-						</Spinner>
-					) : (
-						<>
-							<Grid
-								size={12}
-								sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-							>
-								<Typography
-									fontWeight={700}
-									noWrap
-									sx={{ color: hovered ? 'secondary.main' : 'text.primary' }}
-									variant="h6"
-								>
-									{city?.name}
-								</Typography>
+					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+						<Typography
+							fontWeight={700}
+							noWrap
+							sx={{ color: hovered ? 'secondary.light' : 'text.primary' }}
+							variant="h6"
+						>
+							{isLoading || !time ? (
+								<Skeleton sx={{ minWidth: '10rem', borderRadius: '5px' }} />
+							) : (
+								city?.name
+							)}
+						</Typography>
 
-								<Icon
-									onClick={(e) => handleRemoveCity(e)}
-									sx={{
-										color: 'text.primary',
-										'&:hover': {
-											color: 'secondary.main',
-											scale: 1.2,
-										},
-									}}
-								>
-									<CloseOutlinedIcon />
-								</Icon>
-							</Grid>
-							{/* <Grid size={6}>
+						<Icon
+							onClick={(e) => handleRemoveCity(e)}
+							sx={{
+								color: 'text.primary',
+								'&:hover': {
+									color: 'secondary.main',
+									scale: 1.2,
+								},
+							}}
+						>
+							<CloseOutlinedIcon />
+						</Icon>
+					</Grid>
+					{/* <Grid size={6}>
 						<div className="temperature">
 							<img src={`../icons/${data?.weather?.[0].icon}.svg`} />
 						</div>
 					</Grid> */}
-							<AnimatedGrid
-								size={12}
-								style={props}
-								sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}
-							>
-								<Typography sx={{ color: 'text.primary', fontWeight: 500 }} variant="h3">
-									{data?.temp?.[units]}
-								</Typography>
-								<Typography sx={{ color: 'text.primary' }} variant="h4">
-									&#176;{getUnits()?.temp?.[units]}
-								</Typography>
-							</AnimatedGrid>
-							<Grid display={'flex'} justifyContent={'center'} size={12}>
-								<Typography sx={{ color: 'text.primary' }} variant="h6">
-									{hours <= 9 ? '0' + hours : hours}:{minutes <= 9 ? '0' + minutes : minutes}
-								</Typography>
-							</Grid>
-						</>
-					)}
+					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
+						<AnimatedTypography style={props} sx={{ color: 'text.primary', fontWeight: 500 }} variant="h3">
+							{isLoading || !time ? (
+								<Skeleton sx={{ minWidth: '7rem', borderRadius: '5px' }} />
+							) : (
+								data?.temp?.[units]
+							)}
+						</AnimatedTypography>
+						{isLoading || !time ? null : (
+							<AnimatedTypography style={props} sx={{ color: 'text.primary' }} variant="h4">
+								&#176;{getUnits()?.temp?.[units]}
+							</AnimatedTypography>
+						)}
+					</Grid>
+					<Grid display={'flex'} justifyContent={'center'} size={12}>
+						<Typography
+							sx={{
+								color: 'text.primary',
+							}}
+							variant="h6"
+						>
+							{!time ? <Skeleton sx={{ minWidth: '70px', borderRadius: '5px' }} /> : time}
+						</Typography>
+					</Grid>
 				</Grid>
 			)}
 		</Tile>

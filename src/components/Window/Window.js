@@ -59,8 +59,6 @@ export const Window = ({ onButtonClick, shouldSkip = false, onClick, children, i
 
 	const combinedStyle = { ...style, ...spring };
 
-	console.log(shouldSkip);
-
 	return (
 		<Wrapper
 			id={id}
