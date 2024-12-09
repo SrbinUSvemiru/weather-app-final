@@ -35,7 +35,7 @@ export const BackButton = ({ onClick, inView }) => {
 				position: 'fixed',
 				bottom: '10%',
 				left: '-10px',
-				backgroundColor: 'secondary.main',
+				backgroundColor: 'secondary.light',
 				padding: '0.5rem',
 				zIndex: 100000,
 				display: 'flex',

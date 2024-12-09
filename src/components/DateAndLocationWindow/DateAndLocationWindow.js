@@ -1,32 +1,33 @@
-import { Grid2 as Grid, Typography } from '@mui/material';
+import { Grid2 as Grid, Skeleton, Typography } from '@mui/material';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 import { AppContext } from '../../context/AppContext';
-import { offsetDate, returnDate, trans } from '../../utils/utils';
+import { getDate, getTime, trans } from '../../utils/utils';
 import { Window } from '../Window/Window';
 
 const DateAndLocationWindow = ({ style, handleCloseCurrentWeather }) => {
-	const [hours, setHours] = useState();
-	const [minutes, setMinutes] = useState();
-	const [seconds, setSeconds] = useState();
+	const [time, setTime] = useState('');
 
 	const { selectedCity } = useContext(AppContext);
+
+	const date = useMemo(
+		() =>
+			getDate({
+				timezone: selectedCity?.current?.timezone,
+			}),
+		[selectedCity],
+	);
 
 	useEffect(() => {
 		if (selectedCity) {
 			const interval = setInterval(() => {
-				const time = offsetDate(selectedCity?.current?.timezone);
-				setHours(time[0]);
-				setMinutes(time[1]);
-				setSeconds(time[2]);
+				const time = getTime({
+					timezone: selectedCity?.current?.timezone,
+				});
+				setTime(time);
 			}, 1000);
 
 			return () => clearInterval(interval);
-		}
-	}, [selectedCity]);
-	const date = useMemo(() => {
-		if (selectedCity !== undefined) {
-			return returnDate(selectedCity?.current?.timezone);
 		}
 	}, [selectedCity]);
 
@@ -46,7 +47,7 @@ const DateAndLocationWindow = ({ style, handleCloseCurrentWeather }) => {
 						}}
 						variant="h6"
 					>
-						{date?.[3]} {date?.[2]}/{date?.[1]}/{date?.[0]}
+						{date}
 					</Typography>
 				</Grid>
 
@@ -68,8 +69,7 @@ const DateAndLocationWindow = ({ style, handleCloseCurrentWeather }) => {
 						}}
 						variant="h6"
 					>
-						{hours <= 9 ? '0' + hours : hours}:{minutes <= 9 ? '0' + minutes : minutes}:
-						{seconds <= 9 ? '0' + seconds : seconds}
+						{!time ? <Skeleton sx={{ minWidth: '70px', borderRadius: '5px' }} /> : time}
 					</Typography>
 				</Grid>
 			</Grid>

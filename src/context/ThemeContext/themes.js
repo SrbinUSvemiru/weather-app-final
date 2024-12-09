@@ -4,6 +4,7 @@ export const defaultLight = {
 		default: '#ddecf7',
 		header: '#ffffff',
 	},
+	border: 'rgba(121, 151, 162, 0.2)',
 
 	scrollbarColor: {
 		primary: '#dacff9',
@@ -15,8 +16,8 @@ export const defaultLight = {
 		highlight: '#58C3E0',
 	},
 	secondary: {
-		main: '#ef8039',
-		// light: '#ef8039',
+		main: 'rgba(123 ,0 ,255, 1)',
+		light: '#9b3eff',
 		// dark: '#009987',
 		// highlight: '#4db8ab',
 	},
@@ -35,7 +36,7 @@ export const defaultDark = {
 		window: 'rgb(26, 48, 79, 0.8)',
 		header: '#2d4059',
 	},
-
+	border: 'rgba(255, 255, 255, 0.1)',
 	scrollbarColor: {
 		primary: '#dacff9',
 	},
@@ -46,7 +47,7 @@ export const defaultDark = {
 		highlight: '#008EB6',
 	},
 	secondary: {
-		main: '#ff5722',
+		main: 'rgba(123 ,0 ,255, 1)',
 		// light: '#33ad9f',
 		// dark: '#009987',
 		// highlight: '#4db8ab',
