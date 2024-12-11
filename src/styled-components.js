@@ -90,7 +90,7 @@ export const Window = styled(animated.div)`
 	width: 100%;
 	user-select: none;
 	border-radius: 16px;
-	backdrop-filter: blur(7.6px);
+	backdrop-filter: blur(10px);
 	-webkit-backdrop-filter: blur(7.6px);
 `;
 

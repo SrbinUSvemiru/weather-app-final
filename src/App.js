@@ -16,8 +16,8 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { animated } from '@react-spring/web';
-import React, { useContext, useRef, useState } from 'react';
-import { useSpring } from 'react-spring';
+import React, { useContext, useMemo, useRef, useState } from 'react';
+import { useSpring, useSprings } from 'react-spring';
 
 import { Background } from './components/Background/Background';
 import Expanded from './components/Expanded/Expanded';
@@ -87,19 +87,27 @@ const AnimatedBox = animated(Box);
 
 const App = () => {
 	const [open, setOpen] = useState(true);
-	const containerRef = useRef(null);
 	const [headerClickedIcon, setHeaderClickedIcon] = useState('search');
-	const { isXs } = useBreakpoint();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-	const { theme, setSettings, settings, setTheme } = useContext(AppContext);
 	const [cityToReplace, setCityToReplace] = useState('');
+	const springsNumber = useMemo(() => (open ? 9 : 7), [open]);
+	const containerRef = useRef(null);
+
+	const { isXs } = useBreakpoint();
+	const { theme, setSettings, settings, setTheme } = useContext(AppContext);
 
 	const muiTheme = useTheme();
+
+	const [springs, api] = useSprings(springsNumber, (i) => ({
+		from: { opacity: 0, xys: [30, 0, 0, 50], backdropFilter: 'blur(0px)' },
+		to: { opacity: 1, xys: [0, 0, 1, 0], backdropFilter: 'blur(7.5px)' },
+		delay: () => i * 50,
+	}));
 
 	const handleCloseCurrentWeather = () => {
 		setOpen(true);
 	};
+	const toggleDrawer = (value) => setIsDrawerOpen(value);
 
 	const handleToggleUnits = (event, newAlignment) => {
 		if (newAlignment !== null) {
@@ -112,8 +120,6 @@ const App = () => {
 		to: { height: !isDrawerOpen ? '40px' : '400px' },
 	});
 
-	const toggleDrawer = (value) => setIsDrawerOpen(value);
-
 	return (
 		<>
 			<Container
@@ -121,7 +127,7 @@ const App = () => {
 					padding: '0 !important',
 					height: '100vh',
 					minWidth: '100vw',
-					backgroundColor: 'background.default',
+					backgroundColor: 'background.header',
 					position: 'relative',
 					overflow: 'hidden',
 				}}
@@ -137,7 +143,7 @@ const App = () => {
 						width: '100%',
 						backgroundColor: muiTheme?.palette?.background?.header,
 						overflow: 'hidden',
-						boxShadow: '0px 5px 10px -4px rgba(0, 0, 0, 0.2)',
+
 						display: 'flex',
 						alignItems: 'start',
 						padding: isXs ? '0 2rem' : '0 4rem',
@@ -215,8 +221,11 @@ const App = () => {
 									cityToReplace={cityToReplace}
 									handleCloseCurrentWeather={handleCloseCurrentWeather}
 									isDrawerOpen={isDrawerOpen}
+									open={open}
+									openApi={api}
 									setCityToReplace={setCityToReplace}
 									setIsDrawerOpen={toggleDrawer}
+									setOpen={setOpen}
 								/>
 							) : null}
 						</Grid>
@@ -284,12 +293,14 @@ const App = () => {
 					}}
 				>
 					<Expanded
+						api={api}
 						containerRef={containerRef}
 						handleCloseCurrentWeather={handleCloseCurrentWeather}
 						open={open}
 						setCityToReplace={setCityToReplace}
 						setIsDrawerOpen={setIsDrawerOpen}
 						setOpen={setOpen}
+						springs={springs}
 					/>
 				</Box>
 			</Container>

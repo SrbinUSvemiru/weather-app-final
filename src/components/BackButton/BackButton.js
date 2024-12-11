@@ -11,12 +11,14 @@ export const BackButton = ({ onClick, inView }) => {
 
 	const spring = useSpring({
 		from: { scale: 0, opacity: 0 },
+		immediate: true,
 		ref: springRef,
 	});
 
 	useLayoutEffect(() => {
 		springRef.start({
 			to: {
+				immediate: false,
 				scale: inView ? 1 : 0,
 				opacity: inView ? 1 : 0,
 				x: 0,
@@ -35,11 +37,12 @@ export const BackButton = ({ onClick, inView }) => {
 				position: 'fixed',
 				bottom: '10%',
 				left: '-10px',
-				backgroundColor: 'secondary.light',
+				backgroundColor: 'background.default',
 				padding: '0.5rem',
 				zIndex: 100000,
 				display: 'flex',
 				borderRadius: '50%',
+				boxShadow: '0px 5px 10px -4px rgba(0, 0, 0, 0.3)',
 				minWidth: '40px',
 				height: '40px',
 				justifyContent: 'center',

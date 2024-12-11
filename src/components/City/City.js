@@ -9,12 +9,13 @@ import { v4 as uuid } from 'uuid';
 
 import { AppContext } from '../../context/AppContext/provider';
 import { useCurrentWeatherQuery } from '../../queries/useCurrentWeatherQuery';
+import { getAppearTile, getRemoveTile } from '../../utils/animations';
 import { getTime, getUnits, trans } from '../../utils/utils';
 import { EmptyCell, Tile } from './styled-components';
 
 const AnimatedTypography = animated(Typography);
 
-const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, handleOpenCurrentWeather }) => {
+const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, openApi, handleOpenCurrentWeather }) => {
 	const [hovered, setHovered] = useState(false);
 
 	const [time, setTime] = useState('');
@@ -51,14 +52,14 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, handleOpe
 	}));
 
 	useLayoutEffect(() => {
-		if (!isLoading && time) {
+		if (!isLoading) {
 			api?.start({
 				from: { x: -20, opacity: 0 },
 				to: { x: 0, opacity: 1 },
 				immediate: false,
 			});
 		}
-	}, [isLoading, time, api]);
+	}, [isLoading, api]);
 
 	useLayoutEffect(() => {
 		api?.start({
@@ -82,8 +83,25 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, handleOpe
 		if (idx > -1) {
 			updatedCities[idx] = { id: uuid(), lat: '', lon: '', weight: updatedCities[idx]?.weight };
 		}
+		const removeTileAnimation = () =>
+			getRemoveTile({
+				api: openApi,
+				idx,
+				onRest: () => {
+					setCities(updatedCities);
+				},
+			});
 
-		setCities(updatedCities);
+		const appearTileAnimation = () =>
+			getAppearTile({
+				api: openApi,
+				idx,
+				onRest: () => {},
+			});
+
+		removeTileAnimation()
+			.then(() => appearTileAnimation())
+			.catch((error) => console.error('Animation error:', error));
 	};
 
 	const handleAddCity = (e) => {
@@ -133,14 +151,10 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, handleOpe
 						<Typography
 							fontWeight={700}
 							noWrap
-							sx={{ color: hovered ? 'secondary.light' : 'text.primary' }}
+							sx={{ color: hovered ? 'primary.highlight' : 'text.primary' }}
 							variant="h6"
 						>
-							{isLoading || !time ? (
-								<Skeleton sx={{ minWidth: '10rem', borderRadius: '5px' }} />
-							) : (
-								city?.name
-							)}
+							{city?.name}
 						</Typography>
 
 						<Icon
@@ -148,7 +162,7 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, handleOpe
 							sx={{
 								color: 'text.primary',
 								'&:hover': {
-									color: 'secondary.main',
+									color: 'primary.highlight',
 									scale: 1.2,
 								},
 							}}
@@ -163,13 +177,13 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, handleOpe
 					</Grid> */}
 					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
 						<AnimatedTypography style={props} sx={{ color: 'text.primary', fontWeight: 500 }} variant="h3">
-							{isLoading || !time ? (
+							{isLoading || !units ? (
 								<Skeleton sx={{ minWidth: '7rem', borderRadius: '5px' }} />
 							) : (
 								data?.temp?.[units]
 							)}
 						</AnimatedTypography>
-						{isLoading || !time ? null : (
+						{isLoading || !units ? null : (
 							<AnimatedTypography style={props} sx={{ color: 'text.primary' }} variant="h4">
 								&#176;{getUnits()?.temp?.[units]}
 							</AnimatedTypography>

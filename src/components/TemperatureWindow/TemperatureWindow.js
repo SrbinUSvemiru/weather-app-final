@@ -1,6 +1,6 @@
 import { Grid2 as Grid, Icon, Typography, useTheme } from '@mui/material';
 import { animated } from '@react-spring/web';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useLayoutEffect, useMemo } from 'react';
 import { useSpring } from 'react-spring';
 
 import { AppContext } from '../../context/AppContext';
@@ -17,8 +17,20 @@ const TemperatureWindow = ({ style, handleCloseCurrentWeather, api, index }) => 
 
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
 
-	const [props] = useSpring(
-		() => ({
+	const [props, propsApi] = useSpring(() => ({
+		delay: 300,
+		from: {
+			opacity: 0,
+			transform: 'perspective(600px) translateX(100%)',
+		},
+		to: {
+			transform: 'perspective(600px) translateX(0)',
+			opacity: 1,
+		},
+	}));
+
+	useLayoutEffect(() => {
+		propsApi.start({
 			from: {
 				opacity: 0,
 				transform: 'perspective(600px) rotateX(180deg)',
@@ -27,10 +39,8 @@ const TemperatureWindow = ({ style, handleCloseCurrentWeather, api, index }) => 
 				transform: 'perspective(600px) rotateX(0deg)',
 				opacity: 1,
 			},
-			reset: true,
-		}),
-		[units],
-	);
+		});
+	}, [units, propsApi]);
 
 	return (
 		<Window

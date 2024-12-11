@@ -4,7 +4,7 @@ export const defaultLight = {
 		default: '#ddecf7',
 		header: '#ffffff',
 	},
-	border: 'rgba(121, 151, 162, 0.2)',
+	border: 'rgba(121, 151, 162, 0.3)',
 
 	scrollbarColor: {
 		primary: '#dacff9',
@@ -36,7 +36,7 @@ export const defaultDark = {
 		window: 'rgb(26, 48, 79, 0.8)',
 		header: '#2d4059',
 	},
-	border: 'rgba(255, 255, 255, 0.1)',
+	border: 'rgba(255, 255, 255, 0.2)',
 	scrollbarColor: {
 		primary: '#dacff9',
 	},

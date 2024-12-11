@@ -19,7 +19,7 @@ export const Tile = styled(animated.div)`
 	border-radius: 16px;
 	border: ${(props) =>
 		props?.hovered === 'hovered'
-			? `1px solid ${props?.theme?.palette?.secondary?.main}`
+			? `1px solid ${props?.theme?.palette?.primary?.highlight}`
 			: `1px solid rgba(251, 247, 255, 0.22)`};
 	will-change: transform, opacity;
 
