@@ -85,7 +85,7 @@ export function getDate({ timezone = 0 }) {
 
 export function getTime({ timezone = 0, formatt = 'HH:mm:ss', dt = 0 }) {
 	const utcNow = dt !== 0 ? DateTime.fromMillis(dt * 1000).toUTC() : DateTime.utc();
-	console.log(dt);
+
 	const cityTime = utcNow.plus({ seconds: timezone });
 	const formattedTime = cityTime.toFormat(formatt);
 

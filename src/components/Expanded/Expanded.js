@@ -2,12 +2,12 @@ import { Grid2 as Grid } from '@mui/material';
 import { animated } from '@react-spring/web';
 import { compact, map } from 'lodash';
 import React, { useCallback, useContext, useLayoutEffect, useMemo } from 'react';
-import { useSprings } from 'react-spring';
 
 import { AppContext } from '../../context/AppContext';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useCurrentAirPolutionQuery } from '../../queries/useCurrentAirPolutionQuery';
 import { useMultipleDaysForecastQuery } from '../../queries/useMultipleDaysForecastQuery';
+import { getCloseAnimation, getOpenAnimation } from '../../utils/animations';
 import AlertMessageWindow from '../AlertMessageWindow/AlertMessageWindow';
 import City from '../City/City';
 import CurrentInfoWindow from '../CurrentInfoWindow/CurrentInfoWindow';
@@ -95,8 +95,8 @@ const getGridItems = ({ isXs, airPollution, daysForecast, activeWrapper, handleC
 		},
 	]);
 
-const Expanded = ({ open, setOpen, isDrawerOpen, setIsDrawerOpen, setCityToReplace }) => {
-	const { cities, selectedCity } = useContext(AppContext);
+const Expanded = ({ open, setOpen, isDrawerOpen, setIsDrawerOpen, setCityToReplace, api, springs }) => {
+	const { cities, selectedCity, animation } = useContext(AppContext);
 
 	const { isXs, isSm, isMd, isLg } = useBreakpoint();
 
@@ -109,50 +109,58 @@ const Expanded = ({ open, setOpen, isDrawerOpen, setIsDrawerOpen, setCityToRepla
 		options: { enabled: !open },
 	});
 
-	const [springs, api] = useSprings(open ? 9 : 7, (i) => ({
-		from: { opacity: 0, xys: [0, 0, 0, 50], backdropFilter: 'blur(0px)' },
-		to: { opacity: 1, xys: [0, 0, 1, 0], backdropFilter: 'blur(7.5px)' },
-		delay: i * 50,
-		config: {
-			tension: 500,
-			friction: 50,
-			mass: 3,
-		},
-	}));
-
 	const handleOpenCurrentWeather = useCallback(
 		(e, index) => {
 			e?.preventDefault();
 			if (!cities[index]?.lat || !cities[index]?.lon) {
 				return;
 			}
+			const client = document.getElementById('scrollable-container');
 
-			api.start((i) => ({
-				delay: () => i * 50,
-				to: {
-					opacity: 0,
-					xys: [0, 0, 0, -50],
-					backdropFilter: 'blur(0px)',
-				},
+			const closeAnimation = getCloseAnimation({
+				api,
 				onRest: () => {
 					setOpen(false);
 				},
-			}));
+			});
+
+			const openAnimation = () =>
+				getOpenAnimation({
+					api,
+					onRest: () => {
+						client?.scrollTo({
+							top: 0,
+							behavior: 'smooth',
+						});
+					},
+				});
+
+			closeAnimation.then(openAnimation).catch((error) => console.error('Animation error:', error));
 		},
 		[cities, setOpen, api],
 	);
 
 	const handleCloseCurrentWeather = useCallback(() => {
-		api.start((i) => ({
-			delay: () => i * 50,
-			to: {
-				opacity: 0,
-				xys: [0, 0, 0, -50],
-			},
+		const client = document.getElementById('scrollable-container');
+		const closeAnimation = getCloseAnimation({
+			api,
 			onRest: () => {
 				setOpen(true);
 			},
-		}));
+		});
+
+		const openAnimation = () =>
+			getOpenAnimation({
+				api,
+				onRest: () => {
+					client?.scrollTo({
+						top: 0,
+						behavior: 'smooth',
+					});
+				},
+			});
+
+		closeAnimation.then(openAnimation).catch((error) => console.error('Animation error:', error));
 	}, [setOpen, api]);
 
 	const transitionComponents = useMemo(
@@ -172,6 +180,7 @@ const Expanded = ({ open, setOpen, isDrawerOpen, setIsDrawerOpen, setCityToRepla
 						handleOpenCurrentWeather={handleOpenCurrentWeather}
 						index={index}
 						isDrawerOpen={isDrawerOpen}
+						openApi={api}
 						setCityToReplace={setCityToReplace}
 						setIsDrawerOpen={setIsDrawerOpen}
 					/>
@@ -182,18 +191,14 @@ const Expanded = ({ open, setOpen, isDrawerOpen, setIsDrawerOpen, setCityToRepla
 	);
 
 	useLayoutEffect(() => {
-		const client = document.getElementById('scrollable-container');
-		api.start((i) => ({
-			from: { opacity: 0, xys: [0, 0, 0, 50], backdropFilter: 'blur(0px)' },
-			to: { opacity: 1, xys: [0, 0, 1, 0], backdropFilter: 'blur(7.5px)' },
-			delay: () => i * 50,
-			onRest: () =>
-				client?.scrollTo({
-					top: 0,
-					behavior: 'smooth',
-				}),
-		}));
-	}, [open, api]);
+		if (animation) {
+			animation()
+				.then(() => {
+					console.log('Animation complete');
+				})
+				.catch((error) => console.error('Animation error in App:', error));
+		}
+	}, [animation]);
 
 	return (
 		<Grid
@@ -210,16 +215,16 @@ const Expanded = ({ open, setOpen, isDrawerOpen, setIsDrawerOpen, setCityToRepla
 				const item = open ? citiesComponents?.[index] : transitionComponents?.[index];
 				const Page = item?.component;
 
-				return (
+				return Page ? (
 					<AnimatedGrid
 						container={item?.spacing ? true : false}
 						size={item?.size}
 						spacing={item?.spacing || ''}
 						sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
 					>
-						{Page ? <Page api={api} index={index} style={style} /> : <div>Invalid Component</div>}
+						<Page api={api} index={index} style={style} />
 					</AnimatedGrid>
-				);
+				) : null;
 			})}
 		</Grid>
 	);

@@ -6,15 +6,16 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { AppContext } from '../../context/AppContext/provider';
+import { getAppearTile, getCloseAnimation, getOpenAnimation, getRemoveTile } from '../../utils/animations';
 
-const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, handleCloseCurrentWeather }) => {
+const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, setOpen, openApi, open }) => {
 	const [inputCityName, setInputCityName] = useState('');
 	const [searchCities, setSearchCities] = useState([]);
 	const [isListOpen, setIsListOpen] = useState(false);
 
 	const textFieldRef = useRef(null);
 
-	const { cities, setCities } = useContext(AppContext);
+	const { cities, setCities, setAnimation } = useContext(AppContext);
 
 	const containerRef = useRef(null);
 
@@ -49,13 +50,63 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, handleClo
 				...map(slice(updatedCities, 0, updatedCities?.length - 1), (el) => ({ ...el, weight: el?.weight + 1 })),
 			];
 		}
+		const idx = replaceIdx > -1 ? replaceIdx : emptyIdx;
 
-		setCities(sortBy(updatedCities, 'weight'));
 		setSearchCities([]);
 		setInputCityName('');
 		setCityToReplace('');
 		setIsDrawerOpen(false);
-		handleCloseCurrentWeather();
+
+		const client = document.getElementById('scrollable-container');
+		const closeAnimation = () =>
+			getCloseAnimation({
+				api: openApi,
+				onRest: () => {
+					setOpen(true);
+				},
+			});
+
+		const openAnimation = () =>
+			getOpenAnimation({
+				api: openApi,
+				onRest: () => {
+					client?.scrollTo({
+						top: 0,
+						behavior: 'smooth',
+					});
+				},
+			});
+
+		const removeTileAnimation = () =>
+			getRemoveTile({
+				api: openApi,
+				idx,
+				onRest: () => {
+					setCities(sortBy(updatedCities, 'weight'));
+				},
+			});
+
+		const appearTileAnimation = () =>
+			getAppearTile({
+				api: openApi,
+				idx,
+				onRest: () => {},
+			});
+
+		if (!open) {
+			const animationChain = () =>
+				closeAnimation()
+					.then(() => openAnimation())
+					.then(() => removeTileAnimation())
+					.then(() => appearTileAnimation())
+					.catch((error) => console.error('Animation error:', error));
+			// Pass the animation function to the parent component's state
+			setAnimation(() => animationChain); // Store it in the parent's state
+		} else {
+			removeTileAnimation()
+				.then(() => appearTileAnimation())
+				.catch((error) => console.error('Animation error:', error));
+		}
 	};
 
 	// const handleLocationClick = () => {

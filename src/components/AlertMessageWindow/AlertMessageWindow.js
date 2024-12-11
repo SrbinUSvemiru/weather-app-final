@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { animated, easings, useSpring } from 'react-spring';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
@@ -9,8 +9,8 @@ import { Window } from '../Window/Window';
 import { MessageContainer, StartAndFinishContainer } from './styled-components';
 
 const AlertMessageWindow = (props) => {
-	const [message, setMessage] = useState();
-	const [width, setWidth] = useState();
+	const [message, setMessage] = useState(null);
+
 	const { isXs } = useBreakpoint();
 	const ref = useRef(null);
 
@@ -32,15 +32,11 @@ const AlertMessageWindow = (props) => {
 		}
 	}, [data]);
 
-	useLayoutEffect(() => {
-		setWidth(ref.current.offsetWidth);
-	}, [message]);
-
 	const messageLoop = useSpring({
-		config: { easings: easings.easeInOutBack, duration: width * 70 },
+		config: { easings: easings.easeInOutBack, duration: 10000 },
 		loop: true,
-		from: { x: 290 },
-		to: { x: -width - 16 },
+		from: { opacity: 0 },
+		to: { opacity: 1 },
 		reset: true,
 	});
 

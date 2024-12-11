@@ -1,6 +1,6 @@
 import { Grid2 as Grid, Typography, useTheme } from '@mui/material';
 import { animated } from '@react-spring/web';
-import { map } from 'lodash';
+import { debounce, map } from 'lodash';
 import React, { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useSprings } from 'react-spring';
 
@@ -63,28 +63,25 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 	);
 
 	useEffect(() => {
-		formattData(daysForecast?.days?.[activeDay], units);
+		const debouncedFormatData = debounce(formattData, 500);
+		debouncedFormatData(daysForecast?.days?.[activeDay], units);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const [springs, springsApi] = useSprings(dayData?.length, (i) => ({
-		from: { opacity: 0, height: '0%', transform: 'translateY(-50px)' },
-		immediate: true,
-		to: { opacity: 1, height: '100%', transform: 'translateY(0)' },
-		delay: (i + 1) * 50,
-		config: {
-			tension: 10,
-			friction: 10,
-			mass: 1,
-		},
+		from: { opacity: 0, transform: i === 0 ? 'translateX(-50%)' : 'translateY(-50%)' },
+		to: { opacity: 1, transform: i === 0 ? 'translateX(0)' : 'translateY(0)' },
+		delay: () => (i + 1) * 25,
 	}));
 	// Create springs for each item with individual delays
+
 	useLayoutEffect(() => {
 		springsApi?.start((i) => ({
 			immediate: false,
 			clamp: true,
-			delay: (i + 1) * 25,
-			to: { opacity: 0, height: '0%', transform: 'translateY(-50%)' },
+			delay: () => (i + 1) * 25,
+
+			to: { opacity: 0, transform: i === 0 ? 'translateX(-50%)' : 'translateY(-50%)' },
 			onRest: () => formattData(daysForecast?.days?.[activeDay], units),
 		}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,8 +91,8 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 		springsApi?.start((i) => ({
 			immediate: false,
 			clamp: true,
-			delay: (i + 1) * 25,
-			to: { opacity: 1, height: '100%', transform: 'translateY(0)' },
+			delay: () => (i + 1) * 25,
+			to: { opacity: 1, transform: i === 0 ? 'translateX(0)' : 'translateY(0)' },
 		}));
 	}, [springsApi, dayData]);
 
@@ -108,7 +105,7 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 					onButtonClick={handleCloseCurrentWeather}
 					shadowcolor={theme?.palette?.wrapper?.days?.light}
 					shouldSkip={!isXs}
-					style={{ ...style, transform: style?.xys.to(trans) }}
+					style={{ ...style, transform: style?.xys.to(trans), minHeight: '250px' }}
 				>
 					<Grid columnSpacing={4} container rowSpacing={1}>
 						{map(springs, (style, i) => {
@@ -122,7 +119,7 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 											justifyContent: 'center',
 											paddingBottom: '0.5rem',
 											marginBottom: '0.5rem',
-											borderBottom: '2px solid',
+											borderBottom: '1px solid',
 											borderColor: 'border',
 										}}
 									>
@@ -147,7 +144,7 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 										<AnimatedTypography noWrap sx={{ color: 'text.secondary' }} variant="subtitle1">
 											{dayData?.[i]?.label}
 										</AnimatedTypography>
-										<AnimatedTypography noWrap style={{ ...style }} variant="h6">
+										<AnimatedTypography noWrap style={{ ...style }} variant="subtitle1">
 											{dayData?.[i]?.value}
 										</AnimatedTypography>
 									</Grid>

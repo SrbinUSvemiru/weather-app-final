@@ -18,6 +18,23 @@ export const AppThemeProvider = (props) => {
 				typography: {
 					fontFamily: `"Helvetica Neue", "Arial", sans-serif`,
 				},
+				overrides: {
+					MuiCssBaseline: {
+						'@global': {
+							'*::-webkit-scrollbar': {
+								width: '5px',
+							},
+							'*::-webkit-scrollbar-track': {
+								background: '#E4EFEF',
+							},
+							'*::-webkit-scrollbar-thumb': {
+								background: '#1D388F61',
+								borderRadius: '2px',
+							},
+						},
+					},
+				},
+
 				components: {
 					MuiFormLabel: {
 						styleOverrides: {

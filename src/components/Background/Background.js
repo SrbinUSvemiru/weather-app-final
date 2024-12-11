@@ -55,13 +55,16 @@ export const Background = () => {
 			style={{ ...style }}
 			sx={{
 				position: 'absolute',
+				bottom: 0,
+				left: 0,
+				right: 0,
 				backgroundImage: `url(${backgrounds[item]})`,
 				width: '100vw',
 				height: '100vh',
 				margin: '0 auto',
+				borderRadius: '2rem 2rem 0 0',
 				backgroundSize: 'cover',
 				backgroundPosition: 'center',
-				top: 0,
 			}}
 		/>
 	));
