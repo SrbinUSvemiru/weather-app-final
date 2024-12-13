@@ -1,6 +1,6 @@
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { Grid2 as Grid, Icon, Skeleton, Typography } from '@mui/material';
+import { Box, Grid2 as Grid, Icon, Skeleton, Typography } from '@mui/material';
 import { animated } from '@react-spring/web';
 import { findIndex } from 'lodash';
 import React, { useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
@@ -15,15 +15,22 @@ import { EmptyCell, Tile } from './styled-components';
 
 const AnimatedTypography = animated(Typography);
 
-const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, openApi, handleOpenCurrentWeather }) => {
+const City = ({
+	city,
+	setCityToReplace,
+	index,
+	setIsDrawerOpen,
+	setHeaderClickedIcon,
+	style,
+	openApi,
+	handleOpenCurrentWeather,
+}) => {
 	const [hovered, setHovered] = useState(false);
-
 	const [time, setTime] = useState('');
-
-	const isEmpty = useMemo(() => !city?.lon || !city?.lat, [city]);
 
 	const { cities, settings, setCities, setSelectedCity } = useContext(AppContext);
 
+	const isEmpty = useMemo(() => !city?.lon || !city?.lat, [city]);
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
 
 	const { isLoading, data, isError, error } = useCurrentWeatherQuery({
@@ -107,6 +114,7 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, openApi, 
 	const handleAddCity = (e) => {
 		e.stopPropagation();
 		setIsDrawerOpen(true);
+		setHeaderClickedIcon('search');
 		setCityToReplace(city?.id);
 	};
 
@@ -151,7 +159,7 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, openApi, 
 						<Typography
 							fontWeight={700}
 							noWrap
-							sx={{ color: hovered ? 'primary.highlight' : 'text.primary' }}
+							sx={{ color: hovered ? 'secondary.main' : 'text.primary' }}
 							variant="h6"
 						>
 							{city?.name}
@@ -162,7 +170,7 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, openApi, 
 							sx={{
 								color: 'text.primary',
 								'&:hover': {
-									color: 'primary.highlight',
+									color: 'secondary.main',
 									scale: 1.2,
 								},
 							}}
@@ -170,12 +178,17 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, openApi, 
 							<CloseOutlinedIcon />
 						</Icon>
 					</Grid>
-					{/* <Grid size={6}>
-						<div className="temperature">
-							<img src={`../icons/${data?.weather?.[0].icon}.svg`} />
-						</div>
-					</Grid> */}
-					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
+					<Grid size={6}>
+						<Box
+							sx={{
+								maxWidth: '70px',
+								filter: settings?.theme?.mode === 'light' ? 'brightness(0.95) saturate(2)' : '',
+							}}
+						>
+							<img alt="weather-icon" src={`../icons/${data?.weather?.[0].icon}.svg`} />
+						</Box>
+					</Grid>
+					<Grid size={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
 						<AnimatedTypography style={props} sx={{ color: 'text.primary', fontWeight: 500 }} variant="h3">
 							{isLoading || !units ? (
 								<Skeleton sx={{ minWidth: '7rem', borderRadius: '5px' }} />
@@ -185,7 +198,7 @@ const City = ({ city, setCityToReplace, index, setIsDrawerOpen, style, openApi, 
 						</AnimatedTypography>
 						{isLoading || !units ? null : (
 							<AnimatedTypography style={props} sx={{ color: 'text.primary' }} variant="h4">
-								&#176;{getUnits()?.temp?.[units]}
+								&#176;{getUnits({ selected: 'temperature', units })}
 							</AnimatedTypography>
 						)}
 					</Grid>

@@ -19,7 +19,6 @@ import { animated } from '@react-spring/web';
 import React, { useContext, useMemo, useRef, useState } from 'react';
 import { useSpring, useSprings } from 'react-spring';
 
-import { Background } from './components/Background/Background';
 import Expanded from './components/Expanded/Expanded';
 import SearchBar from './components/SearchBar/SearchBar';
 import { AppContext } from './context/AppContext';
@@ -116,8 +115,8 @@ const App = () => {
 	};
 
 	const appBar = useSpring({
-		from: { height: isDrawerOpen ? '40px' : '400px' },
-		to: { height: !isDrawerOpen ? '40px' : '400px' },
+		from: { height: isDrawerOpen ? '56px' : '400px' },
+		to: { height: !isDrawerOpen ? '56px' : '400px' },
 	});
 
 	return (
@@ -127,26 +126,22 @@ const App = () => {
 					padding: '0 !important',
 					height: '100vh',
 					minWidth: '100vw',
-					backgroundColor: 'background.header',
+					background: `linear-gradient(180deg, ${muiTheme?.palette?.background?.default} 0%,${muiTheme?.palette?.background?.shadeOne} 53%, ${muiTheme?.palette?.background?.shadeTwo} 100%)`,
 					position: 'relative',
 					overflow: 'hidden',
 				}}
 			>
-				<Background />
-
 				<AnimatedBox
 					onMouseLeave={() => setIsDrawerOpen(false)}
 					style={appBar}
 					sx={{
 						position: 'fixed',
-						zIndex: muiTheme?.zIndex?.appBar,
 						width: '100%',
-						backgroundColor: muiTheme?.palette?.background?.header,
 						overflow: 'hidden',
-
 						display: 'flex',
 						alignItems: 'start',
-						padding: isXs ? '0 2rem' : '0 4rem',
+						backgroundColor: 'background.shadeOne',
+						padding: isXs ? '0 2rem' : '0.5rem 4rem',
 					}}
 				>
 					<Grid container spacing={{ xs: 1, sm: 3 }} sx={{ width: '100%' }}>
@@ -179,11 +174,19 @@ const App = () => {
 									<ToggleButtonGroup
 										exclusive
 										onChange={handleToggleUnits}
-										sx={{ borderRadius: '16px' }}
+										sx={{ borderRadius: '16px', backgroundColor: 'background.window' }}
 										value={settings?.preferences?.units}
 									>
 										<ToggleButton
-											sx={{ padding: '0.2rem 0.7rem', borderRadius: '16px 0px 0px 16px' }}
+											sx={{
+												padding: '0.2rem 0.7rem',
+												background: 'background.window',
+												borderRadius: '16px 0px 0px 16px',
+												'&.Mui-selected': {
+													background: `linear-gradient(45deg, ${muiTheme?.palette?.secondary?.main} 0%,${muiTheme?.palette?.secondary?.light} 100%)`,
+													color: 'white',
+												},
+											}}
 											value="metric"
 										>
 											<Typography sx={{ fontSize: '0.7rem' }} variant="subtitle1">
@@ -192,7 +195,15 @@ const App = () => {
 											</Typography>
 										</ToggleButton>
 										<ToggleButton
-											sx={{ padding: '0.2rem 0.7rem', borderRadius: '0px 16px 16px 0px' }}
+											sx={{
+												padding: '0.2rem 0.7rem',
+												borderRadius: '0px 16px 16px 0px',
+												background: 'background.window',
+												'&.Mui-selected': {
+													background: `linear-gradient(45deg, ${muiTheme?.palette?.secondary?.main} 0%,${muiTheme?.palette?.secondary?.light} 100%)`,
+													color: 'white',
+												},
+											}}
 											value="imperial"
 											variant="subtitle1"
 										>
@@ -239,7 +250,14 @@ const App = () => {
 										value={settings?.preferences?.units}
 									>
 										<ToggleButton
-											sx={{ padding: '0.2rem 0.7rem', borderRadius: '16px 0px 0px 16px' }}
+											sx={{
+												padding: '0.2rem 0.7rem',
+												borderRadius: '16px 0px 0px 16px',
+												'&.Mui-selected': {
+													background: `linear-gradient(45deg, ${muiTheme?.palette?.secondary?.main} 0%,${muiTheme?.palette?.secondary?.light} 100%)`,
+													color: 'white',
+												},
+											}}
 											value="metric"
 										>
 											<Typography sx={{ fontSize: '0.7rem' }} variant="subtitle1">
@@ -248,7 +266,14 @@ const App = () => {
 											</Typography>
 										</ToggleButton>
 										<ToggleButton
-											sx={{ padding: '0.2rem 0.7rem', borderRadius: '0px 16px 16px 0px' }}
+											sx={{
+												padding: '0.2rem 0.7rem',
+												borderRadius: '0px 16px 16px 0px',
+												'&.Mui-selected': {
+													background: `linear-gradient(45deg, ${muiTheme?.palette?.secondary?.main} 0%,${muiTheme?.palette?.secondary?.light} 100%)`,
+													color: 'white',
+												},
+											}}
 											value="imperial"
 											variant="subtitle1"
 										>
@@ -278,8 +303,8 @@ const App = () => {
 				<Box
 					id="scrollable-container"
 					sx={{
-						marginTop: '40px',
-						padding: isXs ? '1rem 1rem 4rem 1rem' : '2rem 2rem 4rem 2rem',
+						marginTop: '56px',
+						padding: isXs ? '1rem 1rem 10rem 1rem' : '1rem 2rem 10rem 2rem',
 						display: 'flex',
 						flexDirection: 'column',
 						justifyContent: 'start',
@@ -288,7 +313,7 @@ const App = () => {
 						height: '100%',
 						overflowY: 'scroll',
 						overflowX: 'hidden',
-						zIndex: 2,
+
 						position: 'relative',
 					}}
 				>
@@ -298,6 +323,7 @@ const App = () => {
 						handleCloseCurrentWeather={handleCloseCurrentWeather}
 						open={open}
 						setCityToReplace={setCityToReplace}
+						setHeaderClickedIcon={setHeaderClickedIcon}
 						setIsDrawerOpen={setIsDrawerOpen}
 						setOpen={setOpen}
 						springs={springs}

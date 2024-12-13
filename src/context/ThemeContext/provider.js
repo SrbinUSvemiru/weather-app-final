@@ -18,56 +18,6 @@ export const AppThemeProvider = (props) => {
 				typography: {
 					fontFamily: `"Helvetica Neue", "Arial", sans-serif`,
 				},
-				overrides: {
-					MuiCssBaseline: {
-						'@global': {
-							'*::-webkit-scrollbar': {
-								width: '5px',
-							},
-							'*::-webkit-scrollbar-track': {
-								background: '#E4EFEF',
-							},
-							'*::-webkit-scrollbar-thumb': {
-								background: '#1D388F61',
-								borderRadius: '2px',
-							},
-						},
-					},
-				},
-
-				components: {
-					MuiFormLabel: {
-						styleOverrides: {
-							root: ({ theme }) => ({
-								border: 'none',
-								'&.Mui-focused': {
-									color: theme?.palette?.primary?.highlight, // Change label color when focused
-								},
-							}),
-						},
-					},
-					MuiOutlinedInput: {
-						styleOverrides: {
-							root: () => ({
-								border: 'none',
-								borderRadius: '16px', // Adds rounded corners for the entire input field
-								'&.Mui-focused': {
-									border: 'none',
-								},
-							}),
-
-							input: ({ theme }) => ({
-								border: 'none',
-								backgroundColor: 'transparent', // Sets background color of the input
-								borderRadius: '16px', // Adds rounded corners
-								padding: '0.2rem 0.5rem', // Adjusts padding // Removes padding around the actual input
-								'&:focus': {
-									backgroundColor: theme?.palette?.primary?.light, // Change background when focused
-								},
-							}),
-						},
-					},
-				},
 			}),
 		[theme],
 	);

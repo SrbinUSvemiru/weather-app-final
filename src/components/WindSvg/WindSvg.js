@@ -10,6 +10,7 @@ import { Container, NumbersContainer } from '../../styled-components';
 import { ValueContainer } from './styled-components';
 
 const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
+	const { settings } = useContext(AppContext);
 	const theme = useTheme();
 	const wind = useMemo(() => map(graphData?.wind?.[clicked], (el) => el?.value), [graphData, clicked]);
 	const windDeg = useMemo(() => map(graphData?.wind?.[clicked], (el) => el?.deg), [graphData, clicked]);
@@ -19,8 +20,6 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
 			opacity: activeWrapper === 'wind' ? 1 : 0,
 		},
 	});
-
-	const { settings } = useContext(AppContext);
 
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
 
@@ -35,22 +34,25 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
 					</linearGradient>
 				</defs>
 				<NaturalCurve
-					data={wind?.map((value, index) => [
-						index * (width / (wind?.length - 1)),
-						-value?.metric?.large * 2 +
-							90 +
-							(wind?.reduce(
-								(previousValue, currentValue) => previousValue + (currentValue?.metric?.large || 0),
-								0,
-							) /
-								(wind?.length - 1)) *
-								2 +
-							3,
-					])}
+					data={wind?.map((value, index) => {
+						const x = index * (width / (wind?.length - 1));
+						const metric = map(wind, (el) => el?.metric?.large);
+						const minHumidity = Math.min(...metric);
+						const maxHumidity = Math.max(...metric);
+
+						const padding = (maxHumidity - minHumidity) * 2;
+						const adjustedMin = minHumidity - padding;
+						const adjustedMax = maxHumidity + padding;
+
+						const normalizedY =
+							180 - ((value?.metric?.large - adjustedMin) / (adjustedMax - adjustedMin)) * 180;
+
+						return [x, normalizedY];
+					})}
 					showPoints={false}
 					stroke="url(#gradientStroke)" // Reference the gradient here
 					strokeOpacity={0.9}
-					strokeWidth={3}
+					strokeWidth={2}
 				/>
 			</svg>
 			<div className="container-for">
@@ -58,42 +60,34 @@ const WindSvg = ({ clicked, graphData, activeWrapper, width }) => {
 					<NumbersContainer key={index}>
 						<ValueContainer
 							degrees={windDeg}
-							sumOfTemp={
-								-element?.metric?.large * 2 +
-								90 +
-								(wind?.reduce(
-									(previousValue, currentValue) => previousValue + (currentValue?.metric?.large || 0),
-									0,
-								) /
-									(wind?.length - 1)) *
-									2 +
-								3
-							}
+							sumOfTemp={() => {
+								const metric = map(wind, (el) => el?.metric?.large);
+								const minHumidity = Math.min(...metric);
+								const maxHumidity = Math.max(...metric);
+
+								const padding = (maxHumidity - minHumidity) * 2;
+								const adjustedMin = minHumidity - padding;
+								const adjustedMax = maxHumidity + padding;
+
+								const normalizedY =
+									180 - ((element?.metric?.large - adjustedMin) / (adjustedMax - adjustedMin)) * 180;
+
+								return normalizedY - 40;
+							}}
 						>
 							<Typography variant="subtitle1">{element?.[units]?.large}</Typography>
-							<Icon
-								component={ArrowForwardIcon}
-								sx={{
-									position: 'absolute',
-									left: 0,
-									margin: 'auto',
-									transform: `rotate(${windDeg[index] - 90}deg)`,
-									top: `${
-										-element?.metric?.large * 2 +
-										90 +
-										(wind?.reduce(
-											(previousValue, currentValue) =>
-												previousValue + (currentValue?.metric?.large || 0),
-											0,
-										) /
-											(wind?.length - 1)) *
-											2 +
-										3 -
-										20
-									}px`,
-								}}
-							/>
 						</ValueContainer>
+						<Icon
+							component={ArrowForwardIcon}
+							sx={{
+								position: 'absolute',
+								left: 0,
+								right: 0,
+								margin: '0 auto',
+								transform: `rotate(${windDeg[index] - 90}deg)`,
+								bottom: 0,
+							}}
+						/>
 					</NumbersContainer>
 				))}
 			</div>

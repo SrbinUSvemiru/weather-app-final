@@ -59,18 +59,9 @@ const getGridItems = ({ isXs, airPollution, daysForecast, activeWrapper, handleC
 					),
 				}
 			: null,
+
 		{
-			size: { xs: 12, sm: 2, md: 1 },
-			component: (props) => (
-				<CurrentInfoWindow
-					pop={daysForecast?.days?.[0]?.pop}
-					{...props}
-					handleCloseCurrentWeather={handleCloseCurrentWeather}
-				/>
-			),
-		},
-		{
-			size: { xs: 12, sm: 10, md: 6 },
+			size: { xs: 12, sm: 10, md: 7 },
 			spacing: { xs: 1 },
 
 			component: (props) => (
@@ -82,7 +73,17 @@ const getGridItems = ({ isXs, airPollution, daysForecast, activeWrapper, handleC
 			),
 		},
 		{
-			size: 12,
+			size: { xs: 12, sm: 2, md: 1 },
+			component: (props) => (
+				<CurrentInfoWindow
+					pop={daysForecast?.days?.[0]?.pop}
+					{...props}
+					handleCloseCurrentWeather={handleCloseCurrentWeather}
+				/>
+			),
+		},
+		{
+			size: { xs: 12, sm: 12, md: 11 },
 			component: (props) => (
 				<GraphWindow
 					activeWrapper={activeWrapper}
@@ -95,7 +96,16 @@ const getGridItems = ({ isXs, airPollution, daysForecast, activeWrapper, handleC
 		},
 	]);
 
-const Expanded = ({ open, setOpen, isDrawerOpen, setIsDrawerOpen, setCityToReplace, api, springs }) => {
+const Expanded = ({
+	open,
+	setOpen,
+	isDrawerOpen,
+	setIsDrawerOpen,
+	setHeaderClickedIcon,
+	setCityToReplace,
+	api,
+	springs,
+}) => {
 	const { cities, selectedCity, animation } = useContext(AppContext);
 
 	const { isXs, isSm, isMd, isLg } = useBreakpoint();
@@ -182,6 +192,7 @@ const Expanded = ({ open, setOpen, isDrawerOpen, setIsDrawerOpen, setCityToRepla
 						isDrawerOpen={isDrawerOpen}
 						openApi={api}
 						setCityToReplace={setCityToReplace}
+						setHeaderClickedIcon={setHeaderClickedIcon}
 						setIsDrawerOpen={setIsDrawerOpen}
 					/>
 				),
@@ -204,11 +215,12 @@ const Expanded = ({ open, setOpen, isDrawerOpen, setIsDrawerOpen, setCityToRepla
 		<Grid
 			container
 			size={12}
-			spacing={{ xs: 1 }}
+			spacing={{ xs: 1, sm: 2 }}
 			sx={{
 				padding: 0,
 				width: '100%',
 				maxWidth: isXs ? '500px' : '1200px',
+				position: 'relative',
 			}}
 		>
 			{map(springs, (style, index) => {

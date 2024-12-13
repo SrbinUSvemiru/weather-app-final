@@ -23,7 +23,7 @@ export const ValueContainer = styled.div`
 	left: 50%;
 	transform: translateX(-50%);
 	margin: auto;
-	top: ${(props) => props.sumOfTemp - 40}px;
+	top: ${(props) => props.sumOfTemp}px;
 `;
 
 export const TemperatureTile = styled.div`

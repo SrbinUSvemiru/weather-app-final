@@ -5,7 +5,7 @@ export const NumbersContainer = styled.div`
 	height: 100%;
 	width: 100%;
 	position: relative;
-	font-size: 0.7rem;
+	background: red;
 	opacity: 1;
 	display: flex;
 	justify-content: center;
@@ -23,7 +23,7 @@ export const ValueContainer = styled.div`
 	left: 50%;
 	transform: translateX(-50%);
 	margin: auto;
-	top: ${(props) => props.sumOfTemp - 30}px;
+	top: ${(props) => props.sumOfTemp}px;
 `;
 
 export const TemperatureTile = styled.div`

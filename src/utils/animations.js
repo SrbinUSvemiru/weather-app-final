@@ -46,7 +46,7 @@ export const getRemoveTile = ({ api, onRest = () => {}, idx }) =>
 				opacity: 1, // Preserve opacity
 				xys: [0, 0, 1, 0], // Preserve xys transformation
 				backdropFilter: 'blur(7.5px)', // Preserve current blur state
-				boxShadow: `0px 10px 15px -4px rgba(0, 0, 0, 0.3)`, // Preserve shadow
+				boxShadow: `0px 4px 10px -1px rgba(0, 0, 0, 0.3)`, // Preserve shadow
 			};
 		});
 	});
@@ -69,7 +69,7 @@ export const getAppearTile = ({ api, onRest = () => {}, idx }) =>
 							boxShadow: `0px 0px 10px 0px rgba(123 ,0 ,255, 1)`,
 						},
 						{ boxShadow: `0px 10px 20px 0px rgba(123 ,0 ,255, 1)`, config: { duration: 2000 } },
-						{ boxShadow: `0px 10px 15px -4px rgba(0, 0, 0, 0.3)`, config: { duration: 2000 } },
+						{ boxShadow: `0px 4px 10px -1px rgba(0, 0, 0, 0.3)`, config: { duration: 2000 } },
 					],
 					onRest: () => {
 						onRest();
@@ -81,7 +81,7 @@ export const getAppearTile = ({ api, onRest = () => {}, idx }) =>
 				opacity: 1, // Preserve opacity
 				xys: [0, 0, 1, 0], // Preserve xys transformation
 				backdropFilter: 'blur(7.5px)', // Preserve current blur state
-				boxShadow: `0px 10px 15px -4px rgba(0, 0, 0, 0.3)`, // Preserve shadow
+				boxShadow: `0px 4px 10px -1px rgba(0, 0, 0, 0.3)`, // Preserve shadow
 			};
 		});
 	});

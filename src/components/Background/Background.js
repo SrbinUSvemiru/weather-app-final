@@ -1,14 +1,14 @@
 import { Box } from '@mui/material';
 import { animated } from '@react-spring/web';
 import React, { useContext, useLayoutEffect, useMemo, useState } from 'react';
-import { useSpringRef, useTransition } from 'react-spring';
+import { useSpring, useSpringRef, useTransition } from 'react-spring';
 
 import { AppContext } from '../../context/AppContext';
 import { getBackgroundUrls } from '../../utils/utils';
 
 const AnimatedBox = animated(Box);
 
-export const Background = () => {
+const Background = ({ open }) => {
 	const [activeIndex, setActiveIndex] = useState(0);
 
 	const { theme } = useContext(AppContext);
@@ -39,6 +39,12 @@ export const Background = () => {
 			}
 		},
 	});
+
+	const spring = useSpring({
+		from: { scale: !open ? 1 : 1.5 },
+		to: { scale: open ? 1 : 1.5 },
+	});
+
 	useLayoutEffect(() => {
 		springApi.start();
 
@@ -52,20 +58,22 @@ export const Background = () => {
 
 	return transitions((style, item) => (
 		<AnimatedBox
-			style={{ ...style }}
+			style={{ ...style, ...spring }}
 			sx={{
 				position: 'absolute',
-				bottom: 0,
+				top: '60px',
 				left: 0,
+				borderRadius: '1rem 1rem 0rem 0rem',
 				right: 0,
 				backgroundImage: `url(${backgrounds[item]})`,
-				width: '100vw',
-				height: '100vh',
+				width: '50%',
+				height: '100%',
 				margin: '0 auto',
-				borderRadius: '2rem 2rem 0 0',
 				backgroundSize: 'cover',
 				backgroundPosition: 'center',
 			}}
 		/>
 	));
 };
+
+export default Background;

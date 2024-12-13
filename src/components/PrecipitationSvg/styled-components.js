@@ -24,7 +24,7 @@ export const ValueContainer = styled.div`
 	left: 50%;
 	transform: translateX(-50%);
 	margin: auto;
-	top: ${(props) => props.sumOfTemp - 30}px;
+	top: ${(props) => props.sumOfTemp}px;
 	& span {
 		font-size: 0.6rem;
 		opacity: 0.7;

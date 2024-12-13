@@ -11,14 +11,14 @@ import { Window } from '../Window/Window';
 
 const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }) => {
 	const theme = useTheme();
-	const { isLg, isMd, isXl } = useBreakpoint();
+	const { isXs, isLg, isMd, isXl } = useBreakpoint();
 
 	const { settings, selectedCity, activeWrapper } = useContext(AppContext);
 
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
 
 	return (
-		<Grid container spacing={{ xs: 1 }} sx={{ height: '100%', width: '100%' }}>
+		<Grid container spacing={{ xs: 1 }} sx={{ height: '100%', width: '100%', paddingTop: isXs ? '1rem' : '0rem' }}>
 			<Grid size={{ xs: 4, sm: 12 }}>
 				<Window
 					api={api}
@@ -46,7 +46,7 @@ const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }
 					</Icon>
 					<Typography variant="subtitle1" zIndex={2}>
 						{selectedCity?.current?.wind_speed?.[units]?.large}
-						{getUnits()?.speed?.[units]?.large}
+						{getUnits({ selected: 'wind', units })}
 					</Typography>
 				</Window>
 			</Grid>
