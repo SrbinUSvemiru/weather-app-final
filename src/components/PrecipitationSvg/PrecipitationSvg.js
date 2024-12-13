@@ -1,4 +1,5 @@
 import { Typography, useTheme } from '@mui/material';
+import { every, map } from 'lodash';
 import React, { useMemo } from 'react';
 import { NaturalCurve } from 'react-svg-curve';
 
@@ -8,7 +9,7 @@ import { ValueContainer } from './styled-components';
 const PrecipitationSvg = ({ graphData, activeWrapper, animation, clicked, width }) => {
 	const theme = useTheme();
 	const precipitation = useMemo(() => graphData?.[activeWrapper]?.[clicked], [graphData, clicked, activeWrapper]);
-
+	console.log(precipitation);
 	return (
 		<Container style={animation}>
 			<svg height="180" width={width} xmlns="http://www.w3.org/2000/svg">
@@ -20,39 +21,54 @@ const PrecipitationSvg = ({ graphData, activeWrapper, animation, clicked, width 
 					</linearGradient>
 				</defs>
 				<NaturalCurve
-					data={precipitation?.map((temp, index) => [
-						index * (width / (precipitation?.length - 1)),
-						-temp * 2 +
-							90 +
-							(precipitation?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
-								(precipitation?.length - 1)) *
-								2 +
-							3,
-					])}
+					data={map(precipitation, (value, index) => {
+						const x = index * (width / (precipitation?.length - 1));
+						const isEveryValueZero = every(precipitation, (el) => el === 0);
+
+						const minHumidity = Math.min(...precipitation);
+						const maxHumidity = Math.max(...precipitation);
+
+						const padding = maxHumidity - minHumidity;
+						const adjustedMin = minHumidity - padding;
+						const adjustedMax = maxHumidity + padding;
+
+						const normalizedY = isEveryValueZero
+							? index % 2 === 0
+								? 100
+								: 99
+							: 180 - ((value - adjustedMin) / (adjustedMax - adjustedMin)) * 180;
+
+						return [x, normalizedY];
+					})}
 					showPoints={false}
 					stroke="url(#gradientStroke)" // Reference the gradient here
 					strokeOpacity={0.9}
-					strokeWidth={3}
+					strokeWidth={2}
 				/>
 			</svg>
 			<div className="container-for">
 				{precipitation?.map((element, index) => (
 					<NumbersContainer key={index}>
 						<ValueContainer
-							sumOfTemp={
-								-element * 2 +
-								90 +
-								(precipitation?.reduce(
-									(previousValue, currentValue) => previousValue + currentValue,
-									0,
-								) /
-									(precipitation?.length - 1)) *
-									2 +
-								3
-							}
+							sumOfTemp={() => {
+								const minHumidity = Math.min(...precipitation);
+								const maxHumidity = Math.max(...precipitation);
+								const isEveryValueZero = every(precipitation, (el) => el === 0);
+								const padding = maxHumidity - minHumidity;
+								const adjustedMin = minHumidity - padding;
+								const adjustedMax = maxHumidity + padding;
+
+								const normalizedY = isEveryValueZero
+									? index % 2 === 0
+										? 100
+										: 99
+									: 180 - ((element - adjustedMin) / (adjustedMax - adjustedMin)) * 180;
+
+								return normalizedY - 40;
+							}}
 						>
-							<Typography fontWeight={600} variant="subtitle2">
-								{Math.round(element * 5)}%
+							<Typography fontWeight={500} variant="subtitle1">
+								{Math.round(element * 100)}
 							</Typography>
 						</ValueContainer>
 					</NumbersContainer>

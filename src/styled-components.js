@@ -75,13 +75,11 @@ export const Wrapper = styled(animated.div)`
 
 export const Window = styled(animated.div)`
 	background: ${({ theme }) => theme?.palette?.background?.window};
-	border-radius: 16px;
-	border: 1px solid rgba(251, 247, 255, 0.22);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	box-shadow: ${(props) =>
-		props?.shadowcolor ? `0px 0px 10px 0px ${props?.shadowcolor}` : `0px 10px 15px -4px rgba(0, 0, 0, 0.3)`};
+		props?.shadowcolor ? `0px 0px 10px 0px ${props?.shadowcolor}` : `0px 4px 10px -1px rgba(0, 0, 0, 0.3)`};
 	padding: 1rem;
 	height: 100%;
 	position: relative;
@@ -89,7 +87,7 @@ export const Window = styled(animated.div)`
 	cursor: pointer;
 	width: 100%;
 	user-select: none;
-	border-radius: 16px;
+	border-radius: 1.3rem;
 	backdrop-filter: blur(10px);
 	-webkit-backdrop-filter: blur(7.6px);
 `;
@@ -98,7 +96,6 @@ export const NumbersContainer = styled.div`
 	height: 100%;
 	width: 100%;
 	position: relative;
-	font-size: 0.7rem;
 	opacity: 1;
 	display: flex;
 	justify-content: center;

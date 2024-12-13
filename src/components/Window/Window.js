@@ -15,7 +15,7 @@ export const Window = ({ onButtonClick, shouldSkip = false, onClick, children, i
 
 	const [spring, springApi] = useSpring(() => ({
 		from: {
-			boxShadow: `0px 10px 15px -4px rgba(0, 0, 0, 0.3)`,
+			boxShadow: `0px 4px 10px -1px  rgba(0, 0, 0, 0.3)`,
 		},
 	}));
 
@@ -25,7 +25,7 @@ export const Window = ({ onButtonClick, shouldSkip = false, onClick, children, i
 		skip: shouldSkip,
 		initialInView: false,
 		threshold: 1,
-		rootMargin: `${elementRef?.current?.getBoundingClientRect()?.height - 60 || 0}px 0px -${client?.getBoundingClientRect()?.height - elementRef?.current?.getBoundingClientRect()?.height - 68 || 0}px 0px`,
+		rootMargin: `${elementRef?.current?.getBoundingClientRect()?.height + 60 || 0}px 0px -${client?.getBoundingClientRect()?.height - elementRef?.current?.getBoundingClientRect()?.height - 68 || 0}px 0px`,
 	});
 
 	const combinedRef = (node) => {
@@ -51,7 +51,7 @@ export const Window = ({ onButtonClick, shouldSkip = false, onClick, children, i
 				to: {
 					boxShadow: isWrapperHovered
 						? `0px 0px 10px 0px rgba(123 ,0 ,255, 1)`
-						: `0px 10px 15px -4px rgba(0, 0, 0, 0.3)`,
+						: `0px 4px 10px -1px  rgba(0, 0, 0, 0.3)`,
 				},
 			});
 		}

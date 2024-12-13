@@ -25,8 +25,16 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 		(data, units) => {
 			setDayData([
 				{ id: 0, label: '', value: data?.day },
-				{ id: 1, label: 'Temp max', value: `${data?.max_temp?.[units]}°${getUnits()?.temp?.[units]}` },
-				{ id: 2, label: 'Temp min', value: `${data?.min_temp?.[units]}°${getUnits()?.temp?.[units]}` },
+				{
+					id: 1,
+					label: 'Temp max',
+					value: `${data?.max_temp?.[units]}°${getUnits({ selected: 'temperature', units })}`,
+				},
+				{
+					id: 2,
+					label: 'Temperature min',
+					value: `${data?.min_temp?.[units]}°${getUnits({ selected: 'temperature', units })}`,
+				},
 				{
 					id: 3,
 					label: 'Sunrise',
@@ -48,13 +56,13 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 				{
 					id: 5,
 					label: 'Wind',
-					value: `${data?.wind_speed?.[units]?.large}${getUnits()?.speed?.[units]?.large}`,
+					value: `${data?.wind_speed?.[units]?.large}${getUnits({ selected: 'wind', units })}`,
 				},
 				{ id: 6, label: 'Pressure', value: `${data?.pressure}mb` },
 				{
 					id: 7,
 					label: 'Visibility',
-					value: `${data?.visibility?.[units]?.large}${getUnits()?.distance?.[units]?.large}`,
+					value: `${data?.visibility?.[units]?.large}${getUnits({ selected: 'distance', units })}`,
 				},
 				// Add more items as needed
 			]);
@@ -138,6 +146,7 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 											alignItems: 'center',
 											justifyContent: 'space-between',
 											overflow: 'hidden',
+											padding: isXs ? '0rem 2rem' : '0rem',
 											position: 'relative',
 										}}
 									>
@@ -162,9 +171,14 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 							id={`${idx}-day`}
 							index={index + idx + 1}
 							onClick={() => setActiveDay(idx)}
+							shouldSkip={idx !== 0}
 							style={{ ...style, transform: style?.xys.to(trans), padding: '0.4rem 1rem' }}
 						>
-							<Day>
+							<Day
+								style={{
+									filter: settings?.theme?.mode === 'light' ? 'brightness(0.95) saturate(2)' : '',
+								}}
+							>
 								<img alt="weather-icon" src={`../icons/${day?.weather?.icon}.svg`} />
 								<Typography fontWeight={500} sx={{ color: 'text.secondary' }} variant="subtitle1">
 									{day?.day?.slice(0, 3)}

@@ -16,10 +16,10 @@ export const Tile = styled(animated.div)`
 	color: white;
 	padding: 1rem;
 	background: ${({ theme }) => theme?.palette?.background?.window};
-	border-radius: 16px;
+	border-radius: 1.3rem;
 	border: ${(props) =>
 		props?.hovered === 'hovered'
-			? `1px solid ${props?.theme?.palette?.primary?.highlight}`
+			? `1px solid ${props?.theme?.palette?.secondary?.main}`
 			: `1px solid rgba(251, 247, 255, 0.22)`};
 	will-change: transform, opacity;
 
@@ -53,15 +53,12 @@ export const Tile = styled(animated.div)`
 export const EmptyCell = styled(animated.div)`
 	width: 100%;
 	height: 100%;
-	background-color: ${({ theme }) =>
-		theme?.palette?.mode !== 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(121, 151, 162, 0.2)'};
-	border-radius: 10px;
-	min-height: 156px;
+	border-radius: 1.3rem;
+	min-height: 174px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	opacity: 0.5;
-
 	&:hover {
 		opacity: 1;
 	}

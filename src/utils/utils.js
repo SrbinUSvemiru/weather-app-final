@@ -10,11 +10,17 @@ export function offsetDate(offset) {
 	return [hrs, mins, secs];
 }
 
-export const getUnits = () => ({
-	temp: { metric: 'C', imperial: 'F' },
-	speed: { metric: { small: 'm/s', large: 'km/h' }, imperial: { small: 'ft/s', large: 'mph' } },
-	distance: { metric: { small: 'm', large: 'km' }, imperial: { small: 'ft', large: 'mi' } },
-});
+export const getUnits = ({ selected, units = '' }) => {
+	const obj = {
+		temperature: { metric: 'C', imperial: 'F' },
+		wind: { metric: 'km/h', imperial: 'mph' },
+		distance: { metric: 'km', imperial: 'mi' },
+		precipitation: { metric: '%', imperial: '%' },
+		humidity: { metric: '%', imperial: '%' },
+	};
+
+	return obj[selected][units];
+};
 
 const getNestedValue = (obj, path) => path.split('.').reduce((acc, key) => acc && acc[key], obj);
 

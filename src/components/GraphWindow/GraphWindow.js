@@ -1,9 +1,18 @@
-import { Button, Grid2 as Grid, Typography, useTheme } from '@mui/material';
+import {
+	FormControl,
+	Grid2 as Grid,
+	InputLabel,
+	MenuItem,
+	Select,
+	ToggleButton,
+	ToggleButtonGroup,
+	Typography,
+} from '@mui/material';
 import { set, slice } from 'lodash';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { AppContext } from '../../context/AppContext';
-import { nextFourtyEightHours, trans } from '../../utils/utils';
+import { getUnits, nextFourtyEightHours, trans } from '../../utils/utils';
 import PrecipitationSvg from '../PrecipitationSvg/PrecipitationSvg';
 import TemperatureSvg from '../TemperatureSvg/TemperatureSvg';
 import VisibilitySvg from '../VisibilitySvg/VisibilitySvg';
@@ -12,12 +21,10 @@ import WindSvg from '../WindSvg/WindSvg';
 import { Container, SvgContainer, TimeList } from './styled-components';
 
 const GraphWindow = ({ daysForecast, style, colors, id, handleCloseCurrentWeather }) => {
-	const [clicked, setClicked] = useState('hourly');
+	const [selectedTimeframe, setSelectedTimeframe] = useState('hourly');
 	const [hoursList, setHoursList] = useState();
 
-	const { selectedCity, activeWrapper } = useContext(AppContext);
-
-	const theme = useTheme();
+	const { selectedCity, activeWrapper, setActiveWrapper, settings } = useContext(AppContext);
 
 	const [width, setWidth] = useState(0);
 
@@ -75,12 +82,27 @@ const GraphWindow = ({ daysForecast, style, colors, id, handleCloseCurrentWeathe
 		}
 	}, [daysForecast]);
 
+	const units = useMemo(
+		() =>
+			getUnits({
+				selected: activeWrapper,
+				units: settings?.preferences?.units,
+			}),
+		[activeWrapper, settings?.preferences?.units],
+	);
+
+	const handleToggle = useCallback((e, newAlignment) => {
+		if (newAlignment !== null) {
+			setSelectedTimeframe(newAlignment);
+		}
+	}, []);
+
 	useEffect(() => {
 		setHoursList(() =>
 			nextFourtyEightHours(selectedCity?.current?.timezone).map((hour) => (hour < 10 ? `0${hour}` : `${hour}`)),
 		);
 
-		setClicked('hourly');
+		setSelectedTimeframe('hourly');
 	}, [selectedCity]);
 
 	return (
@@ -93,122 +115,133 @@ const GraphWindow = ({ daysForecast, style, colors, id, handleCloseCurrentWeathe
 		>
 			<Container ref={graphRef}>
 				<Grid container spacing={3}>
-					<Grid size={12}>
-						<Button
-							disableElevation
-							name="hourly"
-							onClick={() => setClicked('hourly')}
-							size="small"
-							sx={{
-								color: 'text.primary',
-								backgroundImage:
-									clicked === 'hourly'
-										? `linear-gradient(to right,${theme?.palette?.wrapper?.[activeWrapper]?.light} 0%,${theme?.palette?.wrapper?.[activeWrapper]?.dark} 100%)`
-										: 'transparent',
-								borderColor: theme?.palette?.wrapper?.[activeWrapper]?.light,
-							}}
-							variant={clicked === 'hourly' ? 'contained' : 'outlined'}
+					<Grid size={12} sx={{ display: 'flex', alignItems: 'end', justifyContent: 'start' }}>
+						<ToggleButtonGroup
+							exclusive
+							onChange={handleToggle}
+							sx={{ borderRadius: '16px' }}
+							value={selectedTimeframe}
 						>
-							<Typography fontSize={'0.8rem'} fontWeight={700} variant="subtitle1">
-								48h
-							</Typography>
-						</Button>
-						<Button
-							disableElevation
-							name="hourly"
-							onClick={() => setClicked('daily')}
-							size="small"
-							sx={{
-								ml: '1rem',
-
-								backgroundImage:
-									clicked === 'daily'
-										? `linear-gradient(to right,${theme?.palette?.wrapper?.[activeWrapper]?.light} 0%,${theme?.palette?.wrapper?.[activeWrapper]?.dark} 100%)`
-										: 'transparent',
-								borderColor: theme?.palette?.wrapper?.[activeWrapper]?.light,
-							}}
-							variant={clicked === 'daily' ? 'contained' : 'outlined'}
-						>
-							<Typography
-								fontSize={'0.8rem'}
-								fontWeight={700}
-								sx={{ color: 'text.primary' }}
+							<ToggleButton
+								exclusive
+								sx={{ padding: '0.2rem 0.7rem', borderRadius: '16px 0px 0px 16px' }}
+								value="hourly"
 								variant="subtitle1"
 							>
-								days
-							</Typography>
-						</Button>
+								<Typography noWrap sx={{ fontSize: '0.7rem' }} variant="subtitle1">
+									Hours
+								</Typography>
+							</ToggleButton>
+							<ToggleButton
+								sx={{ padding: '0.2rem 0.7rem', borderRadius: '0px 16px 16px 0px' }}
+								value="daily"
+								variant="subtitle1"
+							>
+								<Typography noWrap sx={{ fontSize: '0.7rem' }} variant="subtitle1">
+									Days
+								</Typography>
+							</ToggleButton>
+						</ToggleButtonGroup>
+
+						<FormControl size="small" sx={{ minWidth: 80, ml: '1rem' }} variant="standard">
+							<InputLabel>Selected</InputLabel>
+							<Select
+								IconComponent={() => null}
+								disableUnderline
+								label="Selected"
+								labelId="demo-select-small-label"
+								onChange={(e) => setActiveWrapper(e?.target?.value)}
+								sx={{
+									borderRadius: '1rem',
+									backgroundColor: 'background.light',
+									padding: '0.2rem 0.7rem',
+									'& .MuiSelect-select': {
+										padding: 0,
+										paddingRight: '0px !important',
+										minWidth: '0px !important',
+									},
+								}}
+								value={activeWrapper}
+							>
+								<MenuItem value={'temperature'}>Temperature</MenuItem>
+								<MenuItem value={'precipitation'}>Precipitation</MenuItem>
+								<MenuItem value={'wind'}>Wind</MenuItem>
+								<MenuItem value={'humidity'}>Humidity</MenuItem>
+							</Select>
+						</FormControl>
+						<Typography sx={{ ml: '1rem', color: 'text.primary' }} variant="subtitle1">
+							{`Units: ${units}`}
+						</Typography>
 					</Grid>
-					{graphData ? (
-						<Grid size={12}>
-							<SvgContainer width={width}>
-								{activeWrapper === 'temperature' && (
-									<TemperatureSvg
-										activeWrapper={activeWrapper}
-										clicked={clicked}
-										colors={colors}
-										graphData={graphData}
-										hoursList={hoursList}
-										width={width}
-									/>
-								)}
-								{activeWrapper === 'wind' && (
-									<WindSvg
-										activeWrapper={activeWrapper}
-										clicked={clicked}
-										colors={colors}
-										graphData={graphData}
-										hoursList={hoursList}
-										width={width}
-									/>
-								)}
-								{activeWrapper === 'precipitation' ? (
-									<PrecipitationSvg
-										activeWrapper={activeWrapper}
-										clicked={clicked}
-										colors={colors}
-										graphData={graphData}
-										hoursList={hoursList}
-										width={width}
-									/>
-								) : null}
-								{activeWrapper === 'humidity' ? (
-									<VisibilitySvg
-										activeWrapper={activeWrapper}
-										clicked={clicked}
-										colors={colors}
-										graphData={graphData}
-										hoursList={hoursList}
-										width={width}
-									/>
-								) : null}
-								<TimeList width={width}>
-									{clicked === 'hourly'
-										? hoursList?.map((hour, index) => (
-												<Typography
-													fontWeight={500}
-													key={index}
-													sx={{ color: 'text.secondary' }}
-													variant="subtitle1"
-												>
-													{' '}
-													{hour}h
-												</Typography>
-											))
-										: daysForecast?.days?.map((day, index) => (
-												<Typography
-													fontWeight={500}
-													key={index}
-													sx={{ color: 'text.secondary' }}
-													variant="subtitle1"
-												>
-													{day?.day}
-												</Typography>
-											))}
-								</TimeList>
-							</SvgContainer>
-						</Grid>
-					) : null}
+
+					<Grid size={12}>
+						<SvgContainer width={width}>
+							{activeWrapper === 'temperature' && (
+								<TemperatureSvg
+									activeWrapper={activeWrapper}
+									clicked={selectedTimeframe}
+									colors={colors}
+									graphData={graphData}
+									hoursList={hoursList}
+									width={width}
+								/>
+							)}
+							{activeWrapper === 'wind' && (
+								<WindSvg
+									activeWrapper={activeWrapper}
+									clicked={selectedTimeframe}
+									colors={colors}
+									graphData={graphData}
+									hoursList={hoursList}
+									width={width}
+								/>
+							)}
+							{activeWrapper === 'precipitation' ? (
+								<PrecipitationSvg
+									activeWrapper={activeWrapper}
+									clicked={selectedTimeframe}
+									colors={colors}
+									graphData={graphData}
+									hoursList={hoursList}
+									width={width}
+								/>
+							) : null}
+							{activeWrapper === 'humidity' ? (
+								<VisibilitySvg
+									activeWrapper={activeWrapper}
+									clicked={selectedTimeframe}
+									colors={colors}
+									graphData={graphData}
+									hoursList={hoursList}
+									width={width}
+								/>
+							) : null}
+							<TimeList width={width}>
+								{selectedTimeframe === 'hourly'
+									? hoursList?.map((hour, index) => (
+											<Typography
+												fontWeight={500}
+												key={index}
+												sx={{ color: 'text.secondary' }}
+												variant="subtitle1"
+											>
+												{' '}
+												{hour}h
+											</Typography>
+										))
+									: daysForecast?.days?.map((day, index) => (
+											<Typography
+												fontWeight={500}
+												key={index}
+												sx={{ color: 'text.secondary' }}
+												variant="subtitle1"
+											>
+												{day?.day}
+											</Typography>
+										))}
+							</TimeList>
+						</SvgContainer>
+					</Grid>
 				</Grid>
 			</Container>
 		</Window>

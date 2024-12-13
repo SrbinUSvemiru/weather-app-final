@@ -61,6 +61,7 @@ const TemperatureWindow = ({ style, handleCloseCurrentWeather, api, index }) => 
 							display: 'flex',
 							alignItmes: 'center',
 							justifyContent: 'center',
+							filter: settings?.theme?.mode === 'light' ? 'brightness(0.95) saturate(2)' : '',
 							'& > img': { width: '150px' },
 						}}
 					>
@@ -85,18 +86,18 @@ const TemperatureWindow = ({ style, handleCloseCurrentWeather, api, index }) => 
 						sx={{ fontWeight: 600 }}
 						variant={isLg || isMd || isXs ? 'h2' : 'h3'}
 					>
-						&#176;{getUnits()?.temp?.[units]}
+						&#176;{getUnits({ selected: 'temperature', units })}
 					</AnimatedTypography>
 				</Grid>
 				<Grid size={{ xs: 6 }} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-					<Typography sx={{ fontWeight: 600, zIndex: 3 }} variant="h6">
+					<Typography noWrap sx={{ fontWeight: 600, zIndex: 3 }} variant="h6">
 						{selectedCity?.current?.weather?.[0]?.description || ''}
 					</Typography>
 				</Grid>
 				<Grid size={{ xs: 6 }}>
 					<Typography sx={{ color: 'text.secondary', zIndex: 3 }} variant="h6">
 						Feels like {selectedCity?.current?.feels_like?.[units] || ''}
-						&#176;{getUnits()?.temp?.[units]}
+						&#176;{getUnits({ selected: 'temperature', units })}
 					</Typography>
 				</Grid>
 			</Grid>

@@ -9,6 +9,7 @@ import { ValueContainer } from './styled-components';
 const VisibilitySvg = ({ clicked, activeWrapper, graphData, width }) => {
 	const theme = useTheme();
 	const humidity = graphData?.humidity?.[clicked];
+	console.log(humidity);
 	const animation = useSpring({
 		from: { opacity: 0 },
 		to: {
@@ -27,36 +28,45 @@ const VisibilitySvg = ({ clicked, activeWrapper, graphData, width }) => {
 					</linearGradient>
 				</defs>
 				<NaturalCurve
-					data={humidity?.map((temp, index) => [
-						index * (width / (humidity?.length - 1)),
-						-temp * 2 +
-							90 +
-							(humidity?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
-								(humidity?.length - 1)) *
-								2 +
-							3,
-					])}
+					data={humidity?.map((value, index) => {
+						const x = index * (width / (humidity?.length - 1));
+
+						const minHumidity = Math.min(...humidity);
+						const maxHumidity = Math.max(...humidity);
+
+						const padding = (maxHumidity - minHumidity) * 2;
+						const adjustedMin = minHumidity - padding;
+						const adjustedMax = maxHumidity + padding;
+
+						const normalizedY = 180 - ((value - adjustedMin) / (adjustedMax - adjustedMin)) * 180;
+
+						return [x, normalizedY];
+					})}
 					showPoints={false}
 					stroke="url(#gradientStroke)"
 					strokeOpacity={0.9}
-					strokeWidth={3}
+					strokeWidth={2}
 				/>
 			</svg>
 			<div className="container-for">
 				{humidity?.map((element, index) => (
 					<NumbersContainer key={index}>
 						<ValueContainer
-							sumOfTemp={
-								-element * 2 +
-								90 +
-								(humidity?.reduce((previousValue, currentValue) => previousValue + currentValue, 0) /
-									(humidity?.length - 1)) *
-									2 +
-								3
-							}
+							sumOfTemp={() => {
+								const minHumidity = Math.min(...humidity);
+								const maxHumidity = Math.max(...humidity);
+
+								const padding = (maxHumidity - minHumidity) * 2;
+								const adjustedMin = minHumidity - padding;
+								const adjustedMax = maxHumidity + padding;
+
+								const normalizedY = 180 - ((element - adjustedMin) / (adjustedMax - adjustedMin)) * 180;
+
+								return normalizedY - 40;
+							}}
 						>
-							<Typography fontWeight={600} variant="subtitle2">
-								{Math.round(element * 10) / 10}%
+							<Typography fontWeight={500} variant="subtitle1">
+								{Math.round(element * 10) / 10}
 							</Typography>
 						</ValueContainer>
 					</NumbersContainer>

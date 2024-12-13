@@ -12,11 +12,11 @@ export const SvgContainer = styled.div`
 	& .container-for {
 		position: absolute;
 		width: ${(props) => props?.width}px;
-		height: 100%;
+		height: 180px;
 		top: 0;
 		left: 0;
 		right: 0;
-		margin: auto;
+		margin: 0 auto;
 		display: flex;
 	}
 `;
