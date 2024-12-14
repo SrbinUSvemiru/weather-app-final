@@ -17,6 +17,7 @@ const AnimatedTypography = animated(Typography);
 
 const City = ({
 	city,
+	id,
 	setCityToReplace,
 	index,
 	setIsDrawerOpen,
@@ -131,6 +132,7 @@ const City = ({
 	return (
 		<Tile
 			hovered={hovered && !isEmpty ? 'hovered' : 'not-hovered'}
+			id={id}
 			onClick={(e) => handleTileClick(e)}
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}

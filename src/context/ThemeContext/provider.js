@@ -15,6 +15,27 @@ export const AppThemeProvider = (props) => {
 					mode: theme?.mode,
 					...getPaletteForTheme(theme),
 				},
+				components: {
+					MuiCssBaseline: {
+						styleOverrides: {
+							body: {
+								'&::-webkit-scrollbar': {
+									width: '8px', // Scrollbar width
+								},
+								'&::-webkit-scrollbar-track': {
+									backgroundColor: '#2b2e3b', // Track color
+								},
+								'&::-webkit-scrollbar-thumb': {
+									backgroundColor: '#888',
+									borderRadius: '10px',
+								},
+								'&::-webkit-scrollbar-thumb:hover': {
+									backgroundColor: '#555',
+								},
+							},
+						},
+					},
+				},
 				typography: {
 					fontFamily: `"Helvetica Neue", "Arial", sans-serif`,
 				},

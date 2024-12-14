@@ -90,6 +90,16 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, setOpen, 
 			getAppearTile({
 				api: openApi,
 				idx,
+				onStart: () => {
+					const element = document.getElementById(`${newCity?.id}`);
+
+					if (element) {
+						client.scrollTo({
+							top: element.offsetTop,
+							behavior: 'smooth',
+						});
+					}
+				},
 				onRest: () => {},
 			});
 
@@ -125,21 +135,6 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, setOpen, 
 	// 		});
 	// 	}
 	// };
-
-	const handleOutsideClick = (e) => {
-		if (containerRef.current && !containerRef.current.contains(e.target)) {
-			setIsListOpen(false);
-			setCityToReplace('');
-		}
-	};
-
-	useEffect(() => {
-		document.addEventListener('mousedown', handleOutsideClick);
-		return () => {
-			document.removeEventListener('mousedown', handleOutsideClick);
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	useEffect(() => {
 		if (cityToReplace) {
@@ -185,13 +180,13 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, setOpen, 
 					width: '100%',
 					height: '100%',
 					'& .MuiInput-underline:before': {
-						borderBottom: 'none', // Remove the bottom line before interaction
+						borderBottom: 'none',
 					},
 					'& .MuiInput-underline:after': {
-						borderBottom: 'none', // Remove the bottom line after interaction
+						borderBottom: 'none',
 					},
 					'& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-						borderBottom: 'none', // Remove the bottom line on hover
+						borderBottom: 'none',
 					},
 				}}
 				value={inputCityName}
@@ -206,7 +201,7 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, setOpen, 
 						paddingLeft: '2rem',
 						width: '100%',
 						zIndex: 100,
-						backgroundColor: 'background.header',
+						backgroundColor: 'background.default',
 						display: inputCityName ? 'block' : 'none',
 						overflowY: 'hidden',
 					}}

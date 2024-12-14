@@ -170,6 +170,7 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 							api={api}
 							id={`${idx}-day`}
 							index={index + idx + 1}
+							onButtonClick={handleCloseCurrentWeather}
 							onClick={() => setActiveDay(idx)}
 							shouldSkip={idx !== 0}
 							style={{ ...style, transform: style?.xys.to(trans), padding: '0.4rem 1rem' }}

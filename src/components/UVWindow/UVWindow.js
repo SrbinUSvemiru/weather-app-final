@@ -1,4 +1,4 @@
-import { Grid2 as Grid, Typography } from '@mui/material';
+import { Box, Grid2 as Grid, Typography } from '@mui/material';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSpring } from 'react-spring';
 
@@ -53,31 +53,46 @@ export const UVWindow = ({ airPollution, style, activeWrapper: wrapper, handleCl
 		>
 			<Wrapper style={activeWrapper} />
 			<Grid container spacing={1} sx={{ height: '100%' }}>
-				<Grid size={{ xs: 4 }} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-					<Typography color="text.secondary" noWrap variant="h6" zIndex={2}>
-						{' '}
-						{uvIndexCalc?.description}
-					</Typography>
-					<Typography fontWeight={600} variant="h6" zIndex={2}>
-						AQI {airPollution?.main?.aqi}
-					</Typography>
-				</Grid>
-				<Grid size={{ xs: 8 }} sx={{ display: 'flex', alignItems: 'center' }}>
-					<Typography
-						noWrap={true}
+				<Grid size={12} sx={{ display: 'flex' }}>
+					<Box
 						sx={{
-							overflow: 'hidden',
-							display: '-webkit-box',
-							WebkitBoxOrient: 'vertical',
-							textOverflow: 'ellipsis',
-							whiteSpace: 'normal',
-							WebkitLineClamp: 3,
+							display: 'flex',
+
+							mr: '1rem',
+							flexDirection: 'column',
+							justifyContent: 'center',
 						}}
-						variant="subtitle1"
-						zIndex={2}
 					>
-						{uvIndexCalc?.message}
-					</Typography>
+						<Typography color="text.secondary" noWrap variant="h6" zIndex={2}>
+							{' '}
+							{uvIndexCalc?.description}
+						</Typography>
+						<Typography
+							fontWeight={500}
+							sx={{ whiteSpace: 'nowrap', wordWrap: 'normal' }}
+							variant="h6"
+							zIndex={2}
+						>
+							AQI {airPollution?.main?.aqi}
+						</Typography>
+					</Box>
+					<Box sx={{ display: 'flex', alignItems: 'center' }}>
+						<Typography
+							noWrap={true}
+							sx={{
+								overflow: 'hidden',
+								display: '-webkit-box',
+								WebkitBoxOrient: 'vertical',
+								textOverflow: 'ellipsis',
+								whiteSpace: 'normal',
+								WebkitLineClamp: 3,
+							}}
+							variant="subtitle1"
+							zIndex={2}
+						>
+							{uvIndexCalc?.message}
+						</Typography>
+					</Box>
 				</Grid>
 				<Grid size={12} sx={{ display: 'flex', alignItems: 'center' }} zIndex={2}>
 					<Uvi color={uvIndexCalc?.color} ref={airPollutionRef} uvi={airPollution?.main?.aqi} width={width}>
