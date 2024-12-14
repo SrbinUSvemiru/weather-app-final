@@ -80,9 +80,6 @@ const AlertMessageWindow = (props) => {
 						</MessageContainer>
 						<StartAndFinishContainer>
 							<p id="enjoy">Enjoy your day!</p>
-							<div id="warning">
-								<img alt="smiley" src="./smiley.png" />
-							</div>
 						</StartAndFinishContainer>
 					</>
 				)}

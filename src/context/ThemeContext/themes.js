@@ -1,16 +1,18 @@
 export const defaultLight = {
 	background: {
 		window: 'rgba(248, 250, 252, 0.9)',
-		default: 'rgb(226 232 240)',
-		light: 'rgb(180 202 255)',
+		default: 'rgba(226,232,240, 1)',
+		light: 'rgba(180,202,255,1)',
 		header: '#ffffff',
-		shadeOne: 'rgb(241 245 249)',
-		shadeTwo: 'rgb(248 250 252)',
+		shadeOne: 'rgba(241,245,249,1)',
+		shadeTwo: 'rgba(248,250,252,1)',
 	},
 	border: 'rgba(121, 151, 162, 0.3)',
 
 	scrollbarColor: {
-		primary: '#dacff9',
+		primary: 'rgb(156 163 175)',
+		background: 'rgb(209 213 219)',
+		hover: 'rgb(229 231 235)',
 	},
 	primary: {
 		main: '#008EB6',
@@ -42,12 +44,13 @@ export const defaultDark = {
 	},
 	border: 'rgba(255, 255, 255, 0.2)',
 	scrollbarColor: {
-		primary: '#dacff9',
+		primary: 'rgb(51 65 85)',
+		background: ' rgb(30 41 59)',
+		hover: 'rgb(107 114 128)',
 	},
 	primary: {
 		main: '#2d4059',
 		light: '#41618B',
-
 		highlight: '#008EB6',
 	},
 	secondary: {

@@ -115,8 +115,14 @@ const App = () => {
 	};
 
 	const appBar = useSpring({
-		from: { height: isDrawerOpen ? '56px' : '400px' },
-		to: { height: !isDrawerOpen ? '56px' : '400px' },
+		from: {
+			height: isDrawerOpen ? '48px' : '400px',
+			backgroundColor: isDrawerOpen ? 'transparent' : muiTheme?.palette?.background?.default,
+		},
+		to: {
+			height: !isDrawerOpen ? '48px' : '400px',
+			backgroundColor: !isDrawerOpen ? 'transparent' : muiTheme?.palette?.background?.default,
+		},
 	});
 
 	return (
@@ -139,9 +145,10 @@ const App = () => {
 						width: '100%',
 						overflow: 'hidden',
 						display: 'flex',
+						bacgroundColor: 'transparent',
+						zIndex: muiTheme?.zIndex?.appBar,
 						alignItems: 'start',
-						backgroundColor: 'background.shadeOne',
-						padding: isXs ? '0 2rem' : '0.5rem 4rem',
+						padding: isXs ? '0.25rem 2rem' : '0.25rem 4rem',
 					}}
 				>
 					<Grid container spacing={{ xs: 1, sm: 3 }} sx={{ width: '100%' }}>
@@ -303,8 +310,8 @@ const App = () => {
 				<Box
 					id="scrollable-container"
 					sx={{
-						marginTop: '56px',
-						padding: isXs ? '1rem 1rem 10rem 1rem' : '1rem 2rem 10rem 2rem',
+						marginTop: '48px',
+						padding: isXs ? '1rem 1rem 10rem 1rem' : '2rem 2rem 10rem 2rem',
 						display: 'flex',
 						flexDirection: 'column',
 						justifyContent: 'start',
@@ -313,7 +320,19 @@ const App = () => {
 						height: '100%',
 						overflowY: 'scroll',
 						overflowX: 'hidden',
-
+						'&::-webkit-scrollbar': {
+							width: '0.5rem',
+						},
+						'&::-webkit-scrollbar-track': {
+							background: muiTheme?.palette?.scrollbarColor?.background,
+						},
+						'&::-webkit-scrollbar-thumb': {
+							backgroundColor: muiTheme?.palette?.scrollbarColor?.primary,
+							borderRadius: '10px',
+						},
+						'&::-webkit-scrollbar-thumb:hover': {
+							backgroundColor: muiTheme?.palette?.scrollbarColor?.hover,
+						},
 						position: 'relative',
 					}}
 				>

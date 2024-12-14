@@ -50,7 +50,7 @@ export const getRemoveTile = ({ api, onRest = () => {}, idx }) =>
 			};
 		});
 	});
-export const getAppearTile = ({ api, onRest = () => {}, idx }) =>
+export const getAppearTile = ({ api, onRest = () => {}, onStart = () => {}, idx }) =>
 	new Promise((resolve) => {
 		api.start((j) => {
 			if (j === idx) {
@@ -71,6 +71,9 @@ export const getAppearTile = ({ api, onRest = () => {}, idx }) =>
 						{ boxShadow: `0px 10px 20px 0px rgba(123 ,0 ,255, 1)`, config: { duration: 2000 } },
 						{ boxShadow: `0px 4px 10px -1px rgba(0, 0, 0, 0.3)`, config: { duration: 2000 } },
 					],
+					onStart: () => {
+						onStart();
+					},
 					onRest: () => {
 						onRest();
 						resolve();

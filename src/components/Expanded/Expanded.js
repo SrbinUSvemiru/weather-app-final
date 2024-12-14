@@ -215,7 +215,7 @@ const Expanded = ({
 		<Grid
 			container
 			size={12}
-			spacing={{ xs: 1, sm: 2 }}
+			spacing={{ xs: open ? 2 : 1, sm: 2 }}
 			sx={{
 				padding: 0,
 				width: '100%',
@@ -230,6 +230,8 @@ const Expanded = ({
 				return Page ? (
 					<AnimatedGrid
 						container={item?.spacing ? true : false}
+						id={open ? cities?.[index]?.id : ''}
+						key={index}
 						size={item?.size}
 						spacing={item?.spacing || ''}
 						sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
