@@ -8,14 +8,14 @@ import { v4 as uuid } from 'uuid';
 import { AppContext } from '../../context/AppContext/provider';
 import { getAppearTile, getCloseAnimation, getOpenAnimation, getRemoveTile } from '../../utils/animations';
 
-const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, setOpen, openApi, open }) => {
+const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }) => {
 	const [inputCityName, setInputCityName] = useState('');
 	const [searchCities, setSearchCities] = useState([]);
 	const [isListOpen, setIsListOpen] = useState(false);
 
 	const textFieldRef = useRef(null);
 
-	const { cities, setCities, setAnimation } = useContext(AppContext);
+	const { cities, setCities, setAnimation, setIsGridOpen, isGridOpen } = useContext(AppContext);
 
 	const containerRef = useRef(null);
 
@@ -62,7 +62,7 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, setOpen, 
 			getCloseAnimation({
 				api: openApi,
 				onRest: () => {
-					setOpen(true);
+					setIsGridOpen(true);
 				},
 			});
 
@@ -103,7 +103,7 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, setOpen, 
 				onRest: () => {},
 			});
 
-		if (!open) {
+		if (!isGridOpen) {
 			const animationChain = () =>
 				closeAnimation()
 					.then(() => openAnimation())

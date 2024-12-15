@@ -79,7 +79,9 @@ export const Window = styled(animated.div)`
 	align-items: center;
 	justify-content: center;
 	box-shadow: ${(props) =>
-		props?.shadowcolor ? `0px 0px 10px 0px ${props?.shadowcolor}` : `0px 4px 10px -1px rgba(0, 0, 0, 0.3)`};
+		props?.shadowcolor
+			? `0px 0px 10px 0px ${props?.shadowcolor}`
+			: `box-shadow: -5px -5px 15px #444, 5px 5px 15px #222, inset 5px 5px 10px #444, inset -5px -5px 10px #222`};
 	padding: 1rem;
 	height: 100%;
 	position: relative;

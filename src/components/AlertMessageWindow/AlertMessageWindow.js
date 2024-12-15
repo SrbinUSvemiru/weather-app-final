@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { animated, easings, useSpring } from 'react-spring';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { useGetFetchedQuery } from '../../queries/useCitiesQuery';
 import { returnAlertTime, trans } from '../../utils/utils';
 import { Window } from '../Window/Window';
 import { MessageContainer, StartAndFinishContainer } from './styled-components';
@@ -14,23 +13,21 @@ const AlertMessageWindow = (props) => {
 	const { isXs } = useBreakpoint();
 	const ref = useRef(null);
 
-	const data = useGetFetchedQuery(props.currentCity);
-
 	useEffect(() => {
-		if (data?.alerts) {
-			let start = returnAlertTime(data?.alerts[0]?.start, data?.timezone_offset);
-			let end = returnAlertTime(data?.alerts[0]?.end, data?.timezone_offset);
+		if (props?.data?.alerts) {
+			let start = returnAlertTime(props?.data?.alerts[0]?.start, props?.data?.timezone_offset);
+			let end = returnAlertTime(props?.data?.alerts[0]?.end, props?.data?.timezone_offset);
 
 			setMessage({
-				text: data?.alerts[0]?.description,
+				text: props?.data?.alerts[0]?.description,
 				start: start,
 				end: end,
-				event: data?.alerts[0]?.event,
+				event: props?.data?.alerts[0]?.event,
 			});
 		} else {
 			setMessage(null);
 		}
-	}, [data]);
+	}, [props?.data]);
 
 	const messageLoop = useSpring({
 		config: { easings: easings.easeInOutBack, duration: 10000 },
