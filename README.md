@@ -16,5 +16,5 @@ https://deluxe-babka-dd9a1b.netlify.app/
 ![alt text](https://github.com/SrbinUSvemiru/weather-app-final/blob/master/public/screenshots/weather.2.png)
 ![alt text](https://github.com/SrbinUSvemiru/weather-app-final/blob/master/public/screenshots/weather.3.png)
 ![alt text](https://github.com/SrbinUSvemiru/weather-app-final/blob/master/public/screenshots/weather.4.png)
-![alt text](https://github.com/SrbinUSvemiru/weather-app-final/blob/master/public/screenshots/weather.5.lightpng)
+![alt text](https://github.com/SrbinUSvemiru/weather-app-final/blob/master/public/screenshots/weather.lightpng)
  
