@@ -96,27 +96,18 @@ const getGridItems = ({ isXs, airPollution, daysForecast, activeWrapper, handleC
 		},
 	]);
 
-const Expanded = ({
-	open,
-	setOpen,
-	isDrawerOpen,
-	setIsDrawerOpen,
-	setHeaderClickedIcon,
-	setCityToReplace,
-	api,
-	springs,
-}) => {
-	const { cities, selectedCity, animation } = useContext(AppContext);
+const Expanded = ({ isDrawerOpen, setIsDrawerOpen, setHeaderClickedIcon, setCityToReplace, api, springs }) => {
+	const { cities, selectedCity, animation, setIsGridOpen, isGridOpen } = useContext(AppContext);
 
 	const { isXs, isSm, isMd, isLg } = useBreakpoint();
 
 	const { data: daysForecast } = useMultipleDaysForecastQuery({
 		city: selectedCity,
-		options: { enabled: !open },
+		options: { enabled: !isGridOpen },
 	});
 	const { data: airPollution } = useCurrentAirPolutionQuery({
 		city: selectedCity,
-		options: { enabled: !open },
+		options: { enabled: !isGridOpen },
 	});
 
 	const handleOpenCurrentWeather = useCallback(
@@ -130,7 +121,7 @@ const Expanded = ({
 			const closeAnimation = getCloseAnimation({
 				api,
 				onRest: () => {
-					setOpen(false);
+					setIsGridOpen(false);
 				},
 			});
 
@@ -147,7 +138,7 @@ const Expanded = ({
 
 			closeAnimation.then(openAnimation).catch((error) => console.error('Animation error:', error));
 		},
-		[cities, setOpen, api],
+		[cities, setIsGridOpen, api],
 	);
 
 	const handleCloseCurrentWeather = useCallback(() => {
@@ -155,7 +146,7 @@ const Expanded = ({
 		const closeAnimation = getCloseAnimation({
 			api,
 			onRest: () => {
-				setOpen(true);
+				setIsGridOpen(true);
 			},
 		});
 
@@ -171,7 +162,7 @@ const Expanded = ({
 			});
 
 		closeAnimation.then(openAnimation).catch((error) => console.error('Animation error:', error));
-	}, [setOpen, api]);
+	}, [setIsGridOpen, api]);
 
 	const transitionComponents = useMemo(
 		() => getGridItems({ isXs, isSm, isMd, isLg, handleCloseCurrentWeather, airPollution, daysForecast }),
@@ -215,26 +206,26 @@ const Expanded = ({
 		<Grid
 			container
 			size={12}
-			spacing={{ xs: open ? 2 : 1, sm: 2 }}
+			spacing={{ xs: isGridOpen ? 2 : 1, sm: 2 }}
 			sx={{
 				padding: 0,
 				width: '100%',
-				maxWidth: isXs ? '500px' : '1200px',
+
 				position: 'relative',
 			}}
 		>
 			{map(springs, (style, index) => {
-				const item = open ? citiesComponents?.[index] : transitionComponents?.[index];
+				const item = isGridOpen ? citiesComponents?.[index] : transitionComponents?.[index];
 				const Page = item?.component;
 
 				return Page ? (
 					<AnimatedGrid
 						container={item?.spacing ? true : false}
-						id={open ? cities?.[index]?.id : ''}
+						id={isGridOpen ? cities?.[index]?.id : ''}
 						key={index}
 						size={item?.size}
 						spacing={item?.spacing || ''}
-						sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+						sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}
 					>
 						<Page api={api} index={index} style={style} />
 					</AnimatedGrid>

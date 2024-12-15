@@ -17,6 +17,7 @@ export const AppContextProvider = (props) => {
 	const [theme, setTheme] = useState(settings?.theme || { mode: 'dark', variant: 'default' });
 	const [cities, setCities] = useState(getStorageItem('weather-app-settings')?.cities || defaultCities());
 	const [selectedCity, setSelectedCity] = useState({});
+	const [isGridOpen, setIsGridOpen] = useState(true);
 	const [animation, setAnimation] = useState(null);
 
 	useEffect(() => {
@@ -34,6 +35,8 @@ export const AppContextProvider = (props) => {
 				setCities,
 				theme,
 				animation,
+				isGridOpen,
+				setIsGridOpen,
 				setAnimation,
 				setTheme,
 				setSelectedCity,

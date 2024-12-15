@@ -18,8 +18,15 @@ const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
 
 	return (
-		<Grid container spacing={{ xs: 1 }} sx={{ height: '100%', width: '100%', paddingTop: isXs ? '1rem' : '0rem' }}>
-			<Grid size={{ xs: 4, sm: 12 }}>
+		<Grid
+			container
+			spacing={{ xs: 1 }}
+			sx={{ height: '100%', width: '100%', paddingTop: isXs ? '1rem' : '0rem', position: 'relative' }}
+		>
+			<Grid
+				size={{ xs: 4, sm: 12 }}
+				sx={{ display: 'flex', justifyContent: isXs ? 'center' : 'end', alignItems: 'center' }}
+			>
 				<Window
 					api={api}
 					id={'wind'}
@@ -32,17 +39,18 @@ const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }
 						flexDirection: 'column',
 						width: '100%',
 						padding: '0.6rem',
+						maxWidth: '6rem',
+						maxHeight: '6rem',
 					}}
 				>
 					<Icon
 						sx={{
 							zIndex: 2,
 							mb: '0.2rem',
-							width: '100%',
 							color: activeWrapper === 'wind' ? theme?.palette?.wrapper?.wind?.light : 'text.secondary',
 						}}
 					>
-						<AirIcon />
+						<AirIcon sx={{ maxWidth: '20px' }} />
 					</Icon>
 					<Typography variant="subtitle1" zIndex={2}>
 						{selectedCity?.current?.wind_speed?.[units]?.large}
@@ -50,35 +58,48 @@ const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }
 					</Typography>
 				</Window>
 			</Grid>
-			<Grid size={{ xs: 4, sm: 12 }}>
+			<Grid
+				size={{ xs: 4, sm: 12 }}
+				sx={{ display: 'flex', justifyContent: isXs ? 'center' : 'end', alignItems: 'center' }}
+			>
 				<Window
 					api={api}
 					id={'precipitation'}
 					index={index}
 					shadowcolor={activeWrapper === 'precipitation' ? theme?.palette?.wrapper?.precipitation?.light : ''}
 					shouldSkip={true}
-					style={{ ...style, transform: style?.xys.to(trans), flexDirection: 'column', padding: '0.6rem' }}
+					style={{
+						...style,
+						transform: style?.xys.to(trans),
+						flexDirection: 'column',
+						padding: '0.6rem',
+						maxWidth: '6rem',
+						maxHeight: '6rem',
+					}}
 					value="precipitation"
 				>
 					<Icon
 						sx={{
 							zIndex: 2,
 							mb: '0.2rem',
-							width: '100%',
+
 							color:
 								activeWrapper === 'precipitation'
 									? theme?.palette?.wrapper?.precipitation?.light
 									: 'text.secondary',
 						}}
 					>
-						<BeachAccessIcon />
+						<BeachAccessIcon sx={{ maxWidth: '20px' }} />
 					</Icon>
 					<Typography variant="subtitle1" zIndex={2}>
 						{Math.round(pop) * 100}%
 					</Typography>
 				</Window>
 			</Grid>
-			<Grid size={{ xs: 4, sm: 12 }}>
+			<Grid
+				size={{ xs: 4, sm: 12 }}
+				sx={{ display: 'flex', justifyContent: isXs ? 'center' : 'end', alignItems: 'center' }}
+			>
 				<Window
 					api={api}
 					id={'humidity'}
@@ -90,6 +111,8 @@ const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }
 						transform: style?.xys.to(trans),
 						flexDirection: 'column',
 						padding: '0.6rem',
+						maxWidth: '6rem',
+						maxHeight: '6rem',
 					}}
 					value="humidity"
 				>
@@ -97,14 +120,13 @@ const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }
 						sx={{
 							zIndex: 2,
 							mb: '0.2rem',
-							width: '100%',
 							color:
 								activeWrapper === 'humidity'
 									? theme?.palette?.wrapper?.humidity?.light
 									: 'text.secondary',
 						}}
 					>
-						<OpacityIcon />
+						<OpacityIcon sx={{ maxWidth: '20px' }} />
 					</Icon>
 					<Typography variant="subtitle1" zIndex={2}>
 						{' '}

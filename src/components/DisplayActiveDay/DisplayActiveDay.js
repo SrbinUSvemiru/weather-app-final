@@ -1,4 +1,10 @@
-import { Grid2 as Grid, Typography, useTheme } from '@mui/material';
+import AirIcon from '@mui/icons-material/Air';
+import CompressIcon from '@mui/icons-material/Compress';
+import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import WbTwilightIcon from '@mui/icons-material/WbTwilight';
+import { Box, Grid2 as Grid, Icon, Typography, useTheme } from '@mui/material';
 import { animated } from '@react-spring/web';
 import { debounce, map } from 'lodash';
 import React, { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
@@ -11,6 +17,20 @@ import { Window } from '../Window/Window';
 import { Day } from './styled-components';
 
 const AnimatedTypography = animated(Typography);
+const AnimatedBox = animated(Box);
+
+const getIcon = (i) => {
+	const obj = {
+		1: <DeviceThermostatIcon sx={{ maxWidth: '20px' }} />,
+		2: <DeviceThermostatIcon sx={{ maxWidth: '20px' }} />,
+		3: <WbSunnyIcon sx={{ maxWidth: '20px' }} />,
+		4: <WbTwilightIcon sx={{ maxWidth: '20px' }} />,
+		5: <AirIcon sx={{ maxWidth: '20px' }} />,
+		6: <CompressIcon sx={{ maxWidth: '20px' }} />,
+		7: <VisibilityIcon sx={{ maxWidth: '20px' }} />,
+	};
+	return obj[i];
+};
 
 const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, index, api }) => {
 	const theme = useTheme();
@@ -81,14 +101,12 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 		to: { opacity: 1, transform: i === 0 ? 'translateX(0)' : 'translateY(0)' },
 		delay: () => (i + 1) * 25,
 	}));
-	// Create springs for each item with individual delays
 
 	useLayoutEffect(() => {
 		springsApi?.start((i) => ({
 			immediate: false,
 			clamp: true,
 			delay: () => (i + 1) * 25,
-
 			to: { opacity: 0, transform: i === 0 ? 'translateX(-50%)' : 'translateY(-50%)' },
 			onRest: () => formattData(daysForecast?.days?.[activeDay], units),
 		}));
@@ -105,7 +123,19 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 	}, [springsApi, dayData]);
 
 	return (
-		<>
+		<AnimatedBox
+			style={{
+				...style,
+				transform: style?.xys.to(trans),
+				boxShadow: 'inset 0px 4px 10px -1px rgba(0, 0, 0, 0.3)',
+			}}
+			sx={{
+				paddingBottom: '0.4rem',
+				borderRadius: '1.4rem',
+				width: '100%',
+				height: '100%',
+			}}
+		>
 			<Grid size={12} spacing={1}>
 				<Window
 					id={'day-details'}
@@ -150,9 +180,24 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 											position: 'relative',
 										}}
 									>
-										<AnimatedTypography noWrap sx={{ color: 'text.secondary' }} variant="subtitle1">
-											{dayData?.[i]?.label}
-										</AnimatedTypography>
+										<Box sx={{ display: 'flex', alignItems: 'center' }}>
+											<Icon
+												sx={{
+													zIndex: 2,
+													mr: '0.5rem',
+													color: 'text.secondary',
+												}}
+											>
+												{getIcon(i)}
+											</Icon>
+											<AnimatedTypography
+												noWrap
+												sx={{ color: 'text.secondary' }}
+												variant="subtitle1"
+											>
+												{dayData?.[i]?.label}
+											</AnimatedTypography>
+										</Box>
 										<AnimatedTypography noWrap style={{ ...style }} variant="subtitle1">
 											{dayData?.[i]?.value}
 										</AnimatedTypography>
@@ -163,33 +208,44 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 					</Grid>
 				</Window>
 			</Grid>
-			<Grid container size={12} spacing={{ xs: 0.5, sm: 1 }}>
+			<Grid
+				size={12}
+				sx={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					mt: '0.4rem',
+					padding: '0 0.4rem',
+				}}
+			>
 				{map(daysForecast?.days, (day, idx) => (
-					<Grid key={idx} size={2}>
-						<Window
-							api={api}
-							id={`${idx}-day`}
-							index={index + idx + 1}
-							onButtonClick={handleCloseCurrentWeather}
-							onClick={() => setActiveDay(idx)}
-							shouldSkip={idx !== 0}
-							style={{ ...style, transform: style?.xys.to(trans), padding: '0.4rem 1rem' }}
+					<Window
+						api={api}
+						id={`${idx}-day`}
+						index={index + idx + 1}
+						onButtonClick={handleCloseCurrentWeather}
+						onClick={() => setActiveDay(idx)}
+						shouldSkip={idx !== 0}
+						style={{
+							...style,
+							transform: style?.xys.to(trans),
+							padding: isXs ? '0.4rem 0.2rem' : '0.4rem 0.6rem',
+							width: 'fit-content',
+						}}
+					>
+						<Day
+							style={{
+								filter: settings?.theme?.mode === 'light' ? 'brightness(0.95) saturate(2)' : '',
+							}}
 						>
-							<Day
-								style={{
-									filter: settings?.theme?.mode === 'light' ? 'brightness(0.95) saturate(2)' : '',
-								}}
-							>
-								<img alt="weather-icon" src={`../icons/${day?.weather?.icon}.svg`} />
-								<Typography fontWeight={500} sx={{ color: 'text.secondary' }} variant="subtitle1">
-									{day?.day?.slice(0, 3)}
-								</Typography>
-							</Day>
-						</Window>
-					</Grid>
+							<img alt="weather-icon" src={`../icons/${day?.weather?.icon}.svg`} />
+							<Typography fontWeight={500} sx={{ color: 'text.secondary' }} variant="subtitle1">
+								{day?.day?.slice(0, 3)}
+							</Typography>
+						</Day>
+					</Window>
 				))}
 			</Grid>
-		</>
+		</AnimatedBox>
 	);
 };
 

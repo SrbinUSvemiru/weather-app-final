@@ -85,15 +85,14 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 const AnimatedBox = animated(Box);
 
 const App = () => {
-	const [open, setOpen] = useState(true);
+	const { theme, setSettings, settings, setTheme, isGridOpen } = useContext(AppContext);
 	const [headerClickedIcon, setHeaderClickedIcon] = useState('search');
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [cityToReplace, setCityToReplace] = useState('');
-	const springsNumber = useMemo(() => (open ? 9 : 7), [open]);
+	const springsNumber = useMemo(() => (isGridOpen ? 9 : 7), [isGridOpen]);
 	const containerRef = useRef(null);
 
 	const { isXs } = useBreakpoint();
-	const { theme, setSettings, settings, setTheme } = useContext(AppContext);
 
 	const muiTheme = useTheme();
 
@@ -103,9 +102,6 @@ const App = () => {
 		delay: () => i * 50,
 	}));
 
-	const handleCloseCurrentWeather = () => {
-		setOpen(true);
-	};
 	const toggleDrawer = (value) => setIsDrawerOpen(value);
 
 	const handleToggleUnits = (event, newAlignment) => {
@@ -237,13 +233,11 @@ const App = () => {
 							{isDrawerOpen && headerClickedIcon === 'search' ? (
 								<SearchBar
 									cityToReplace={cityToReplace}
-									handleCloseCurrentWeather={handleCloseCurrentWeather}
 									isDrawerOpen={isDrawerOpen}
 									open={open}
 									openApi={api}
 									setCityToReplace={setCityToReplace}
 									setIsDrawerOpen={toggleDrawer}
-									setOpen={setOpen}
 								/>
 							) : null}
 						</Grid>
@@ -311,7 +305,7 @@ const App = () => {
 					id="scrollable-container"
 					sx={{
 						marginTop: '48px',
-						padding: isXs ? '1rem 1rem 10rem 1rem' : '2rem 2rem 10rem 2rem',
+						padding: isXs ? '1rem 1rem 10rem 1rem' : '1.5rem 2rem 10rem 2rem',
 						display: 'flex',
 						flexDirection: 'column',
 						justifyContent: 'start',
@@ -339,12 +333,9 @@ const App = () => {
 					<Expanded
 						api={api}
 						containerRef={containerRef}
-						handleCloseCurrentWeather={handleCloseCurrentWeather}
-						open={open}
 						setCityToReplace={setCityToReplace}
 						setHeaderClickedIcon={setHeaderClickedIcon}
 						setIsDrawerOpen={setIsDrawerOpen}
-						setOpen={setOpen}
 						springs={springs}
 					/>
 				</Box>

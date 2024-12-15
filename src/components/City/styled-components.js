@@ -55,6 +55,8 @@ export const EmptyCell = styled(animated.div)`
 	height: 100%;
 	border-radius: 1.3rem;
 	min-height: 174px;
+	min-width: 260px;
+	border: 1px solid rgba(251, 247, 255, 0.22),
 	display: flex;
 	justify-content: center;
 	align-items: center;

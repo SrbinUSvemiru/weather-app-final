@@ -44,6 +44,8 @@ const DateAndLocationWindow = ({ style, handleCloseCurrentWeather }) => {
 						sx={{
 							fontWeight: 500,
 							color: 'text.secondary',
+							whiteSpace: 'nowrap',
+							wordWrap: 'normal',
 						}}
 						variant="h6"
 					>
