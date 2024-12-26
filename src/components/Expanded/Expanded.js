@@ -210,7 +210,7 @@ const Expanded = ({ isDrawerOpen, setIsDrawerOpen, setHeaderClickedIcon, setCity
 			sx={{
 				padding: 0,
 				width: '100%',
-
+				maxWidth: '1440px',
 				position: 'relative',
 			}}
 		>
