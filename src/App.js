@@ -23,10 +23,11 @@ import Expanded from './components/Expanded/Expanded';
 import SearchBar from './components/SearchBar/SearchBar';
 import { AppContext } from './context/AppContext';
 import { useBreakpoint } from './hooks/useBreakpoint';
+import useOutsideClick from './hooks/useOutsideClick';
 
-const MaterialUISwitch = styled(Switch)(({ theme }) => ({
-	width: 50,
-	height: 32,
+const MaterialUISwitch = styled(Switch)(({ theme, isXs }) => ({
+	width: isXs ? 60 : 50,
+	height: isXs ? 38 : 32,
 	padding: 7,
 
 	'& .MuiSwitch-switchBase': {
@@ -52,9 +53,9 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 	},
 	'& .MuiSwitch-thumb': {
 		backgroundColor: theme?.palette?.primary?.highlight,
-		width: 23,
+		width: isXs ? 30 : 23,
 		transform: 'translateY(3px)',
-		height: 23,
+		height: isXs ? 30 : 23,
 		'&::before': {
 			content: "''",
 			position: 'absolute',
@@ -75,7 +76,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 	'& .MuiSwitch-track': {
 		opacity: 1,
 		backgroundColor: '#aab4be',
-		borderRadius: 20 / 2,
+		borderRadius: (isXs ? 30 : 20) / 2,
 		...theme.applyStyles('dark', {
 			backgroundColor: '#8796A5',
 		}),
@@ -91,6 +92,7 @@ const App = () => {
 	const [cityToReplace, setCityToReplace] = useState('');
 	const springsNumber = useMemo(() => (isGridOpen ? 9 : 7), [isGridOpen]);
 	const containerRef = useRef(null);
+	const appBarRef = useRef(null);
 
 	const { isXs } = useBreakpoint();
 
@@ -111,15 +113,18 @@ const App = () => {
 	};
 
 	const appBar = useSpring({
+		config: { duration: 300 },
 		from: {
-			height: isDrawerOpen ? '48px' : '400px',
-			backgroundColor: isDrawerOpen ? 'transparent' : muiTheme?.palette?.background?.default,
+			height: isDrawerOpen ? '56px' : '500px',
+			backgroundColor: isDrawerOpen ? 'transparent' : muiTheme?.palette?.background?.shadeOne,
 		},
 		to: {
-			height: !isDrawerOpen ? '48px' : '400px',
-			backgroundColor: !isDrawerOpen ? 'transparent' : muiTheme?.palette?.background?.default,
+			height: !isDrawerOpen ? '56px' : '500px',
+			backgroundColor: !isDrawerOpen ? 'transparent' : muiTheme?.palette?.background?.shadeOne,
 		},
 	});
+
+	useOutsideClick({ ref: appBarRef, callback: () => toggleDrawer(false) });
 
 	return (
 		<>
@@ -134,7 +139,7 @@ const App = () => {
 				}}
 			>
 				<AnimatedBox
-					onMouseLeave={() => setIsDrawerOpen(false)}
+					ref={appBarRef}
 					style={appBar}
 					sx={{
 						position: 'fixed',
@@ -143,11 +148,14 @@ const App = () => {
 						display: 'flex',
 						bacgroundColor: 'transparent',
 						zIndex: muiTheme?.zIndex?.appBar,
-						alignItems: 'start',
-						padding: isXs ? '0.25rem 2rem' : '0.25rem 4rem',
+						alignItems: 'flex-start',
 					}}
 				>
-					<Grid container spacing={{ xs: 1, sm: 3 }} sx={{ width: '100%' }}>
+					<Grid
+						container
+						spacing={{ xs: 1, sm: 3 }}
+						sx={{ width: '100%', padding: isXs ? '0.5rem 2rem' : '0.5rem 4rem', position: 'fixed' }}
+					>
 						<Grid size={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Grid>
 						<Grid size={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Grid>
 
@@ -155,22 +163,29 @@ const App = () => {
 							<IconButton
 								aria-label="search"
 								onClick={() => {
-									setHeaderClickedIcon('search');
-									toggleDrawer(true);
+									if (isXs && headerClickedIcon !== 'search' && isDrawerOpen) {
+										setHeaderClickedIcon('search');
+									} else {
+										setHeaderClickedIcon('search');
+										toggleDrawer((prev) => !prev);
+									}
 								}}
-								sx={{ color: 'text.secondary', marginRight: '1rem' }}
+								sx={{ color: 'text.secondary', marginRight: '2rem' }}
 							>
-								<SearchIcon />
+								<SearchIcon sx={{ fontSize: isXs ? '2rem' : '1.5rem' }} />
 							</IconButton>
 							{isXs ? (
-								<IconButton>
-									<MenuIcon
-										onClick={() => {
+								<IconButton
+									onClick={() => {
+										if (isXs && headerClickedIcon !== 'menu' && isDrawerOpen) {
+											setHeaderClickedIcon('menu');
+										} else {
 											setHeaderClickedIcon('menu');
 											toggleDrawer((prev) => !prev);
-										}}
-										sx={{ color: 'text.secondary' }}
-									/>
+										}
+									}}
+								>
+									<MenuIcon sx={{ fontSize: isXs ? '2rem' : '1.5rem' }} />
 								</IconButton>
 							) : (
 								<Stack direction="row" spacing={4}>
@@ -186,13 +201,13 @@ const App = () => {
 												background: 'background.window',
 												borderRadius: '16px 0px 0px 16px',
 												'&.Mui-selected': {
-													background: `linear-gradient(45deg, ${muiTheme?.palette?.secondary?.main} 0%,${muiTheme?.palette?.secondary?.light} 100%)`,
+													background: `linear-gradient(45deg, ${muiTheme?.palette?.accent?.main} 0%,${muiTheme?.palette?.accent?.light} 100%)`,
 													color: 'white',
 												},
 											}}
 											value="metric"
 										>
-											<Typography sx={{ fontSize: '0.7rem' }} variant="subtitle1">
+											<Typography sx={{ fontSize: '0.8rem' }} variant="subtitle1">
 												{' '}
 												&#176;C{' '}
 											</Typography>
@@ -203,14 +218,14 @@ const App = () => {
 												borderRadius: '0px 16px 16px 0px',
 												background: 'background.window',
 												'&.Mui-selected': {
-													background: `linear-gradient(45deg, ${muiTheme?.palette?.secondary?.main} 0%,${muiTheme?.palette?.secondary?.light} 100%)`,
+													background: `linear-gradient(45deg, ${muiTheme?.palette?.accent?.main} 0%,${muiTheme?.palette?.accent?.light} 100%)`,
 													color: 'white',
 												},
 											}}
 											value="imperial"
 											variant="subtitle1"
 										>
-											<Typography sx={{ fontSize: '0.7rem' }} variant="subtitle1">
+											<Typography sx={{ fontSize: '0.8rem' }} variant="subtitle1">
 												{' '}
 												&#176;F{' '}
 											</Typography>
@@ -218,6 +233,7 @@ const App = () => {
 									</ToggleButtonGroup>
 									<MaterialUISwitch
 										checked={theme?.mode === 'dark'}
+										isXs={isXs}
 										onClick={() =>
 											setTheme((prev) => ({
 												variant: prev?.variant,
@@ -254,6 +270,7 @@ const App = () => {
 											sx={{
 												padding: '0.2rem 0.7rem',
 												borderRadius: '16px 0px 0px 16px',
+												fontSize: isXs ? '1.5rem' : '0.7rem',
 												'&.Mui-selected': {
 													background: `linear-gradient(45deg, ${muiTheme?.palette?.secondary?.main} 0%,${muiTheme?.palette?.secondary?.light} 100%)`,
 													color: 'white',
@@ -261,10 +278,7 @@ const App = () => {
 											}}
 											value="metric"
 										>
-											<Typography sx={{ fontSize: '0.7rem' }} variant="subtitle1">
-												{' '}
-												&#176;C{' '}
-											</Typography>
+											<Typography variant="subtitle1"> &#176;C </Typography>
 										</ToggleButton>
 										<ToggleButton
 											sx={{
@@ -278,16 +292,14 @@ const App = () => {
 											value="imperial"
 											variant="subtitle1"
 										>
-											<Typography sx={{ fontSize: '0.7rem' }} variant="subtitle1">
-												{' '}
-												&#176;F{' '}
-											</Typography>
+											<Typography variant="subtitle1"> &#176;F </Typography>
 										</ToggleButton>
 									</ToggleButtonGroup>
 								</Grid>
 								<Grid size={12}>
 									<MaterialUISwitch
 										checked={theme?.mode === 'dark'}
+										isXs={isXs}
 										onClick={() =>
 											setTheme((prev) => ({
 												variant: prev?.variant,
@@ -304,7 +316,7 @@ const App = () => {
 				<Box
 					id="scrollable-container"
 					sx={{
-						marginTop: '48px',
+						marginTop: '56px',
 						padding: isXs ? '1rem 1rem 10rem 1rem' : '1.5rem 2rem 10rem 2rem',
 						display: 'flex',
 						flexDirection: 'column',

@@ -29,7 +29,7 @@ const City = ({
 	const [hovered, setHovered] = useState(false);
 	const [time, setTime] = useState('');
 
-	const { cities, settings, setCities, setSelectedCity } = useContext(AppContext);
+	const { cities, settings, setCities, setSelectedCity, theme } = useContext(AppContext);
 
 	const isEmpty = useMemo(() => !city?.lon || !city?.lat, [city]);
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
@@ -95,6 +95,7 @@ const City = ({
 			getRemoveTile({
 				api: openApi,
 				idx,
+				updatedCities,
 				onRest: () => {
 					setCities(updatedCities);
 				},
@@ -104,7 +105,9 @@ const City = ({
 			getAppearTile({
 				api: openApi,
 				idx,
+				updatedCities,
 				onRest: () => {},
+				isDark: theme?.mode === 'dark',
 			});
 
 		removeTileAnimation()
@@ -133,6 +136,7 @@ const City = ({
 		<Tile
 			hovered={hovered && !isEmpty ? 'hovered' : 'not-hovered'}
 			id={id}
+			isEmpty={isEmpty}
 			onClick={(e) => handleTileClick(e)}
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
@@ -156,14 +160,9 @@ const City = ({
 					</Icon>
 				</EmptyCell>
 			) : (
-				<Grid container sx={{ width: '100%' }}>
-					<Grid size={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-						<Typography
-							fontWeight={700}
-							noWrap
-							sx={{ color: hovered ? 'secondary.main' : 'text.primary' }}
-							variant="h6"
-						>
+				<Grid container spacing={0.5} sx={{ width: '100%' }}>
+					<Grid size={12} sx={{ display: 'flex', alignItems: 'start', justifyContent: 'space-between' }}>
+						<Typography fontWeight={700} noWrap sx={{ color: 'text.primary' }} variant="h5">
 							{city?.name}
 						</Typography>
 
@@ -171,6 +170,8 @@ const City = ({
 							onClick={(e) => handleRemoveCity(e)}
 							sx={{
 								color: 'text.primary',
+								display: 'flex',
+								alignItems: 'start',
 								'&:hover': {
 									color: 'secondary.main',
 									scale: 1.2,

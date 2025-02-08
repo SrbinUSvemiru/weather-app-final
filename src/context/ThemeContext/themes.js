@@ -1,6 +1,7 @@
 export const defaultLight = {
 	background: {
 		window: 'rgba(248, 250, 252, 0.9)',
+		windowShade: 'rgba(248, 250, 252, 0.49)',
 		default: 'rgba(226,232,240, 1)',
 		light: 'rgba(180,202,255,1)',
 		header: '#ffffff',
@@ -17,12 +18,15 @@ export const defaultLight = {
 	primary: {
 		main: '#008EB6',
 		light: '#00A5E0',
-
 		highlight: '#58C3E0',
 	},
 	secondary: {
-		main: '#ac4af7',
+		main: '#5e09dc',
 		light: '#cf7aff',
+	},
+	accent: {
+		main: 'rgb(252, 115, 88)',
+		light: 'rgb(255, 145, 123)',
 	},
 	wrapper: {
 		temperature: { light: '#007bff', dark: '#F7C265' },
@@ -35,12 +39,13 @@ export const defaultLight = {
 
 export const defaultDark = {
 	background: {
-		default: 'rgba(15,23,42,1)',
+		default: 'rgba(6,12,26,1)',
 		window: 'rgba(51,65,85,0.9)',
+		windowShade: 'rgba(51, 65, 85, 0.49)',
 		header: '#2d4059',
 		light: 'rgb(58 74 111)',
-		shadeOne: 'rgba(30,41,59,1)',
-		shadeTwo: 'rgba(51,65,85,1)',
+		shadeOne: 'rgba(24,33,47,1)',
+		shadeTwo: 'rgba(12,21,34,1)',
 	},
 	border: 'rgba(255, 255, 255, 0.2)',
 	scrollbarColor: {
@@ -54,8 +59,12 @@ export const defaultDark = {
 		highlight: '#008EB6',
 	},
 	secondary: {
-		main: '#7B2CBF',
+		main: 'rgb(118, 33, 246)',
 		light: '#9D4EDD',
+	},
+	accent: {
+		main: 'rgb(249, 114, 87)',
+		light: 'rgb(245, 132, 109)',
 	},
 	wrapper: {
 		temperature: { light: '#f7e199', dark: '#f7c2b2' },

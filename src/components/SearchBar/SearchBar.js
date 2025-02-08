@@ -1,8 +1,8 @@
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, IconButton, List, ListItemButton, TextField, Typography } from '@mui/material';
 import citiesList from 'cities.json';
-import { findIndex, map, set, slice, sortBy } from 'lodash';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { findIndex, map, set, slice, some, sortBy } from 'lodash';
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { AppContext } from '../../context/AppContext/provider';
@@ -15,8 +15,8 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 
 	const textFieldRef = useRef(null);
 
-	const { cities, setCities, setAnimation, setIsGridOpen, isGridOpen } = useContext(AppContext);
-
+	const { cities, setCities, setAnimation, setIsGridOpen, isGridOpen, theme } = useContext(AppContext);
+	console.log(cities);
 	const containerRef = useRef(null);
 
 	useEffect(() => {
@@ -46,11 +46,11 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 			updatedCities[emptyIdx] = newCity;
 		} else {
 			updatedCities = [
-				{ ...newCity },
-				...map(slice(updatedCities, 0, updatedCities?.length - 1), (el) => ({ ...el, weight: el?.weight + 1 })),
+				...map(slice(updatedCities, 0, updatedCities?.length - 1), (el) => ({ ...el })),
+				{ ...newCity, weight: updatedCities?.length },
 			];
 		}
-		const idx = replaceIdx > -1 ? replaceIdx : emptyIdx;
+		const idx = replaceIdx > -1 ? replaceIdx : emptyIdx > -1 ? emptyIdx : updatedCities?.length - 1;
 
 		setSearchCities([]);
 		setInputCityName('');
@@ -80,6 +80,7 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 		const removeTileAnimation = () =>
 			getRemoveTile({
 				api: openApi,
+				updatedCities,
 				idx,
 				onRest: () => {
 					setCities(sortBy(updatedCities, 'weight'));
@@ -90,6 +91,8 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 			getAppearTile({
 				api: openApi,
 				idx,
+				updatedCities,
+				isDark: theme?.mode === 'dark',
 				onStart: () => {
 					const element = document.getElementById(`${newCity?.id}`);
 
@@ -148,6 +151,12 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 		}
 	}, [isListOpen]);
 
+	useLayoutEffect(() => {
+		if (textFieldRef.current) {
+			textFieldRef.current.focus();
+		}
+	}, []);
+
 	return (
 		<Box
 			ref={containerRef}
@@ -165,7 +174,6 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 			</IconButton>
 			<TextField
 				className="text"
-				fontSize={'2rem'}
 				inputRef={textFieldRef}
 				onFocus={() => setIsListOpen(true)}
 				onInput={(e) => {
@@ -175,19 +183,21 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 				size="medium"
 				sx={{
 					padding: 0,
-					fontSize: '2rem',
 					borderRadius: '16px',
 					width: '100%',
 					height: '100%',
-					'& .MuiInput-underline:before': {
-						borderBottom: 'none',
+					'& .MuiInputBase-input': {
+						fontSize: '1.5rem', // Change the font size here
 					},
-					'& .MuiInput-underline:after': {
-						borderBottom: 'none',
-					},
-					'& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-						borderBottom: 'none',
-					},
+					// '& .MuiInput-underline:before': {
+					// 	borderBottom: 'none',
+					// },
+					// '& .MuiInput-underline:after': {
+					// 	borderBottom: 'none',
+					// },
+					// '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+					// 	borderBottom: 'none',
+					// },
 				}}
 				value={inputCityName}
 				variant="standard"
@@ -201,22 +211,24 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 						paddingLeft: '2rem',
 						width: '100%',
 						zIndex: 100,
-						backgroundColor: 'background.default',
+						backgroundColor: 'background.shadeOne',
 						display: inputCityName ? 'block' : 'none',
 						overflowY: 'hidden',
 					}}
 				>
 					{map(searchCities, (city, index) => (
 						<ListItemButton
-							disabled={!city?.lat || !city?.lng}
+							disabled={!city?.lat || !city?.lng || some(cities, { lat: city?.lat, lng: city?.lng })}
 							key={index}
 							onClick={() => handleAddCity(city)}
 							sx={{ padding: '0.1rem 1rem', background: 'primary.light' }}
 						>
-							<Typography variant="subtitle1">{city?.name}</Typography>
+							<Typography sx={{ fontSize: '1.5rem' }} variant="subtitle1">
+								{city?.name}
+							</Typography>
 							<Typography
 								fontWeight={700}
-								sx={{ color: 'text.secondary', marginLeft: '0.5rem' }}
+								sx={{ color: 'text.secondary', marginLeft: '0.5rem', fontSize: '1.5rem' }}
 								variant="subtitle1"
 							>
 								{city?.country}
