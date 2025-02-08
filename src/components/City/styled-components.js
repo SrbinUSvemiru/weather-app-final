@@ -7,7 +7,7 @@ export const Tile = styled(animated.div)`
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	box-shadow: 0px 10px 15px -4px rgba(0, 0, 0, 0.2);
+	box-shadow: ${(props) => (props?.isEmpty ? 'none' : `0px 3px 8px -1px rgba(0, 0, 0, 0.2)`)};
 	align-items: center;
 	width: 260px;
 	backdrop-filter: blur(7.6px);
@@ -15,14 +15,14 @@ export const Tile = styled(animated.div)`
 	cursor: pointer;
 	color: white;
 	padding: 1rem;
-	background: ${({ theme }) => theme?.palette?.background?.window};
+	background: ${({ isEmpty, theme }) =>
+		isEmpty ? theme?.palette?.background?.windowShade : theme?.palette?.background?.window};
 	border-radius: 1.3rem;
 	border: ${(props) =>
 		props?.hovered === 'hovered'
 			? `1px solid ${props?.theme?.palette?.secondary?.main}`
-			: `1px solid rgba(251, 247, 255, 0.22)`};
+			: `1px ${props?.isEmpty ? 'dashed' : 'solid'} ${props?.theme?.palette?.border}`};
 	will-change: transform, opacity;
-
 	& .temperature {
 		width: 100%;
 		justify-content: space-between;
@@ -54,7 +54,7 @@ export const EmptyCell = styled(animated.div)`
 	width: 100%;
 	height: 100%;
 	border-radius: 1.3rem;
-	min-height: 174px;
+	min-height: 182.52px;
 	min-width: 260px;
 	border: 1px solid rgba(251, 247, 255, 0.22),
 	display: flex;

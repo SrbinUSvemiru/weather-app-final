@@ -27,7 +27,7 @@ export const getOpenAnimation = ({ api, onRest = () => {} }) =>
 		}));
 	});
 
-export const getRemoveTile = ({ api, onRest = () => {}, idx }) =>
+export const getRemoveTile = ({ api, updatedCities, onRest = () => {}, idx }) =>
 	new Promise((resolve) => {
 		api.start((i) => {
 			if (i === idx) {
@@ -46,11 +46,12 @@ export const getRemoveTile = ({ api, onRest = () => {}, idx }) =>
 				opacity: 1, // Preserve opacity
 				xys: [0, 0, 1, 0], // Preserve xys transformation
 				backdropFilter: 'blur(7.5px)', // Preserve current blur state
-				boxShadow: `0px 4px 10px -1px rgba(0, 0, 0, 0.3)`, // Preserve shadow
+				boxShadow:
+					!updatedCities[i]?.lat || !updatedCities[i]?.lon ? 'none' : `0px 3px 8px -1px rgba(0, 0, 0, 0.2)`, // Preserve shadow
 			};
 		});
 	});
-export const getAppearTile = ({ api, onRest = () => {}, onStart = () => {}, idx }) =>
+export const getAppearTile = ({ api, onRest = () => {}, updatedCities, onStart = () => {}, idx, isDark = false }) =>
 	new Promise((resolve) => {
 		api.start((j) => {
 			if (j === idx) {
@@ -58,7 +59,7 @@ export const getAppearTile = ({ api, onRest = () => {}, onStart = () => {}, idx 
 					config: { easing: easings?.easeOutCirc, duration: 1000 },
 					from: {
 						opacity: 0,
-						xys: [-50, 0, 0.5, 500],
+						xys: [0, 0, 0.5, 500],
 						backdropFilter: 'blur(0px)',
 					},
 					to: [
@@ -66,10 +67,22 @@ export const getAppearTile = ({ api, onRest = () => {}, onStart = () => {}, idx 
 							opacity: 1,
 							xys: [0, 0, 1, 0],
 							backdropFilter: 'blur(7.5px)',
-							boxShadow: `0px 0px 10px 0px rgba(123 ,0 ,255, 1)`,
+							boxShadow: !isDark
+								? `0px 0px 10px 0px rgb(94, 9, 220)`
+								: `0px 0px 10px 0px rgb(118, 33, 246)`,
 						},
-						{ boxShadow: `0px 10px 20px 0px rgba(123 ,0 ,255, 1)`, config: { duration: 2000 } },
-						{ boxShadow: `0px 4px 10px -1px rgba(0, 0, 0, 0.3)`, config: { duration: 2000 } },
+						{
+							boxShadow: !isDark
+								? `0px 0px 10px 0px rgb(94, 9, 220)`
+								: `0px 0px 10px 0px rgb(118, 33, 246)`,
+							config: { duration: 2000 },
+						},
+						{
+							boxShadow:
+								!updatedCities[j]?.lat || !updatedCities[j]?.lon
+									? 'none'
+									: `0px 3px 8px -1px rgba(0, 0, 0, 0.2)`,
+						},
 					],
 					onStart: () => {
 						onStart();
@@ -84,7 +97,8 @@ export const getAppearTile = ({ api, onRest = () => {}, onStart = () => {}, idx 
 				opacity: 1, // Preserve opacity
 				xys: [0, 0, 1, 0], // Preserve xys transformation
 				backdropFilter: 'blur(7.5px)', // Preserve current blur state
-				boxShadow: `0px 4px 10px -1px rgba(0, 0, 0, 0.3)`, // Preserve shadow
+				boxShadow:
+					!updatedCities[j]?.lat || !updatedCities[j]?.lon ? 'none' : `0px 3px 8px -1px rgba(0, 0, 0, 0.2)`, // Preserve shadow
 			};
 		});
 	});
