@@ -1,6 +1,6 @@
 export const defaultLight = {
 	background: {
-		window: 'rgba(248, 250, 252, 0.9)',
+		window: '-webkit-linear-gradient(70deg,rgba(236, 239, 242, 0.7), rgba(248, 250, 252, 0.9) 70%)',
 		windowShade: 'rgba(248, 250, 252, 0.49)',
 		default: 'rgba(226,232,240, 1)',
 		light: 'rgba(180,202,255,1)',
@@ -25,8 +25,8 @@ export const defaultLight = {
 		light: '#cf7aff',
 	},
 	accent: {
-		main: 'rgb(252, 115, 88)',
-		light: 'rgb(255, 145, 123)',
+		main: 'hsl(20, 90.60%, 62.40%)',
+		light: 'hsl(33, 83.60%, 64.10%)',
 	},
 	wrapper: {
 		temperature: { light: '#007bff', dark: '#F7C265' },
@@ -35,12 +35,13 @@ export const defaultLight = {
 		wind: { light: '#abecd6', dark: '#fbed96' },
 		days: { light: '#c779d0', dark: '#4bc0c8' },
 	},
+	temperature: 'hsl(213, 100.00%, 46.10%)',
 };
 
 export const defaultDark = {
 	background: {
 		default: 'rgba(6,12,26,1)',
-		window: 'rgba(51,65,85,0.9)',
+		window: '-webkit-linear-gradient(70deg,rgba(36, 46, 61, 0.9), rgba(51, 65, 85, 0.9) 70%)',
 		windowShade: 'rgba(51, 65, 85, 0.49)',
 		header: '#2d4059',
 		light: 'rgb(58 74 111)',
@@ -63,8 +64,8 @@ export const defaultDark = {
 		light: '#9D4EDD',
 	},
 	accent: {
-		main: 'rgb(249, 114, 87)',
-		light: 'rgb(245, 132, 109)',
+		main: 'hsl(20, 80%, 45.90%)',
+		light: 'hsl(33, 80%, 46.50%)',
 	},
 	wrapper: {
 		temperature: { light: '#f7e199', dark: '#f7c2b2' },
@@ -73,4 +74,5 @@ export const defaultDark = {
 		wind: { light: '#abecd6', dark: '#fbed96' },
 		days: { light: '#c779d0', dark: '#4bc0c8' },
 	},
+	temperature: 'hsl(177, 31.20%, 75.50%)',
 };

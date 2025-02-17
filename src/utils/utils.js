@@ -1,14 +1,5 @@
-import { concat, join } from 'lodash';
+import { clamp, concat, join } from 'lodash';
 import { DateTime } from 'luxon';
-
-export function offsetDate(offset) {
-	var d = new Date(new Date().getTime() + offset * 1000);
-	var hrs = d.getUTCHours();
-	var mins = d.getUTCMinutes();
-	var secs = d.getUTCSeconds();
-
-	return [hrs, mins, secs];
-}
 
 export const getUnits = ({ selected, units = '' }) => {
 	const obj = {
@@ -22,6 +13,32 @@ export const getUnits = ({ selected, units = '' }) => {
 	return obj[selected][units];
 };
 
+function mapTempToPercentage(temp) {
+	const tempMin = 7;
+	const tempMax = -30;
+	const targetMin = 170;
+	const targetMax = 200;
+
+	// Calculate percentage between 7 and -100
+	const percentage = (temp - tempMin) / (tempMax - tempMin);
+
+	// Map the percentage to the range [170, 240]
+	const mappedValue = targetMin + percentage * (targetMax - targetMin);
+
+	return clamp(Math.round(mappedValue), 170, 200);
+}
+
+export const getTemperatureColor = ({ temp }) => {
+	const luminance = temp > 0 ? 80 - temp : clamp(80 - Math.abs(temp), 50, 80);
+	const hue = mapTempToPercentage(temp);
+	console.log(hue);
+	const saturation = 90;
+	if (temp < 7) {
+		return `-webkit-linear-gradient(90deg, hsl(${hue - 20}, ${saturation}%, ${50}%), hsl(${hue}, ${saturation}%, ${50}%)  90%)`;
+	}
+	return `-webkit-linear-gradient(90deg, hsl(58, ${saturation}%, ${luminance}%), hsl(13, ${saturation}%, ${luminance}%)  150%)`;
+};
+
 const getNestedValue = (obj, path) => path.split('.').reduce((acc, key) => acc && acc[key], obj);
 
 export const getMinMax = (arr, field, minOrMax) =>
@@ -32,53 +49,6 @@ export const getMinMax = (arr, field, minOrMax) =>
 		},
 		minOrMax === 'min' ? Infinity : -Infinity,
 	);
-
-export function returnAlertTime(dt, offset) {
-	var d = new Date(dt * 1000 + offset * 1000);
-	const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-	var day = d.getUTCDay();
-	var num = day % days.length;
-
-	var dayOfMonth = d.getUTCDate();
-
-	var hrs = d.getUTCHours() <= 9 ? `0${d.getUTCHours()}` : d.getUTCHours();
-	var mins = d.getUTCMinutes() <= 9 ? `0${d.getUTCMinutes()}` : d.getUTCMinutes();
-
-	let suffix = dayOfMonth;
-
-	switch (suffix) {
-		case 1:
-			suffix = '1st';
-			break;
-		case 2:
-			suffix = '2nd';
-			break;
-		case 3:
-			suffix = '3rd';
-			break;
-
-		case 21:
-			suffix = `21st`;
-			break;
-		case 22:
-			suffix = '22nd';
-			break;
-		case 23:
-			suffix = '23rd';
-			break;
-		case 31:
-			suffix = `${suffix}st`;
-			break;
-		default:
-			suffix = `${suffix}th`;
-	}
-
-	let date = `${days[num]} ${suffix}`;
-	let time = `${hrs}:${mins}`;
-
-	return { date: date, time: time };
-}
 
 export function getDate({ timezone = 0 }) {
 	const utcNow = DateTime.utc();
@@ -204,19 +174,8 @@ export function uvIndex(index) {
 	return { color: colors[index - 1], description: description[index - 1], message: message[index - 1] };
 }
 
-export const makeRandomNumbers = (num) => {
-	const array = [];
-	for (let i = 0; i < num; i++) {
-		const number = Math.random() * 10;
-		array.push(number);
-	}
-	return array;
-};
-
 export const trans = (x, y, s, z) =>
 	`perspective(600px) translateZ(${z}px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
-
-export const Images = ['light'];
 
 export function getCurrentLocation(list) {
 	const geolocationAPI = navigator.geolocation;

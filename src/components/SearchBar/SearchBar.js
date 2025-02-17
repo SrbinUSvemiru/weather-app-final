@@ -1,3 +1,4 @@
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, IconButton, List, ListItemButton, TextField, Typography } from '@mui/material';
 import citiesList from 'cities.json';
@@ -12,25 +13,13 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 	const [inputCityName, setInputCityName] = useState('');
 	const [searchCities, setSearchCities] = useState([]);
 	const [isListOpen, setIsListOpen] = useState(false);
+	// const [location, setLocation] = useState({ latitude: null, longitude: null, error: null });
 
 	const textFieldRef = useRef(null);
 
 	const { cities, setCities, setAnimation, setIsGridOpen, isGridOpen, theme } = useContext(AppContext);
-	console.log(cities);
+
 	const containerRef = useRef(null);
-
-	useEffect(() => {
-		const list = inputCityName
-			? citiesList?.filter((post) => post?.name?.toLowerCase()?.startsWith(inputCityName?.toLowerCase()))
-			: [];
-
-		const sorted = list.sort(function (a, b) {
-			return a?.name?.length - b?.name?.length;
-		});
-		const sliced = sorted?.slice(0, 7);
-
-		setSearchCities(sliced?.length ? sliced : [{ name: 'No results...' }]);
-	}, [inputCityName, cities, cityToReplace]);
 
 	const handleAddCity = (obj) => {
 		let updatedCities = cities?.length ? [...cities] : [];
@@ -122,22 +111,38 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 		}
 	};
 
-	// const handleLocationClick = () => {
-	// 	if (navigator.geolocation) {
-	// 		const geolocationAPI = navigator.geolocation;
-	// 		geolocationAPI.getCurrentPosition((position) => {
-	// 			let lat = position.coords.latitude.toString().slice(0, 4);
-	// 			let lng = position.coords.longitude.toString().slice(0, 4);
-
-	// 			const array = filter(
-	// 				citiesList,
-	// 				(city) => city.lat.toString().slice(0, 4) === lat && city.lng.toString().slice(0, 4) === lng,
-	// 			);
-
-	// 			setSearchCities(array);
-	// 		});
+	// const handleGetLocation = () => {
+	// 	if (!navigator.geolocation) {
+	// 		setLocation({ ...location, error: 'Geolocation is not supported by your browser.' });
+	// 		return;
 	// 	}
+
+	// 	navigator.geolocation.getCurrentPosition(
+	// 		(position) => {
+	// 			setLocation({
+	// 				latitude: position.coords.latitude,
+	// 				longitude: position.coords.longitude,
+	// 				error: null,
+	// 			});
+	// 		},
+	// 		(error) => {
+	// 			setLocation({ ...location, error: error.message });
+	// 		},
+	// 	);
 	// };
+
+	useEffect(() => {
+		const list = inputCityName
+			? citiesList?.filter((post) => post?.name?.toLowerCase()?.startsWith(inputCityName?.toLowerCase()))
+			: [];
+
+		const sorted = list?.sort(function (a, b) {
+			return a?.name?.length - b?.name?.length;
+		});
+		const sliced = sorted?.slice(0, 7);
+
+		setSearchCities(sliced?.length ? sliced : [{ name: 'No results...' }]);
+	}, [inputCityName, cities, cityToReplace]);
 
 	useEffect(() => {
 		if (cityToReplace) {
@@ -169,9 +174,6 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 				alignItems: 'center',
 			}}
 		>
-			<IconButton aria-label="search" sx={{ color: 'text.secondary' }} type="submit">
-				<SearchIcon sx={{ fontSize: '2rem' }} />
-			</IconButton>
 			<TextField
 				className="text"
 				inputRef={textFieldRef}
@@ -181,6 +183,31 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 				}}
 				placeholder="Search..."
 				size="medium"
+				slotProps={{
+					input: {
+						startAdornment: (
+							<IconButton
+								aria-label="search"
+								disabled={true}
+								sx={{ color: 'text.secondary' }}
+								type="submit"
+							>
+								<SearchIcon sx={{ fontSize: '2rem' }} />
+							</IconButton>
+						),
+						endAdornment: inputCityName ? (
+							<IconButton
+								onClick={(e) => {
+									e.stopPropagation();
+									setInputCityName('');
+								}}
+								sx={{ color: 'text.secondary' }}
+							>
+								<ClearOutlinedIcon sx={{ fontSize: '2rem' }} />
+							</IconButton>
+						) : null,
+					},
+				}}
 				sx={{
 					padding: 0,
 					borderRadius: '16px',
@@ -207,7 +234,7 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 				<List
 					sx={{
 						position: 'absolute',
-						top: 35,
+						top: 50,
 						paddingLeft: '2rem',
 						width: '100%',
 						zIndex: 100,

@@ -47,12 +47,15 @@ export const getRemoveTile = ({ api, updatedCities, onRest = () => {}, idx }) =>
 				xys: [0, 0, 1, 0], // Preserve xys transformation
 				backdropFilter: 'blur(7.5px)', // Preserve current blur state
 				boxShadow:
-					!updatedCities[i]?.lat || !updatedCities[i]?.lon ? 'none' : `0px 3px 8px -1px rgba(0, 0, 0, 0.2)`, // Preserve shadow
+					!updatedCities[i]?.lat || !updatedCities[i]?.lon
+						? `0px 0px 0px 0px rgba(0, 0, 0, 0)`
+						: `0px 3px 8px -1px rgba(0, 0, 0, 0.2)`, // Preserve shadow
 			};
 		});
 	});
-export const getAppearTile = ({ api, onRest = () => {}, updatedCities, onStart = () => {}, idx, isDark = false }) =>
-	new Promise((resolve) => {
+export const getAppearTile = ({ api, onRest = () => {}, updatedCities, onStart = () => {}, idx, isDark = false }) => {
+	console.log(updatedCities);
+	return new Promise((resolve) => {
 		api.start((j) => {
 			if (j === idx) {
 				return {
@@ -80,7 +83,7 @@ export const getAppearTile = ({ api, onRest = () => {}, updatedCities, onStart =
 						{
 							boxShadow:
 								!updatedCities[j]?.lat || !updatedCities[j]?.lon
-									? 'none'
+									? `0px 0px 0px 0px rgba(0, 0, 0, 0)`
 									: `0px 3px 8px -1px rgba(0, 0, 0, 0.2)`,
 						},
 					],
@@ -98,7 +101,10 @@ export const getAppearTile = ({ api, onRest = () => {}, updatedCities, onStart =
 				xys: [0, 0, 1, 0], // Preserve xys transformation
 				backdropFilter: 'blur(7.5px)', // Preserve current blur state
 				boxShadow:
-					!updatedCities[j]?.lat || !updatedCities[j]?.lon ? 'none' : `0px 3px 8px -1px rgba(0, 0, 0, 0.2)`, // Preserve shadow
+					!updatedCities[j]?.lat || !updatedCities[j]?.lon
+						? `0px 0px 0px 0px rgba(0, 0, 0, 0)`
+						: `0px 3px 8px -1px rgba(0, 0, 0, 0.2)`, // Preserve shadow
 			};
 		});
 	});
+};

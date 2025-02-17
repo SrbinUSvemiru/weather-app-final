@@ -1,6 +1,6 @@
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { Box, Grid2 as Grid, Icon, Skeleton, Typography } from '@mui/material';
+import { Box, Grid2 as Grid, Icon, Skeleton, Typography, useTheme } from '@mui/material';
 import { animated } from '@react-spring/web';
 import { findIndex } from 'lodash';
 import React, { useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
@@ -33,6 +33,7 @@ const City = ({
 
 	const isEmpty = useMemo(() => !city?.lon || !city?.lat, [city]);
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
+	const muiTheme = useTheme();
 
 	const { isLoading, data, isError, error } = useCurrentWeatherQuery({
 		city,
@@ -162,7 +163,14 @@ const City = ({
 			) : (
 				<Grid container spacing={0.5} sx={{ width: '100%' }}>
 					<Grid size={12} sx={{ display: 'flex', alignItems: 'start', justifyContent: 'space-between' }}>
-						<Typography fontWeight={700} noWrap sx={{ color: 'text.primary' }} variant="h5">
+						<Typography
+							fontWeight={700}
+							noWrap
+							sx={{
+								color: 'text.primary',
+							}}
+							variant="h5"
+						>
 							{city?.name}
 						</Typography>
 
@@ -192,7 +200,16 @@ const City = ({
 						</Box>
 					</Grid>
 					<Grid size={6} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
-						<AnimatedTypography style={props} sx={{ color: 'text.primary', fontWeight: 500 }} variant="h3">
+						<AnimatedTypography
+							style={props}
+							sx={{
+								background: `-webkit-linear-gradient(90deg, ${muiTheme?.palette?.text?.primary} ,  ${muiTheme?.palette?.temperature}  150%)`,
+								WebkitBackgroundClip: 'text',
+								WebkitTextFillColor: 'transparent',
+								fontWeight: 500,
+							}}
+							variant="h3"
+						>
 							{isLoading || !units ? (
 								<Skeleton sx={{ minWidth: '7rem', borderRadius: '5px' }} />
 							) : (
@@ -200,7 +217,15 @@ const City = ({
 							)}
 						</AnimatedTypography>
 						{isLoading || !units ? null : (
-							<AnimatedTypography style={props} sx={{ color: 'text.primary' }} variant="h4">
+							<AnimatedTypography
+								style={props}
+								sx={{
+									background: `-webkit-linear-gradient(90deg, ${muiTheme?.palette?.text?.primary} ,  ${muiTheme?.palette?.temperature}  150%)`,
+									WebkitBackgroundClip: 'text',
+									WebkitTextFillColor: 'transparent',
+								}}
+								variant="h4"
+							>
 								&#176;{getUnits({ selected: 'temperature', units })}
 							</AnimatedTypography>
 						)}

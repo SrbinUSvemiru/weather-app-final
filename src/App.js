@@ -124,6 +124,8 @@ const App = () => {
 		},
 	});
 
+	console.log(isDrawerOpen);
+
 	useOutsideClick({ ref: appBarRef, callback: () => toggleDrawer(false) });
 
 	return (
@@ -172,7 +174,7 @@ const App = () => {
 								}}
 								sx={{ color: 'text.secondary', marginRight: '2rem' }}
 							>
-								<SearchIcon sx={{ fontSize: isXs ? '2rem' : '1.5rem' }} />
+								<SearchIcon sx={{ fontSize: isXs ? '2rem' : '1.7rem' }} />
 							</IconButton>
 							{isXs ? (
 								<IconButton
@@ -197,26 +199,30 @@ const App = () => {
 									>
 										<ToggleButton
 											sx={{
-												padding: '0.2rem 0.7rem',
-												background: 'background.window',
-												borderRadius: '16px 0px 0px 16px',
+												padding: '0rem 0.6rem',
+												backgroundColor: 'background.window',
+												borderRadius: '45% 0px 0px 45%',
+												borderColor: 'accent.main',
+
 												'&.Mui-selected': {
 													background: `linear-gradient(45deg, ${muiTheme?.palette?.accent?.main} 0%,${muiTheme?.palette?.accent?.light} 100%)`,
 													color: 'white',
 												},
 											}}
 											value="metric"
+											variant="subtitle1"
 										>
-											<Typography sx={{ fontSize: '0.8rem' }} variant="subtitle1">
+											<Typography fontWeight={500} sx={{ fontSize: '1rem' }} variant="subtitle1">
 												{' '}
 												&#176;C{' '}
 											</Typography>
 										</ToggleButton>
 										<ToggleButton
 											sx={{
-												padding: '0.2rem 0.7rem',
-												borderRadius: '0px 16px 16px 0px',
-												background: 'background.window',
+												padding: '0rem 0.6rem',
+												borderColor: 'accent.main',
+												borderRadius: '0px 45% 45% 0px',
+
 												'&.Mui-selected': {
 													background: `linear-gradient(45deg, ${muiTheme?.palette?.accent?.main} 0%,${muiTheme?.palette?.accent?.light} 100%)`,
 													color: 'white',
@@ -225,7 +231,7 @@ const App = () => {
 											value="imperial"
 											variant="subtitle1"
 										>
-											<Typography sx={{ fontSize: '0.8rem' }} variant="subtitle1">
+											<Typography fontWeight={500} sx={{ fontSize: '1rem' }} variant="subtitle1">
 												{' '}
 												&#176;F{' '}
 											</Typography>
@@ -269,10 +275,11 @@ const App = () => {
 										<ToggleButton
 											sx={{
 												padding: '0.2rem 0.7rem',
-												borderRadius: '16px 0px 0px 16px',
+												borderRadius: '45% 0px 0px 45%',
+												borderColor: 'accent.main',
 												fontSize: isXs ? '1.5rem' : '0.7rem',
 												'&.Mui-selected': {
-													background: `linear-gradient(45deg, ${muiTheme?.palette?.secondary?.main} 0%,${muiTheme?.palette?.secondary?.light} 100%)`,
+													background: `linear-gradient(45deg, ${muiTheme?.palette?.accent?.main} 0%,${muiTheme?.palette?.accent?.light} 100%)`,
 													color: 'white',
 												},
 											}}
@@ -283,9 +290,11 @@ const App = () => {
 										<ToggleButton
 											sx={{
 												padding: '0.2rem 0.7rem',
-												borderRadius: '0px 16px 16px 0px',
+
+												borderRadius: '0px 45% 45% 0px',
+												borderColor: 'accent.main',
 												'&.Mui-selected': {
-													background: `linear-gradient(45deg, ${muiTheme?.palette?.secondary?.main} 0%,${muiTheme?.palette?.secondary?.light} 100%)`,
+													background: `linear-gradient(45deg, ${muiTheme?.palette?.accent?.main} 0%,${muiTheme?.palette?.accent?.light} 100%)`,
 													color: 'white',
 												},
 											}}
