@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { animated, easings, useSpring } from 'react-spring';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { returnAlertTime, trans } from '../../utils/utils';
+import { trans } from '../../utils/utils';
 import { Window } from '../Window/Window';
 import { MessageContainer, StartAndFinishContainer } from './styled-components';
 
@@ -14,19 +14,18 @@ const AlertMessageWindow = (props) => {
 	const ref = useRef(null);
 
 	useEffect(() => {
-		if (props?.data?.alerts) {
-			let start = returnAlertTime(props?.data?.alerts[0]?.start, props?.data?.timezone_offset);
-			let end = returnAlertTime(props?.data?.alerts[0]?.end, props?.data?.timezone_offset);
+		// if (props?.data?.alerts) {
+		// 	let start = returnAlertTime(props?.data?.alerts[0]?.start, props?.data?.timezone_offset);
+		// 	let end = returnAlertTime(props?.data?.alerts[0]?.end, props?.data?.timezone_offset);
 
-			setMessage({
-				text: props?.data?.alerts[0]?.description,
-				start: start,
-				end: end,
-				event: props?.data?.alerts[0]?.event,
-			});
-		} else {
-			setMessage(null);
-		}
+		// 	setMessage({
+		// 		text: props?.data?.alerts[0]?.description,
+		// 		start: start,
+		// 		end: end,
+		// 		event: props?.data?.alerts[0]?.event,
+		// 	});
+		// } else {
+		setMessage(null);
 	}, [props?.data]);
 
 	const messageLoop = useSpring({

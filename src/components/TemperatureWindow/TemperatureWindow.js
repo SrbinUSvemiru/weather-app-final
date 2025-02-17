@@ -76,14 +76,25 @@ const TemperatureWindow = ({ style, handleCloseCurrentWeather, api, index }) => 
 					<AnimatedTypography
 						fontSize={isXl || isLg || isMd ? '5.5rem' : '4rem'}
 						style={props}
-						sx={{ fontWeight: 600, zIndex: 3 }}
+						sx={{
+							fontWeight: 600,
+							zIndex: 3,
+							background: `-webkit-linear-gradient(90deg, ${theme?.palette?.text?.primary} ,  ${theme?.palette?.temperature}  150%)`,
+							WebkitBackgroundClip: 'text',
+							WebkitTextFillColor: 'transparent',
+						}}
 						variant="h1"
 					>
 						{selectedCity?.current?.temp?.[units] || ''}
 					</AnimatedTypography>
 					<AnimatedTypography
 						style={props}
-						sx={{ fontWeight: 600 }}
+						sx={{
+							fontWeight: 600,
+							background: `-webkit-linear-gradient(90deg, ${theme?.palette?.text?.primary} ,  ${theme?.palette?.temperature}  150%)`,
+							WebkitBackgroundClip: 'text',
+							WebkitTextFillColor: 'transparent',
+						}}
 						variant={isLg || isMd || isXs ? 'h2' : 'h3'}
 					>
 						&#176;{getUnits({ selected: 'temperature', units })}
