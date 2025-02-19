@@ -238,7 +238,7 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 						paddingLeft: '2rem',
 						width: '100%',
 						zIndex: 100,
-						backgroundColor: 'background.shadeOne',
+						// backgroundColor: 'background.shadeOne',
 						display: inputCityName ? 'block' : 'none',
 						overflowY: 'hidden',
 					}}

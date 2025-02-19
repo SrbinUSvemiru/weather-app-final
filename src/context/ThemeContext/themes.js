@@ -1,6 +1,7 @@
 export const defaultLight = {
 	background: {
 		window: '-webkit-linear-gradient(70deg,rgba(236, 239, 242, 0.7), rgba(248, 250, 252, 0.9) 70%)',
+		appBar: 'rgba(226,232,240, 0.5)',
 		windowShade: 'rgba(248, 250, 252, 0.49)',
 		default: 'rgba(226,232,240, 1)',
 		light: 'rgba(180,202,255,1)',
@@ -41,6 +42,7 @@ export const defaultLight = {
 export const defaultDark = {
 	background: {
 		default: 'rgba(6,12,26,1)',
+		appBar: 'rgba(24,33,47,0.9)',
 		window: '-webkit-linear-gradient(70deg,rgba(36, 46, 61, 0.9), rgba(51, 65, 85, 0.9) 70%)',
 		windowShade: 'rgba(51, 65, 85, 0.49)',
 		header: '#2d4059',
