@@ -14,7 +14,6 @@ const getResult = async (response) => {
 const fetchFromServer = async (path, errorHandler = defaultErrorHandler) => {
 	try {
 		const response = await fetch(path);
-
 		const result = await getResult(response);
 
 		if (!response.ok) {

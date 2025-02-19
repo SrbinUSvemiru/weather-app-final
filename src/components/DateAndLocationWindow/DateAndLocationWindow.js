@@ -1,4 +1,4 @@
-import { Grid2 as Grid, Skeleton, Typography } from '@mui/material';
+import { Grid2 as Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 import { AppContext } from '../../context/AppContext';
@@ -40,17 +40,21 @@ const DateAndLocationWindow = ({ style, handleCloseCurrentWeather }) => {
 		>
 			<Grid container spacing={0.5} sx={{ padding: 0, width: '100%' }}>
 				<Grid size={{ xs: 12 }} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-					<Typography
-						sx={{
-							fontWeight: 500,
-							color: 'text.secondary',
-							whiteSpace: 'nowrap',
-							wordWrap: 'normal',
-						}}
-						variant="h6"
-					>
-						{date}
-					</Typography>
+					<Tooltip title={date}>
+						<Typography
+							sx={{
+								fontWeight: 500,
+								overflow: 'hidden',
+								textOverflow: 'ellipsis',
+								color: 'text.secondary',
+								whiteSpace: 'nowrap',
+								wordWrap: 'normal',
+							}}
+							variant="h6"
+						>
+							{date}
+						</Typography>
+					</Tooltip>
 				</Grid>
 
 				<Grid size={{ xs: 12 }} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

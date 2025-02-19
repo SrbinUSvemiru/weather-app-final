@@ -206,7 +206,7 @@ const Expanded = ({ isDrawerOpen, setIsDrawerOpen, setHeaderClickedIcon, setCity
 		<Grid
 			container
 			size={12}
-			spacing={{ xs: isGridOpen ? 2 : 1, sm: 2 }}
+			spacing={{ xs: 2 }}
 			sx={{
 				padding: 0,
 				width: '100%',

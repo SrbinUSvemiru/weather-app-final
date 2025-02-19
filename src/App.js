@@ -115,16 +115,12 @@ const App = () => {
 	const appBar = useSpring({
 		config: { duration: 300 },
 		from: {
-			height: isDrawerOpen ? '56px' : '500px',
-			backgroundColor: isDrawerOpen ? 'transparent' : muiTheme?.palette?.background?.shadeOne,
+			height: isDrawerOpen ? '51px' : '500px',
 		},
 		to: {
-			height: !isDrawerOpen ? '56px' : '500px',
-			backgroundColor: !isDrawerOpen ? 'transparent' : muiTheme?.palette?.background?.shadeOne,
+			height: !isDrawerOpen ? '51px' : '500px',
 		},
 	});
-
-	console.log(isDrawerOpen);
 
 	useOutsideClick({ ref: appBarRef, callback: () => toggleDrawer(false) });
 
@@ -144,20 +140,21 @@ const App = () => {
 					ref={appBarRef}
 					style={appBar}
 					sx={{
+						background: muiTheme?.palette?.background?.appBar,
+						boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+						backdropFilter: 'blur(10px)',
+						'-webkit-backdrop-filter': 'blur(10px)',
 						position: 'fixed',
 						width: '100%',
 						overflow: 'hidden',
+						top: '0',
 						display: 'flex',
-						bacgroundColor: 'transparent',
+						padding: isXs ? '0.2rem 2rem' : '0.2rem 4rem',
 						zIndex: muiTheme?.zIndex?.appBar,
 						alignItems: 'flex-start',
 					}}
 				>
-					<Grid
-						container
-						spacing={{ xs: 1, sm: 3 }}
-						sx={{ width: '100%', padding: isXs ? '0.5rem 2rem' : '0.5rem 4rem', position: 'fixed' }}
-					>
+					<Grid container spacing={{ xs: 1, sm: 3 }} sx={{ width: '100%' }}>
 						<Grid size={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Grid>
 						<Grid size={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Grid>
 
@@ -250,9 +247,8 @@ const App = () => {
 								</Stack>
 							)}
 						</Grid>
-
-						<Grid size={12}>
-							{isDrawerOpen && headerClickedIcon === 'search' ? (
+						{isDrawerOpen && headerClickedIcon === 'search' ? (
+							<Grid size={12}>
 								<SearchBar
 									cityToReplace={cityToReplace}
 									isDrawerOpen={isDrawerOpen}
@@ -261,8 +257,8 @@ const App = () => {
 									setCityToReplace={setCityToReplace}
 									setIsDrawerOpen={toggleDrawer}
 								/>
-							) : null}
-						</Grid>
+							</Grid>
+						) : null}
 						{isDrawerOpen && headerClickedIcon === 'menu' ? (
 							<Grid container size={3} spacing={2}>
 								<Grid size={12}>
@@ -325,8 +321,8 @@ const App = () => {
 				<Box
 					id="scrollable-container"
 					sx={{
-						marginTop: '56px',
-						padding: isXs ? '1rem 1rem 10rem 1rem' : '1.5rem 2rem 10rem 2rem',
+						marginTop: '51px',
+						padding: isXs ? '1.5rem 1rem 10rem 1rem' : '1.5rem 2rem 10rem 2rem',
 						display: 'flex',
 						flexDirection: 'column',
 						justifyContent: 'start',
