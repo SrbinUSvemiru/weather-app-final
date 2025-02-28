@@ -45,6 +45,7 @@ export const useCurrentWeatherQuery = ({ city, options }) =>
 						},
 					},
 				};
+
 				return { ...response, ...obj } || null;
 			} catch (e) {
 				console.error(e);

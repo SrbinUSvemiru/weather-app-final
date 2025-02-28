@@ -12,7 +12,7 @@ import { set, slice } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { AppContext } from '../../context/AppContext';
-import { getUnits, nextFourtyEightHours, trans } from '../../utils/utils';
+import { getUnits, nextFourtyEightHours } from '../../utils/utils';
 import PrecipitationSvg from '../PrecipitationSvg/PrecipitationSvg';
 import TemperatureSvg from '../TemperatureSvg/TemperatureSvg';
 import VisibilitySvg from '../VisibilitySvg/VisibilitySvg';
@@ -20,11 +20,11 @@ import { Window } from '../Window/Window';
 import WindSvg from '../WindSvg/WindSvg';
 import { Container, SvgContainer, TimeList } from './styled-components';
 
-const GraphWindow = ({ daysForecast, style, colors, id, handleCloseCurrentWeather }) => {
+const GraphWindow = ({ daysForecast, colors, id, handleCloseCurrentWeather, selectedCity }) => {
 	const [selectedTimeframe, setSelectedTimeframe] = useState('hourly');
 	const [hoursList, setHoursList] = useState();
 
-	const { selectedCity, activeWrapper, setActiveWrapper, settings } = useContext(AppContext);
+	const { activeWrapper, setActiveWrapper, settings } = useContext(AppContext);
 
 	const [width, setWidth] = useState(0);
 
@@ -99,20 +99,14 @@ const GraphWindow = ({ daysForecast, style, colors, id, handleCloseCurrentWeathe
 
 	useEffect(() => {
 		setHoursList(() =>
-			nextFourtyEightHours(selectedCity?.current?.timezone).map((hour) => (hour < 10 ? `0${hour}` : `${hour}`)),
+			nextFourtyEightHours(selectedCity?.timezone).map((hour) => (hour < 10 ? `0${hour}` : `${hour}`)),
 		);
 
 		setSelectedTimeframe('hourly');
 	}, [selectedCity]);
 
 	return (
-		<Window
-			id={id}
-			isDisabled={true}
-			onButtonClick={handleCloseCurrentWeather}
-			shouldSkip={false}
-			style={{ ...style, transform: style?.xys.to(trans), display: 'block' }}
-		>
+		<Window id={id} isDisabled={true} onButtonClick={handleCloseCurrentWeather} style={{ display: 'block' }}>
 			<Container ref={graphRef}>
 				<Grid container spacing={3}>
 					<Grid size={12} sx={{ display: 'flex', alignItems: 'end', justifyContent: 'start' }}>

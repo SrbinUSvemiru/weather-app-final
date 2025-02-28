@@ -3,13 +3,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Box, IconButton, List, ListItemButton, TextField, Typography } from '@mui/material';
 import citiesList from 'cities.json';
 import { findIndex, map, set, slice, some, sortBy } from 'lodash';
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { AppContext } from '../../context/AppContext/provider';
-import { getAppearTile, getCloseAnimation, getOpenAnimation, getRemoveTile } from '../../utils/animations';
 
-const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }) => {
+const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, isInDrawer }) => {
 	const [inputCityName, setInputCityName] = useState('');
 	const [searchCities, setSearchCities] = useState([]);
 	const [isListOpen, setIsListOpen] = useState(false);
@@ -17,7 +16,7 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 
 	const textFieldRef = useRef(null);
 
-	const { cities, setCities, setAnimation, setIsGridOpen, isGridOpen, theme } = useContext(AppContext);
+	const { cities, setCities, isGridOpen, setSelectedCity } = useContext(AppContext);
 
 	const containerRef = useRef(null);
 
@@ -39,97 +38,22 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 				{ ...newCity, weight: updatedCities?.length },
 			];
 		}
-		const idx = replaceIdx > -1 ? replaceIdx : emptyIdx > -1 ? emptyIdx : updatedCities?.length - 1;
+		// const idx = replaceIdx > -1 ? replaceIdx : emptyIdx > -1 ? emptyIdx : updatedCities?.length - 1;
 
 		setSearchCities([]);
 		setInputCityName('');
 		setCityToReplace('');
-		setIsDrawerOpen(false);
-
-		const client = document.getElementById('scrollable-container');
-		const closeAnimation = () =>
-			getCloseAnimation({
-				api: openApi,
-				onRest: () => {
-					setIsGridOpen(true);
-				},
-			});
-
-		const openAnimation = () =>
-			getOpenAnimation({
-				api: openApi,
-				onRest: () => {
-					client?.scrollTo({
-						top: 0,
-						behavior: 'smooth',
-					});
-				},
-			});
-
-		const removeTileAnimation = () =>
-			getRemoveTile({
-				api: openApi,
-				updatedCities,
-				idx,
-				onRest: () => {
-					setCities(sortBy(updatedCities, 'weight'));
-				},
-			});
-
-		const appearTileAnimation = () =>
-			getAppearTile({
-				api: openApi,
-				idx,
-				updatedCities,
-				isDark: theme?.mode === 'dark',
-				onStart: () => {
-					const element = document.getElementById(`${newCity?.id}`);
-
-					if (element) {
-						client.scrollTo({
-							top: element.offsetTop,
-							behavior: 'smooth',
-						});
-					}
-				},
-				onRest: () => {},
-			});
+		if (isInDrawer) {
+			setIsDrawerOpen(false);
+		}
 
 		if (!isGridOpen) {
-			const animationChain = () =>
-				closeAnimation()
-					.then(() => openAnimation())
-					.then(() => removeTileAnimation())
-					.then(() => appearTileAnimation())
-					.catch((error) => console.error('Animation error:', error));
-			// Pass the animation function to the parent component's state
-			setAnimation(() => animationChain); // Store it in the parent's state
+			setSelectedCity({ ...newCity });
+			setCities(sortBy(updatedCities, 'weight'));
 		} else {
-			removeTileAnimation()
-				.then(() => appearTileAnimation())
-				.catch((error) => console.error('Animation error:', error));
+			setCities(sortBy(updatedCities, 'weight'));
 		}
 	};
-
-	// const handleGetLocation = () => {
-	// 	if (!navigator.geolocation) {
-	// 		setLocation({ ...location, error: 'Geolocation is not supported by your browser.' });
-	// 		return;
-	// 	}
-
-	// 	navigator.geolocation.getCurrentPosition(
-	// 		(position) => {
-	// 			setLocation({
-	// 				latitude: position.coords.latitude,
-	// 				longitude: position.coords.longitude,
-	// 				error: null,
-	// 			});
-	// 		},
-	// 		(error) => {
-	// 			setLocation({ ...location, error: error.message });
-	// 		},
-	// 	);
-	// };
 
 	useEffect(() => {
 		const list = inputCityName
@@ -155,12 +79,6 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 			textFieldRef.current.focus();
 		}
 	}, [isListOpen]);
-
-	useLayoutEffect(() => {
-		if (textFieldRef.current) {
-			textFieldRef.current.focus();
-		}
-	}, []);
 
 	return (
 		<Box
@@ -192,7 +110,7 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 								sx={{ color: 'text.secondary' }}
 								type="submit"
 							>
-								<SearchIcon sx={{ fontSize: '2rem' }} />
+								<SearchIcon sx={{ fontSize: '1.5rem' }} />
 							</IconButton>
 						),
 						endAdornment: inputCityName ? (
@@ -203,7 +121,7 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 								}}
 								sx={{ color: 'text.secondary' }}
 							>
-								<ClearOutlinedIcon sx={{ fontSize: '2rem' }} />
+								<ClearOutlinedIcon sx={{ fontSize: '1.5rem' }} />
 							</IconButton>
 						) : null,
 					},
@@ -214,17 +132,24 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 					width: '100%',
 					height: '100%',
 					'& .MuiInputBase-input': {
-						fontSize: '1.5rem', // Change the font size here
+						fontSize: '1rem', // Change the font size here
 					},
-					// '& .MuiInput-underline:before': {
-					// 	borderBottom: 'none',
-					// },
-					// '& .MuiInput-underline:after': {
-					// 	borderBottom: 'none',
-					// },
-					// '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-					// 	borderBottom: 'none',
-					// },
+					'& .MuiInput-underline:before': {
+						borderColor: 'divider',
+					},
+					...(isInDrawer
+						? {
+								'& .MuiInput-underline:before': {
+									borderBottom: 'none',
+								},
+								'& .MuiInput-underline:after': {
+									borderBottom: 'none',
+								},
+								'& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+									borderBottom: 'none',
+								},
+							}
+						: {}),
 				}}
 				value={inputCityName}
 				variant="standard"
@@ -234,13 +159,17 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 				<List
 					sx={{
 						position: 'absolute',
-						top: 50,
-						paddingLeft: '2rem',
-						width: '100%',
-						zIndex: 100,
-						// backgroundColor: 'background.shadeOne',
+						top: 40,
+						left: '50%',
+						transform: 'translateX(-50%)',
+						width: '110%',
+						backdropFilter: 'blur(7.6px)',
+						'-webkit-backdrop-filter': 'blur(7.6px)',
+						backgroundColor: 'background.appBar',
 						display: inputCityName ? 'block' : 'none',
 						overflowY: 'hidden',
+						borderRadius: '1rem',
+						zIndex: 100,
 					}}
 				>
 					{map(searchCities, (city, index) => (
@@ -248,7 +177,7 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, openApi }
 							disabled={!city?.lat || !city?.lng || some(cities, { lat: city?.lat, lng: city?.lng })}
 							key={index}
 							onClick={() => handleAddCity(city)}
-							sx={{ padding: '0.1rem 1rem', background: 'primary.light' }}
+							sx={{ padding: '0.1rem 1rem', margin: '0 auto' }}
 						>
 							<Typography sx={{ fontSize: '1.5rem' }} variant="subtitle1">
 								{city?.name}

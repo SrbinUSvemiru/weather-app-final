@@ -31,7 +31,7 @@ function mapTempToPercentage(temp) {
 export const getTemperatureColor = ({ temp }) => {
 	const luminance = temp > 0 ? 80 - temp : clamp(80 - Math.abs(temp), 50, 80);
 	const hue = mapTempToPercentage(temp);
-	console.log(hue);
+
 	const saturation = 90;
 	if (temp < 7) {
 		return `-webkit-linear-gradient(90deg, hsl(${hue - 20}, ${saturation}%, ${50}%), hsl(${hue}, ${saturation}%, ${50}%)  90%)`;
@@ -59,10 +59,10 @@ export function getDate({ timezone = 0 }) {
 	return formattedDate;
 }
 
-export function getTime({ timezone = 0, formatt = 'HH:mm:ss', dt = 0 }) {
+export function getTime({ timezone = 0, formatt = 'HH:mm:ss', dt = 0, local = false }) {
 	const utcNow = dt !== 0 ? DateTime.fromMillis(dt * 1000).toUTC() : DateTime.utc();
 
-	const cityTime = utcNow.plus({ seconds: timezone });
+	const cityTime = local ? DateTime.local() : utcNow.plus({ seconds: timezone });
 	const formattedTime = cityTime.toFormat(formatt);
 
 	return formattedTime;

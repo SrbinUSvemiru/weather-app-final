@@ -90,8 +90,6 @@ export const Window = styled(animated.div)`
 	width: 100%;
 	user-select: none;
 	border-radius: 1.3rem;
-	backdrop-filter: blur(10px);
-	-webkit-backdrop-filter: blur(7.6px);
 `;
 
 export const NumbersContainer = styled.div`

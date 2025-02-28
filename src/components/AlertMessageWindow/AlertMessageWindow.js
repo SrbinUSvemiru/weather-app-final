@@ -2,15 +2,12 @@ import { Box } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { animated, easings, useSpring } from 'react-spring';
 
-import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { trans } from '../../utils/utils';
 import { Window } from '../Window/Window';
 import { MessageContainer, StartAndFinishContainer } from './styled-components';
 
 const AlertMessageWindow = (props) => {
 	const [message, setMessage] = useState(null);
 
-	const { isXs } = useBreakpoint();
 	const ref = useRef(null);
 
 	useEffect(() => {
@@ -37,13 +34,7 @@ const AlertMessageWindow = (props) => {
 	});
 
 	return (
-		<Window
-			id={'alert-message'}
-			isDisabled={true}
-			onButtonClick={props?.handleCloseCurrentWeather}
-			shouldSkip={!isXs}
-			style={{ ...props?.style, transform: props?.style?.xys.to(trans) }}
-		>
+		<Window id={'alert-message'} isDisabled={true} onButtonClick={props?.handleCloseCurrentWeather}>
 			<Box sx={{ width: '100%', height: '100%', minWidth: '200px', position: 'relative', overflow: 'hidden' }}>
 				{message !== null ? (
 					<>

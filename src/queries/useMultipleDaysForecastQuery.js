@@ -34,7 +34,7 @@ export const useMultipleDaysForecastQuery = ({ city, options }) =>
 							large: Math.round((el?.wind?.speed * 2.23 * 2) / 2),
 						},
 					},
-					day: returnDay(el?.dt, city?.current?.timezone),
+					day: returnDay(el?.dt, city?.timezone),
 				}));
 
 				const groupedData = res.reduce((acc, item) => {
