@@ -12,7 +12,7 @@ import { useSprings } from 'react-spring';
 
 import { AppContext } from '../../context/AppContext';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { getTime, getUnits, trans } from '../../utils/utils';
+import { getTime, getUnits } from '../../utils/utils';
 import { Window } from '../Window/Window';
 import { Day } from './styled-components';
 
@@ -32,12 +32,12 @@ const getIcon = (i) => {
 	return obj[i];
 };
 
-const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, index, api }) => {
+const DisplayActiveDay = ({ daysForecast, handleCloseCurrentWeather, index, api, selectedCity }) => {
 	const theme = useTheme();
 	const [activeDay, setActiveDay] = useState(0);
 	const [dayData, setDayData] = useState([]);
 	const { isXs } = useBreakpoint();
-	const { settings, selectedCity } = useContext(AppContext);
+	const { settings } = useContext(AppContext);
 
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
 
@@ -59,8 +59,8 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 					id: 3,
 					label: 'Sunrise',
 					value: getTime({
-						dt: selectedCity?.current?.sys?.sunrise,
-						timezone: selectedCity?.current?.timezone,
+						dt: selectedCity?.sys?.sunrise,
+						timezone: selectedCity?.timezone,
 						formatt: 'HH:mm',
 					}),
 				},
@@ -68,8 +68,8 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 					id: 4,
 					label: 'Sunset',
 					value: getTime({
-						dt: selectedCity?.current?.sys?.sunset,
-						timezone: selectedCity?.current?.timezone,
+						dt: selectedCity?.sys?.sunset,
+						timezone: selectedCity?.timezone,
 						formatt: 'HH:mm',
 					}),
 				},
@@ -94,7 +94,7 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 		const debouncedFormatData = debounce(formattData, 500);
 		debouncedFormatData(daysForecast?.days?.[activeDay], units);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [daysForecast, selectedCity]);
 
 	const [springs, springsApi] = useSprings(dayData?.length, (i) => ({
 		from: { opacity: 0, transform: i === 0 ? 'translateX(-50%)' : 'translateY(-50%)' },
@@ -125,8 +125,6 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 	return (
 		<AnimatedBox
 			style={{
-				...style,
-				transform: style?.xys.to(trans),
 				boxShadow: 'inset 0px 4px 10px -1px rgba(0, 0, 0, 0.3)',
 			}}
 			sx={{
@@ -142,8 +140,7 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 					isDisabled={true}
 					onButtonClick={handleCloseCurrentWeather}
 					shadowcolor={theme?.palette?.wrapper?.days?.light}
-					shouldSkip={!isXs}
-					style={{ ...style, transform: style?.xys.to(trans), minHeight: '250px' }}
+					style={{ minHeight: '250px' }}
 				>
 					<Grid columnSpacing={4} container rowSpacing={1}>
 						{map(springs, (style, i) => {
@@ -224,10 +221,7 @@ const DisplayActiveDay = ({ daysForecast, style, handleCloseCurrentWeather, inde
 						index={index + idx + 1}
 						onButtonClick={handleCloseCurrentWeather}
 						onClick={() => setActiveDay(idx)}
-						shouldSkip={idx !== 0}
 						style={{
-							...style,
-							transform: style?.xys.to(trans),
 							padding: isXs ? '0.4rem 0.2rem' : '0.4rem 0.6rem',
 							width: 'fit-content',
 						}}

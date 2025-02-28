@@ -9,7 +9,7 @@ import { ValueContainer } from './styled-components';
 const VisibilitySvg = ({ clicked, activeWrapper, graphData, width }) => {
 	const theme = useTheme();
 	const humidity = graphData?.humidity?.[clicked];
-	console.log(humidity);
+
 	const animation = useSpring({
 		from: { opacity: 0 },
 		to: {

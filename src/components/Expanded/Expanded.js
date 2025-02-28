@@ -1,14 +1,17 @@
-import { Grid2 as Grid } from '@mui/material';
-import { animated } from '@react-spring/web';
+import { Box, Grid2 as Grid } from '@mui/material';
+import { animated, easings, useChain, useSpringRef, useTransition } from '@react-spring/web';
 import { compact, map } from 'lodash';
 import React, { useCallback, useContext, useLayoutEffect, useMemo } from 'react';
 
 import { AppContext } from '../../context/AppContext';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import useMeasure from '../../hooks/useMeasure';
 import { useCurrentAirPolutionQuery } from '../../queries/useCurrentAirPolutionQuery';
+import { useCurrentWeatherQuery } from '../../queries/useCurrentWeatherQuery';
 import { useMultipleDaysForecastQuery } from '../../queries/useMultipleDaysForecastQuery';
-import { getCloseAnimation, getOpenAnimation } from '../../utils/animations';
+// import { useNewWeatherQuery } from '../../queries/useNewWeather';
 import AlertMessageWindow from '../AlertMessageWindow/AlertMessageWindow';
+import { BackButton } from '../BackButton/BackButton';
 import City from '../City/City';
 import CurrentInfoWindow from '../CurrentInfoWindow/CurrentInfoWindow';
 import DateAndLocationWindow from '../DateAndLocationWindow/DateAndLocationWindow';
@@ -19,33 +22,50 @@ import UVWindow from '../UVWindow/UVWindow';
 
 const AnimatedGrid = animated(Grid);
 
-const getGridItems = ({ isXs, airPollution, daysForecast, activeWrapper, handleCloseCurrentWeather }) =>
+const getGridItems = ({ isXs, airPollution, daysForecast, activeWrapper, handleCloseCurrentWeather, data }) =>
 	compact([
 		{
 			size: { xs: 12, sm: 6, md: 4 },
+			id: 'date-window',
 			component: (props) => (
-				<DateAndLocationWindow handleCloseCurrentWeather={handleCloseCurrentWeather} {...props} />
+				<DateAndLocationWindow
+					handleCloseCurrentWeather={handleCloseCurrentWeather}
+					selectedCity={data}
+					{...props}
+				/>
 			),
 		},
 		isXs
 			? {
 					size: { xs: 12, sm: 6, md: 5 },
+					id: 'temperature-window',
 					component: (props) => (
-						<TemperatureWindow {...props} handleCloseCurrentWeather={handleCloseCurrentWeather} />
+						<TemperatureWindow
+							selectedCity={data}
+							{...props}
+							handleCloseCurrentWeather={handleCloseCurrentWeather}
+						/>
 					),
 				}
 			: null,
 		{
 			size: { xs: 12, sm: 6, md: 3 },
+			id: 'alert-message-window',
 			component: (props) => (
-				<AlertMessageWindow {...props} handleCloseCurrentWeather={handleCloseCurrentWeather} />
+				<AlertMessageWindow
+					selectedCity={data}
+					{...props}
+					handleCloseCurrentWeather={handleCloseCurrentWeather}
+				/>
 			),
 		},
 		{
 			size: { xs: 12, sm: 6, md: 5 },
+			id: 'uv-window',
 			component: (props) => (
 				<UVWindow
 					airPollution={airPollution?.list?.[0]}
+					selectedCity={data}
 					{...props}
 					handleCloseCurrentWeather={handleCloseCurrentWeather}
 				/>
@@ -54,8 +74,13 @@ const getGridItems = ({ isXs, airPollution, daysForecast, activeWrapper, handleC
 		!isXs
 			? {
 					size: { xs: 12, sm: 6, md: 5 },
+					id: 'temperature-window',
 					component: (props) => (
-						<TemperatureWindow {...props} handleCloseCurrentWeather={handleCloseCurrentWeather} />
+						<TemperatureWindow
+							selectedCity={data}
+							{...props}
+							handleCloseCurrentWeather={handleCloseCurrentWeather}
+						/>
 					),
 				}
 			: null,
@@ -63,10 +88,11 @@ const getGridItems = ({ isXs, airPollution, daysForecast, activeWrapper, handleC
 		{
 			size: { xs: 12, sm: 10, md: 7 },
 			spacing: { xs: 1 },
-
+			id: 'active-day-window',
 			component: (props) => (
 				<DisplayActiveDay
 					daysForecast={daysForecast}
+					selectedCity={data}
 					{...props}
 					handleCloseCurrentWeather={handleCloseCurrentWeather}
 				/>
@@ -74,9 +100,11 @@ const getGridItems = ({ isXs, airPollution, daysForecast, activeWrapper, handleC
 		},
 		{
 			size: { xs: 12, sm: 2, md: 1 },
+			id: 'current-info-window',
 			component: (props) => (
 				<CurrentInfoWindow
 					pop={daysForecast?.days?.[0]?.pop}
+					selectedCity={data}
 					{...props}
 					handleCloseCurrentWeather={handleCloseCurrentWeather}
 				/>
@@ -84,31 +112,64 @@ const getGridItems = ({ isXs, airPollution, daysForecast, activeWrapper, handleC
 		},
 		{
 			size: { xs: 12, sm: 12, md: 11 },
+			id: 'graph-window',
 			component: (props) => (
 				<GraphWindow
 					activeWrapper={activeWrapper}
 					daysForecast={daysForecast}
 					handleCloseCurrentWeather={handleCloseCurrentWeather}
-					id="graph-window"
+					selectedCity={data}
 					{...props}
 				/>
 			),
 		},
 	]);
 
-const Expanded = ({ isDrawerOpen, setIsDrawerOpen, setHeaderClickedIcon, setCityToReplace, api, springs }) => {
-	const { cities, selectedCity, animation, setIsGridOpen, isGridOpen } = useContext(AppContext);
+const Expanded = ({ setHeaderClickedIcon, setCityToReplace }) => {
+	const { cities, selectedCity, setIsGridOpen, isGridOpen } = useContext(AppContext);
 
-	const { isXs, isSm, isMd, isLg } = useBreakpoint();
+	const [ref, { width }] = useMeasure();
 
-	const { data: daysForecast } = useMultipleDaysForecastQuery({
-		city: selectedCity,
-		options: { enabled: !isGridOpen },
-	});
-	const { data: airPollution } = useCurrentAirPolutionQuery({
-		city: selectedCity,
-		options: { enabled: !isGridOpen },
-	});
+	const { isXs, isSm, isMd } = useBreakpoint();
+	const columns = useMemo(() => (isXs ? 1 : isSm ? 2 : isMd ? 3 : 3), [isXs, isSm, isMd]);
+
+	const [heights, gridItems] = useMemo(() => {
+		let heights = new Array(columns).fill(0); // Each column gets a height starting with zero
+		let gridItems = map(cities, (child) => {
+			const column = heights.indexOf(Math.min(...heights)); // Basic masonry-grid placing, puts tile into the smallest column using Math.min
+			const columnWidth = 260;
+			const totalGridWidth = columns * columnWidth + (columns - 1) * 16; // Including spacing (16px)
+
+			// Calculate the starting x position for each column
+			let x;
+			if (columns === 1) {
+				x = (width - columnWidth) / 2; // Center single column
+			} else if (columns === 2) {
+				x = column === 0 ? (width - totalGridWidth) / 2 : (width + totalGridWidth) / 2 - columnWidth; // Space-between with centering
+			} else if (columns === 3) {
+				// Center columns with more emphasis on the middle one
+				if (column === 0) {
+					x = (width - totalGridWidth) / 2; // Left column gravitating towards the center
+				} else if (column === 1) {
+					x = (width - columnWidth) / 2; // Middle column centered
+				} else {
+					x = (width + totalGridWidth) / 2 - columnWidth; // Right column gravitating towards the center
+				}
+			} else {
+				// More than 3 columns, distribute columns evenly but with a gravitation to the center
+				const gap = (width - totalGridWidth) / (columns - 1); // Dynamic spacing between columns
+				const startPosition = (width - totalGridWidth) / 2; // Starting offset to center the columns
+				x = startPosition + column * (columnWidth + gap); // Apply the calculated starting position and distribute columns
+			}
+
+			const y = heights[column] + 16; // y = it's just the height of the current column
+			heights[column] += 196.52; // Update the height of the column with the new item's height
+
+			return { ...child, x, y };
+		});
+
+		return [heights, gridItems];
+	}, [columns, cities, width]);
 
 	const handleOpenCurrentWeather = useCallback(
 		(e, index) => {
@@ -116,97 +177,80 @@ const Expanded = ({ isDrawerOpen, setIsDrawerOpen, setHeaderClickedIcon, setCity
 			if (!cities[index]?.lat || !cities[index]?.lon) {
 				return;
 			}
-			const client = document.getElementById('scrollable-container');
-
-			const closeAnimation = getCloseAnimation({
-				api,
-				onRest: () => {
-					setIsGridOpen(false);
-				},
-			});
-
-			const openAnimation = () =>
-				getOpenAnimation({
-					api,
-					onRest: () => {
-						client?.scrollTo({
-							top: 0,
-							behavior: 'smooth',
-						});
-					},
-				});
-
-			closeAnimation.then(openAnimation).catch((error) => console.error('Animation error:', error));
+			setIsGridOpen(false);
 		},
-		[cities, setIsGridOpen, api],
+		[cities, setIsGridOpen],
 	);
 
 	const handleCloseCurrentWeather = useCallback(() => {
-		const client = document.getElementById('scrollable-container');
-		const closeAnimation = getCloseAnimation({
-			api,
-			onRest: () => {
-				setIsGridOpen(true);
-			},
-		});
+		setIsGridOpen(true);
+	}, [setIsGridOpen]);
 
-		const openAnimation = () =>
-			getOpenAnimation({
-				api,
-				onRest: () => {
-					client?.scrollTo({
-						top: 0,
-						behavior: 'smooth',
-					});
-				},
-			});
+	const { data } = useCurrentWeatherQuery({
+		city: selectedCity,
+		options: { enabled: !isGridOpen },
+	});
 
-		closeAnimation.then(openAnimation).catch((error) => console.error('Animation error:', error));
-	}, [setIsGridOpen, api]);
+	const { data: daysForecast } = useMultipleDaysForecastQuery({
+		city: { ...selectedCity, timezone: data?.timezone },
+		options: { enabled: !isGridOpen && !!data },
+	});
+
+	const { data: airPollution } = useCurrentAirPolutionQuery({
+		city: selectedCity,
+		options: { enabled: !isGridOpen },
+	});
 
 	const transitionComponents = useMemo(
-		() => getGridItems({ isXs, isSm, isMd, isLg, handleCloseCurrentWeather, airPollution, daysForecast }),
+		() => getGridItems({ isXs, isSm, isMd, handleCloseCurrentWeather, airPollution, daysForecast, data }),
 
-		[airPollution, daysForecast, handleCloseCurrentWeather, isXs, isSm, isMd, isLg],
+		[airPollution, daysForecast, data, handleCloseCurrentWeather, isXs, isSm, isMd],
 	);
 
-	const citiesComponents = useMemo(
-		() =>
-			map(cities, (el, index) => ({
-				size: { xs: 12, sm: 6, md: 4 },
-				component: (props) => (
-					<City
-						{...props}
-						city={el}
-						handleOpenCurrentWeather={handleOpenCurrentWeather}
-						index={index}
-						isDrawerOpen={isDrawerOpen}
-						openApi={api}
-						setCityToReplace={setCityToReplace}
-						setHeaderClickedIcon={setHeaderClickedIcon}
-						setIsDrawerOpen={setIsDrawerOpen}
-					/>
-				),
-			})),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[cities],
-	);
+	const transApi = useSpringRef();
+
+	const transitions = useTransition(isGridOpen ? gridItems : [], {
+		ref: transApi,
+		key: (item) => item.id,
+		from: ({ x, y }) => ({ x, y, opacity: 0, scale: 0.1 }),
+		enter: ({ x, y }) => ({ x, y, opacity: 1, scale: 1 }),
+		update: ({ x, y }) => ({ x, y, scale: 1 }),
+		leave: { opacity: 0, scale: 0.1 },
+		config: { easing: easings?.easeInOutBack, duration: 700 },
+		trail: 200 / gridItems?.length,
+	});
+
+	const transTwoApi = useSpringRef();
+	const transitionsTwo = useTransition(!isGridOpen ? transitionComponents : [], {
+		ref: transTwoApi,
+		enabled: !!transitionComponents,
+		key: (item) => item.id,
+		from: ({ x, y }) => ({ x, y, opacity: 0, scale: 0.1 }),
+		enter: ({ x, y }) => ({ x, y, opacity: 1, scale: 1 }),
+		update: ({ x, y }) => ({ x, y, scale: 1 }),
+		leave: { opacity: 0, scale: 0.1 },
+		config: { easing: easings?.easeInOutBack, duration: 500 },
+		trail: 200 / transitionComponents?.length,
+	});
 
 	useLayoutEffect(() => {
-		if (animation) {
-			animation()
-				.then(() => {
-					console.log('Animation complete');
-				})
-				.catch((error) => console.error('Animation error in App:', error));
-		}
-	}, [animation]);
+		const client = document.getElementById('scrollable-container');
+
+		client?.scrollTo({
+			top: 0,
+			behavior: 'smooth',
+		});
+	}, [isGridOpen]);
+
+	useChain(isGridOpen ? [transTwoApi, transApi] : [transApi, transTwoApi], [0, isGridOpen ? 0.1 : 0.4]);
 
 	return (
 		<Grid
 			container
+			ref={ref}
 			size={12}
-			spacing={{ xs: 2 }}
+			spacing={2}
+			style={{ height: isGridOpen ? Math.max(...heights) : 'fit-content' }}
 			sx={{
 				padding: 0,
 				width: '100%',
@@ -214,20 +258,53 @@ const Expanded = ({ isDrawerOpen, setIsDrawerOpen, setHeaderClickedIcon, setCity
 				position: 'relative',
 			}}
 		>
-			{map(springs, (style, index) => {
-				const item = isGridOpen ? citiesComponents?.[index] : transitionComponents?.[index];
+			<Box
+				sx={{
+					padding: 0,
+					position: 'fixed',
+					left: '15px',
+					top: '50%',
+					transform: 'translateY(-50%)',
+					zIndex: 1000,
+				}}
+			>
+				<BackButton inView={!isGridOpen} onClick={() => setIsGridOpen(true)} />
+			</Box>
+			{transitions((style, item, _, index) => (
+				<AnimatedGrid
+					id={cities?.[index]?.id}
+					key={index}
+					style={{ ...style, transform: style.transform?.to((t) => `${t} translateZ(${style.z}px)`) }}
+					sx={{
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						position: 'absolute',
+						height: '182.52px',
+					}}
+				>
+					<City
+						city={item}
+						handleOpenCurrentWeather={handleOpenCurrentWeather}
+						index={index}
+						setCityToReplace={setCityToReplace}
+						setHeaderClickedIcon={setHeaderClickedIcon}
+					/>
+				</AnimatedGrid>
+			))}
+			{transitionsTwo((style, item, _, index) => {
 				const Page = item?.component;
 
 				return Page ? (
 					<AnimatedGrid
 						container={item?.spacing ? true : false}
-						id={isGridOpen ? cities?.[index]?.id : ''}
 						key={index}
 						size={item?.size}
 						spacing={item?.spacing || ''}
+						style={{ ...style }}
 						sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}
 					>
-						<Page api={api} index={index} style={style} />
+						<Page index={index} />
 					</AnimatedGrid>
 				) : null;
 			})}

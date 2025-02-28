@@ -1,12 +1,10 @@
 import { useCallback, useContext, useLayoutEffect, useRef, useState } from 'react';
-import { useInView } from 'react-intersection-observer';
 import { useSpring } from 'react-spring';
 
 import { AppContext } from '../../context/AppContext';
 import { Window as Wrapper } from '../../styled-components';
-import { BackButton } from '../BackButton/BackButton';
 
-export const Window = ({ onButtonClick, shouldSkip = false, onClick, children, id, style, isDisabled }) => {
+export const Window = ({ style, onClick, children, id, isDisabled }) => {
 	const elementRef = useRef(null);
 	const { setActiveWrapper } = useContext(AppContext);
 
@@ -18,20 +16,6 @@ export const Window = ({ onButtonClick, shouldSkip = false, onClick, children, i
 			boxShadow: `0px 4px 10px -1px  rgba(0, 0, 0, 0.3)`,
 		},
 	}));
-
-	const { ref: inViewRef, inView } = useInView({
-		delay: 500,
-		root: client,
-		skip: shouldSkip,
-		initialInView: false,
-		threshold: 1,
-		rootMargin: `${elementRef?.current?.getBoundingClientRect()?.height + 60 || 0}px 0px -${client?.getBoundingClientRect()?.height - elementRef?.current?.getBoundingClientRect()?.height - 68 || 0}px 0px`,
-	});
-
-	const combinedRef = (node) => {
-		inViewRef(node);
-		elementRef.current = node;
-	};
 
 	const scrollGraphInView = useCallback(() => {
 		if (onClick) {
@@ -65,10 +49,9 @@ export const Window = ({ onButtonClick, shouldSkip = false, onClick, children, i
 			onClick={() => (isDisabled ? {} : scrollGraphInView())}
 			onMouseEnter={() => setIsWrapperHovered(true)}
 			onMouseLeave={() => setIsWrapperHovered(false)}
-			ref={combinedRef}
+			ref={elementRef}
 			style={{ ...combinedStyle, cursor: isDisabled ? 'auto' : 'pointer' }}
 		>
-			{shouldSkip ? null : <BackButton inView={inView} onClick={onButtonClick} />}
 			{children}
 		</Wrapper>
 	);

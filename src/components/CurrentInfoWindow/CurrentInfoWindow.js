@@ -6,14 +6,14 @@ import React, { useContext, useMemo } from 'react';
 
 import { AppContext } from '../../context/AppContext';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { getUnits, trans } from '../../utils/utils';
+import { getUnits } from '../../utils/utils';
 import { Window } from '../Window/Window';
 
-const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }) => {
+const CurrentInfoWindow = ({ pop, index, handleCloseCurrentWeather, selectedCity, api }) => {
 	const theme = useTheme();
-	const { isXs, isLg, isMd, isXl } = useBreakpoint();
+	const { isXs } = useBreakpoint();
 
-	const { settings, selectedCity, activeWrapper } = useContext(AppContext);
+	const { settings, activeWrapper } = useContext(AppContext);
 
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
 
@@ -32,10 +32,7 @@ const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }
 					id={'wind'}
 					index={index}
 					onButtonClick={handleCloseCurrentWeather}
-					shouldSkip={isLg || isMd || isXl}
 					style={{
-						...style,
-						transform: style?.xys.to(trans),
 						flexDirection: 'column',
 						width: '100%',
 						padding: '0.6rem',
@@ -53,7 +50,7 @@ const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }
 						<AirIcon sx={{ maxWidth: '20px' }} />
 					</Icon>
 					<Typography variant="subtitle1" zIndex={2}>
-						{selectedCity?.current?.wind_speed?.[units]?.large}
+						{selectedCity?.wind_speed?.[units]?.large}
 						{getUnits({ selected: 'wind', units })}
 					</Typography>
 				</Window>
@@ -67,10 +64,7 @@ const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }
 					id={'precipitation'}
 					index={index}
 					shadowcolor={activeWrapper === 'precipitation' ? theme?.palette?.wrapper?.precipitation?.light : ''}
-					shouldSkip={true}
 					style={{
-						...style,
-						transform: style?.xys.to(trans),
 						flexDirection: 'column',
 						padding: '0.6rem',
 						maxWidth: '6rem',
@@ -105,10 +99,7 @@ const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }
 					id={'humidity'}
 					index={index}
 					shadowcolor={activeWrapper === 'humidity' ? theme?.palette?.wrapper?.humidity?.light : ''}
-					shouldSkip={true}
 					style={{
-						...style,
-						transform: style?.xys.to(trans),
 						flexDirection: 'column',
 						padding: '0.6rem',
 						maxWidth: '6rem',
@@ -130,7 +121,7 @@ const CurrentInfoWindow = ({ pop, style, index, handleCloseCurrentWeather, api }
 					</Icon>
 					<Typography variant="subtitle1" zIndex={2}>
 						{' '}
-						{selectedCity?.current?.main?.humidity}%
+						{selectedCity?.main?.humidity}%
 					</Typography>
 				</Window>
 			</Grid>

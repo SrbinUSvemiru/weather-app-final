@@ -2,17 +2,14 @@ import { Box, Grid2 as Grid, Typography } from '@mui/material';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSpring } from 'react-spring';
 
-import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { Wrapper } from '../../styled-components';
-import { trans, uvIndex } from '../../utils/utils';
+import { uvIndex } from '../../utils/utils';
 import { Window } from '../Window/Window';
 import { Uvi } from './styled-components';
 
-export const UVWindow = ({ airPollution, style, activeWrapper: wrapper, handleCloseCurrentWeather }) => {
+export const UVWindow = ({ airPollution, activeWrapper: wrapper, handleCloseCurrentWeather }) => {
 	const [width, setWidth] = useState(0);
 	const airPollutionRef = useRef();
-
-	const { isSm, isXs } = useBreakpoint();
 
 	const activeWrapper = useSpring({
 		config: { mass: 2, tension: 3000, friction: 150 },
@@ -47,9 +44,8 @@ export const UVWindow = ({ airPollution, style, activeWrapper: wrapper, handleCl
 		<Window
 			id={'air-polution'}
 			isDisabled={true}
+			isFetching={!airPollution}
 			onButtonClick={handleCloseCurrentWeather}
-			shouldSkip={!isXs && !isSm}
-			style={{ ...style, transform: style?.xys.to(trans) }}
 		>
 			<Wrapper style={activeWrapper} />
 			<Grid container spacing={1} sx={{ height: '100%' }}>

@@ -53,9 +53,8 @@ export const getRemoveTile = ({ api, updatedCities, onRest = () => {}, idx }) =>
 			};
 		});
 	});
-export const getAppearTile = ({ api, onRest = () => {}, updatedCities, onStart = () => {}, idx, isDark = false }) => {
-	console.log(updatedCities);
-	return new Promise((resolve) => {
+export const getAppearTile = ({ api, onRest = () => {}, updatedCities, onStart = () => {}, idx, isDark = false }) =>
+	new Promise((resolve) => {
 		api.start((j) => {
 			if (j === idx) {
 				return {
@@ -107,4 +106,3 @@ export const getAppearTile = ({ api, onRest = () => {}, updatedCities, onStart =
 			};
 		});
 	});
-};

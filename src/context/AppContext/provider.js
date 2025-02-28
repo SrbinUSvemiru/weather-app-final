@@ -19,6 +19,27 @@ export const AppContextProvider = (props) => {
 	const [selectedCity, setSelectedCity] = useState({});
 	const [isGridOpen, setIsGridOpen] = useState(true);
 	const [animation, setAnimation] = useState(null);
+	const [location, setLocation] = useState(null);
+
+	const handleGetLocation = () => {
+		if (!navigator.geolocation) {
+			setLocation({ ...location, error: 'Geolocation is not supported by your browser.' });
+			return;
+		}
+
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				setLocation({
+					lat: position.coords.latitude,
+					lon: position.coords.longitude,
+					error: null,
+				});
+			},
+			(error) => {
+				setLocation({ ...location, error: error.message });
+			},
+		);
+	};
 
 	useEffect(() => {
 		setStorageItem('weather-app-settings', { theme, cities, preferences: { units: settings?.preferences?.units } });
@@ -33,6 +54,8 @@ export const AppContextProvider = (props) => {
 				setActiveWrapper,
 				cities,
 				setCities,
+				handleGetLocation,
+				location,
 				theme,
 				animation,
 				isGridOpen,

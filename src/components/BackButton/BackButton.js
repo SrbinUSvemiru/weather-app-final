@@ -1,30 +1,16 @@
 import ArrowBackSharpIcon from '@mui/icons-material/ArrowBackSharp';
 import { Button } from '@mui/material';
 import { animated } from '@react-spring/web';
-import { useLayoutEffect } from 'react';
-import { useSpring, useSpringRef } from 'react-spring';
+import { useSpring } from 'react-spring';
 
 const AnimatedButton = animated(Button);
 
 export const BackButton = ({ onClick, inView }) => {
-	const springRef = useSpringRef();
-
 	const spring = useSpring({
-		from: { scale: 0, opacity: 0 },
-		immediate: true,
-		ref: springRef,
+		from: { scale: !inView ? 1 : 0, opacity: !inView ? 1 : 0 },
+		to: { scale: inView ? 1 : 0, opacity: inView ? 1 : 0 },
+		delay: !inView ? 0 : 300,
 	});
-
-	useLayoutEffect(() => {
-		springRef.start({
-			to: {
-				immediate: false,
-				scale: inView ? 1 : 0,
-				opacity: inView ? 1 : 0,
-				x: 0,
-			},
-		});
-	}, [springRef, inView]);
 
 	return (
 		<AnimatedButton
@@ -34,12 +20,8 @@ export const BackButton = ({ onClick, inView }) => {
 			}}
 			style={{ ...spring, transform: 'translateY(-50%)' }}
 			sx={{
-				position: 'fixed',
-				bottom: '10%',
-				left: '-10px',
-				backgroundColor: 'background.default',
+				backgroundColor: 'background.shadeOne',
 				padding: '0.5rem',
-				zIndex: 100000,
 				display: 'flex',
 				borderRadius: '50%',
 				boxShadow: '0px 5px 10px -4px rgba(0, 0, 0, 0.3)',

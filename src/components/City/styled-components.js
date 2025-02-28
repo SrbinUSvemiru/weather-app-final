@@ -10,8 +10,6 @@ export const Tile = styled(animated.div)`
 	box-shadow: ${(props) => (props?.isEmpty ? 'none' : `0px 3px 8px -1px rgba(0, 0, 0, 0.2)`)};
 	align-items: center;
 	width: 260px;
-	backdrop-filter: blur(7.6px);
-	-webkit-backdrop-filter: blur(7.6px);
 	cursor: pointer;
 	color: white;
 	padding: 1rem;
@@ -54,8 +52,8 @@ export const EmptyCell = styled(animated.div)`
 	width: 100%;
 	height: 100%;
 	border-radius: 1.3rem;
-	min-height: 182.52px;
-	min-width: 260px;
+	height: 182.52px;
+	width: 260px;
 	border: 1px solid rgba(251, 247, 255, 0.22),
 	display: flex;
 	justify-content: center;

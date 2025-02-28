@@ -9,7 +9,7 @@ import { ValueContainer } from './styled-components';
 const PrecipitationSvg = ({ graphData, activeWrapper, animation, clicked, width }) => {
 	const theme = useTheme();
 	const precipitation = useMemo(() => graphData?.[activeWrapper]?.[clicked], [graphData, clicked, activeWrapper]);
-	console.log(precipitation);
+
 	return (
 		<Container style={animation}>
 			<svg height="180" width={width} xmlns="http://www.w3.org/2000/svg">
