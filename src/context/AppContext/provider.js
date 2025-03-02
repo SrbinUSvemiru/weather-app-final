@@ -20,6 +20,7 @@ export const AppContextProvider = (props) => {
 	const [isGridOpen, setIsGridOpen] = useState(true);
 	const [animation, setAnimation] = useState(null);
 	const [location, setLocation] = useState(null);
+	const [sortData, setSortData] = useState(new Map());
 
 	const handleGetLocation = () => {
 		if (!navigator.geolocation) {
@@ -58,6 +59,8 @@ export const AppContextProvider = (props) => {
 				location,
 				theme,
 				animation,
+				sortData,
+				setSortData,
 				isGridOpen,
 				setIsGridOpen,
 				setAnimation,

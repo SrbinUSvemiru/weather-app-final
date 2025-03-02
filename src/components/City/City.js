@@ -3,7 +3,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { Box, Grid2 as Grid, Icon, Skeleton, Typography, useTheme } from '@mui/material';
 import { animated } from '@react-spring/web';
 import { findIndex } from 'lodash';
-import React, { useContext, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useSpring } from 'react-spring';
 import { v4 as uuid } from 'uuid';
 
@@ -15,10 +15,10 @@ import { EmptyCell, Tile } from './styled-components';
 
 const AnimatedTypography = animated(Typography);
 
-const City = ({ city, id, setCityToReplace, index, setHeaderClickedIcon, handleOpenCurrentWeather }) => {
+const City = ({ city, id, setCityToReplace, index, handleOpenCurrentWeather }) => {
 	const [hovered, setHovered] = useState(false);
 
-	const { cities, settings, setCities, setSelectedCity } = useContext(AppContext);
+	const { cities, settings, setCities, setSelectedCity, setSortData } = useContext(AppContext);
 
 	const isEmpty = useMemo(() => !city?.lon || !city?.lat, [city]);
 	const units = useMemo(() => settings?.preferences?.units, [settings?.preferences?.units]);
@@ -35,6 +35,27 @@ const City = ({ city, id, setCityToReplace, index, setHeaderClickedIcon, handleO
 		immediate: true,
 	}));
 
+	const handleRemoveCity = (e) => {
+		e.stopPropagation();
+		const updatedCities = cities?.length ? [...cities] : [];
+		const idx = findIndex(updatedCities, (el) => el?.id === city?.id);
+
+		if (idx > -1) {
+			updatedCities[idx] = { id: uuid(), lat: '', lon: '', weight: updatedCities[idx]?.weight };
+		}
+		setCities(updatedCities);
+	};
+
+	const handleAddCity = (e) => {
+		e.stopPropagation();
+		setCityToReplace(city?.id);
+	};
+
+	const handleTileClick = (e) => {
+		e.stopPropagation();
+		handleOpenCurrentWeather(e, index);
+		setSelectedCity(city);
+	};
 	useLayoutEffect(() => {
 		if (!isLoading) {
 			api?.start({
@@ -59,28 +80,21 @@ const City = ({ city, id, setCityToReplace, index, setHeaderClickedIcon, handleO
 		});
 	}, [units, api]);
 
-	const handleRemoveCity = (e) => {
-		e.stopPropagation();
-		const updatedCities = cities?.length ? [...cities] : [];
-		const idx = findIndex(updatedCities, (el) => el?.id === city?.id);
+	useEffect(() => {
+		if (data) {
+			const temp = data?.temp?.metric;
+			const time = data?.timezone;
+			const longitude = data?.coord?.lon;
+			const latitude = data?.coord?.lat;
 
-		if (idx > -1) {
-			updatedCities[idx] = { id: uuid(), lat: '', lon: '', weight: updatedCities[idx]?.weight };
+			setSortData((prev) => {
+				const newMap = new Map(prev);
+				newMap.set(city?.id, { time, temp, longitude, latitude });
+				return newMap;
+			});
 		}
-		setCities(updatedCities);
-	};
-
-	const handleAddCity = (e) => {
-		e.stopPropagation();
-		setHeaderClickedIcon('search');
-		setCityToReplace(city?.id);
-	};
-
-	const handleTileClick = (e) => {
-		e.stopPropagation();
-		handleOpenCurrentWeather(e, index);
-		setSelectedCity(city);
-	};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [data]);
 
 	if (isError) {
 		return <div>{error?.message}</div>;

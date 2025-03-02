@@ -19,9 +19,11 @@ import {
 	useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useContext, useRef, useState } from 'react';
+import { map, sortBy } from 'lodash';
+import React, { useCallback, useContext, useRef, useState } from 'react';
 
 import Expanded from './components/Expanded/Expanded';
+import MenuListComposition from './components/MenuListComposition/MenuListComposition';
 import SearchBar from './components/SearchBar/SearchBar';
 import { AppContext } from './context/AppContext';
 import { useBreakpoint } from './hooks/useBreakpoint';
@@ -95,7 +97,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 const App = () => {
-	const { theme, setSettings, settings, setTheme } = useContext(AppContext);
+	const { theme, setSettings, settings, setTheme, cities, setCities, sortData } = useContext(AppContext);
 
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [cityToReplace, setCityToReplace] = useState('');
@@ -114,12 +116,34 @@ const App = () => {
 		}
 	};
 
-	// const handleSortBy = useCallback(() => {
-	// 	const updatedCities = cities ? [...cities] : [];
-	// 	const sorted = sortBy(updatedCities, 'name');
+	const handleSortBy = useCallback(
+		(type) => {
+			const updatedCities = cities ? [...cities] : [];
+			let sorted;
+			switch (type) {
+				case 'a_z':
+					sorted = sortBy(updatedCities, 'name');
+					break;
+				case 'time':
+					sorted = sortBy(updatedCities, (el) => sortData.get(el?.id)?.time);
+					break;
+				case 'temperature':
+					sorted = sortBy(updatedCities, (el) => sortData.get(el?.id)?.temp);
+					break;
+				case 'latitude':
+					sorted = sortBy(updatedCities, (el) => sortData.get(el?.id)?.latitude);
+					break;
+				case 'longitude':
+					sorted = sortBy(updatedCities, (el) => sortData.get(el?.id)?.longitude);
+					break;
+				default:
+					sorted = updatedCities;
+			}
 
-	// 	setCities(map(sorted, (el, index) => ({ ...el, weight: index + 1 })));
-	// }, [cities, setCities]);
+			setCities(map(sorted, (el, index) => ({ ...el, weight: index + 1 })));
+		},
+		[cities, setCities, sortData],
+	);
 
 	useOutsideClick({ ref: appBarRef, callback: () => toggleDrawer(false) });
 
@@ -451,7 +475,7 @@ const App = () => {
 					id="scrollable-container"
 					sx={{
 						padding: isXs ? '1rem 1rem 5rem 1rem' : '1.5rem 2rem 5rem 2rem',
-						marginTop: '3rem',
+						marginTop: '3.5rem',
 						width: '100%',
 						borderRadius: '1.5rem 0rem 0rem 0rem',
 						height: '100%',
@@ -481,17 +505,29 @@ const App = () => {
 						sx={{
 							position: 'fixed',
 							width: '100%',
+							padding: '0.5rem 0rem',
 							top: 0,
 							left: 0,
-							height: '48px',
-							backgroundColor: 'background.default',
 							zIndex: 1000,
 						}}
 					>
 						<Grid
-							size={isXs ? 12 : 4}
+							size={isXs ? 6 : 4}
 							sx={{ display: 'flex', paddingLeft: '2rem', justifyContent: 'start', alignItems: 'center' }}
 						>
+							{isXs ? null : (
+								<MenuListComposition
+									header={'Sort'}
+									items={[
+										{ label: 'A-Z', value: 'a_z' },
+										{ label: 'Time', value: 'time' },
+										{ label: 'Temperature', value: 'temperature' },
+										{ label: 'Latitude', value: 'latitude' },
+										{ label: 'Longitude', value: 'longitude' },
+									]}
+									onClick={handleSortBy}
+								/>
+							)}
 							<IconButton
 								aria-label="open drawer"
 								color="inherit"
@@ -602,7 +638,21 @@ const App = () => {
 									/>
 								</Grid>
 							</>
-						) : null}
+						) : (
+							<Grid size={6} sx={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '2rem' }}>
+								<MenuListComposition
+									header={'Sort'}
+									items={[
+										{ label: 'A-Z', value: 'a_z' },
+										{ label: 'Time', value: 'time' },
+										{ label: 'Temperature', value: 'temperature' },
+										{ label: 'Latitude', value: 'latitude' },
+										{ label: 'Longitude', value: 'longitude' },
+									]}
+									onClick={handleSortBy}
+								/>
+							</Grid>
+						)}
 					</Grid>
 					<Expanded setCityToReplace={setCityToReplace} />
 				</Box>
