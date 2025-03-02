@@ -69,8 +69,8 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, isInDrawe
 	}, [inputCityName, cities, cityToReplace]);
 
 	useEffect(() => {
-		if (cityToReplace) {
-			setIsListOpen(true);
+		if (cityToReplace && textFieldRef.current) {
+			textFieldRef.current.focus();
 		}
 	}, [cityToReplace]);
 
@@ -179,12 +179,12 @@ const SearchBar = ({ setIsDrawerOpen, cityToReplace, setCityToReplace, isInDrawe
 							onClick={() => handleAddCity(city)}
 							sx={{ padding: '0.1rem 1rem', margin: '0 auto' }}
 						>
-							<Typography sx={{ fontSize: '1.5rem' }} variant="subtitle1">
+							<Typography sx={{ fontSize: '1rem' }} variant="subtitle1">
 								{city?.name}
 							</Typography>
 							<Typography
 								fontWeight={700}
-								sx={{ color: 'text.secondary', marginLeft: '0.5rem', fontSize: '1.5rem' }}
+								sx={{ color: 'text.secondary', marginLeft: '0.5rem', fontSize: '1rem' }}
 								variant="subtitle1"
 							>
 								{city?.country}
