@@ -11,7 +11,6 @@ import {
 	IconButton,
 	List,
 	ListItem,
-	ListItemText,
 	Switch,
 	ToggleButton,
 	ToggleButtonGroup,
@@ -196,24 +195,30 @@ const App = () => {
 					</List>
 
 					<List>
-						<ListItem key={'theme'}>
-							<MaterialUISwitch
-								checked={theme?.mode === 'dark'}
-								isXs={isXs}
-								onClick={() =>
-									setTheme((prev) => ({
-										variant: prev?.variant,
-										mode: prev?.mode === 'dark' ? 'light' : 'dark',
-									}))
-								}
-							/>
-							<ListItemText primary={'Theme'} />
+						<ListItem key={'theme'} sx={{ width: '100%', display: 'flex' }}>
+							<Box sx={{ width: '30%' }}>
+								<MaterialUISwitch
+									checked={theme?.mode === 'dark'}
+									isXs={isXs}
+									onClick={() =>
+										setTheme((prev) => ({
+											variant: prev?.variant,
+											mode: prev?.mode === 'dark' ? 'light' : 'dark',
+										}))
+									}
+								/>
+							</Box>
+							<Typography>Theme</Typography>
 						</ListItem>
-						<ListItem key={'units'}>
+						<ListItem key={'units'} sx={{ width: '100%', display: 'flex' }}>
 							<ToggleButtonGroup
 								exclusive
 								onChange={handleToggleUnits}
-								sx={{ borderRadius: '16px', backgroundColor: 'background.window', marginRight: '1rem' }}
+								sx={{
+									borderRadius: '16px',
+									backgroundColor: 'background.window',
+									width: '30%',
+								}}
 								value={settings?.preferences?.units}
 							>
 								<ToggleButton
@@ -256,7 +261,7 @@ const App = () => {
 									</Typography>
 								</ToggleButton>
 							</ToggleButtonGroup>
-							<ListItemText primary={'Units'} />
+							<Typography sx={{ width: '50%' }}>Units</Typography>
 						</ListItem>
 					</List>
 					<Divider />
